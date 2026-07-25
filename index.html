@@ -175,15 +175,30 @@ html[data-lang="en"] .disp { word-break:normal; }
    fast movement against all the slow drifting mass */
 .spark { position:absolute; width:3px; height:3px; border-radius:100px;
   background:var(--jade); opacity:0; will-change:transform,opacity; }
-.spark.s1 { top:18%; left:-4%; animation:cross 14s linear infinite; }
-.spark.s2 { top:62%; left:-4%; animation:cross 19s linear infinite 5s; }
-.spark.s3 { top:38%; left:-4%; animation:cross 11s linear infinite 9s; background:var(--brass); }
-.spark.s4 { top:80%; left:-4%; animation:cross 23s linear infinite 2s; }
+.spark.s1  { top:18%; left:-4%; animation:cross 14s linear infinite; }
+.spark.s2  { top:62%; left:-4%; animation:cross 19s linear infinite 5s; }
+.spark.s3  { top:38%; left:-4%; animation:cross 11s linear infinite 9s; background:var(--brass); }
+.spark.s4  { top:80%; left:-4%; animation:cross 23s linear infinite 2s; }
+.spark.s5  { top:8%;  left:-4%; animation:cross 16s linear infinite 7s; }
+.spark.s6  { top:50%; left:-4%; animation:cross 9s  linear infinite 3s; width:2px; height:2px; }
+.spark.s7  { top:28%; left:-4%; animation:cross 21s linear infinite 12s; background:var(--brass); }
+.spark.s8  { top:71%; left:-4%; animation:cross 13s linear infinite 6s; width:4px; height:4px; }
+/* a second current running the other way, so the field has cross-traffic */
+.spark.u1 { bottom:-4%; left:16%; animation:rise 17s linear infinite 1s; }
+.spark.u2 { bottom:-4%; left:44%; animation:rise 12s linear infinite 6s; width:2px; height:2px; }
+.spark.u3 { bottom:-4%; left:68%; animation:rise 22s linear infinite 3s; background:var(--brass); }
+.spark.u4 { bottom:-4%; left:88%; animation:rise 15s linear infinite 10s; }
 @keyframes cross {
   0%   { transform:translate3d(0,0,0) scale(.6); opacity:0; }
   8%   { opacity:.85; }
   70%  { opacity:.6; }
   100% { transform:translate3d(112vw,-14vh,0) scale(1.3); opacity:0; }
+}
+@keyframes rise {
+  0%   { transform:translate3d(0,0,0) scale(.5); opacity:0; }
+  10%  { opacity:.8; }
+  75%  { opacity:.5; }
+  100% { transform:translate3d(-9vw,-108vh,0) scale(1.2); opacity:0; }
 }
 @keyframes blobA { from{transform:translate3d(0,0,0) scale(1)}     to{transform:translate3d(-8vmax,6vmax,0) scale(1.12)} }
 @keyframes blobB { from{transform:translate3d(0,0,0) scale(1.06)}  to{transform:translate3d(7vmax,-5vmax,0) scale(.95)} }
@@ -509,100 +524,87 @@ section.drench > * { position:relative; z-index:1; }
 .grp li span:not(.u) { display:block; color:var(--faint); font-size:.85em;
   line-height:1.7; margin-top:2px; }
 
-/* ---------- the wire: vertical scroll-drawn system diagram ----------
-   A spine down the middle that literally draws itself as you scroll
-   (--p is written from the scroll loop). Tools sit either side and snap
-   in with their connector lines when the spine reaches them, and packets
-   fall continuously down the line so the system always looks alive. */
-.wire { position:relative; margin-top:clamp(30px,4.5vh,48px); padding:8px 0 4px; }
-.spine { position:absolute; top:0; bottom:0; left:50%; width:2px; margin-left:-1px;
-  background:var(--hair); overflow:hidden; border-radius:2px; }
-.spine .fill { position:absolute; inset:0; transform-origin:50% 0;
-  transform:scaleY(var(--p,0));
-  background:linear-gradient(180deg, var(--jade), #7ce8ac 55%, var(--jade)); }
-.spine i { position:absolute; left:-2px; width:6px; height:6px; border-radius:100px;
-  background:#dfffee; box-shadow:0 0 10px var(--jade); animation:fall 3.4s linear infinite; }
-.spine i:nth-child(3){ animation-delay:1.1s } .spine i:nth-child(4){ animation-delay:2.3s }
-@keyframes fall { from{ transform:translate3d(0,-20px,0); opacity:0 }
-  12%{ opacity:1 } 88%{ opacity:1 }
-  to  { transform:translate3d(0,var(--spineH,900px),0); opacity:0 } }
+/* ---------- the diagram ----------
+   A real drawn schematic: icon nodes, curved wires with arrowheads,
+   particles running the wires, and stages that draw themselves in as the
+   section scrolls. SVG carries the graphics; the stage captions are HTML
+   chips positioned over it by percentage, so they keep proper Japanese
+   typography and swap language with everything else. */
+.dia { position:relative; margin:clamp(26px,4vh,44px) auto 0; max-width:560px; }
+.dia svg { display:block; width:100%; height:auto; overflow:visible; }
 
-.stn { position:relative; display:grid; grid-template-columns:1fr auto 1fr;
-  align-items:center; gap:0 clamp(10px,1.6vw,20px);
-  padding:clamp(12px,2vh,20px) 0; }
-.stn .side { display:flex; flex-direction:column; gap:9px; }
-.stn .side li { display:flex; align-items:center; list-style:none; }
-.stn .side b { flex:none; font-weight:700; font-size:clamp(11.5px,1.05vw,14px);
-  color:var(--sub); border:1px solid var(--hair-2); background:rgba(255,255,255,.03);
-  border-radius:100px; padding:7px 13px; white-space:nowrap;
-  transition:color .5s var(--eo), border-color .5s var(--eo), background .5s var(--eo); }
-/* the connector: a line that grows out of the spine toward the chip.
-   Drawn by default; only `.js` collapses it, so a no-JS or print render
-   still shows a complete, connected diagram. */
-/* fixed-length leaders, not flex:1 — a growing line shoves every chip out
-   to the window edge and the diagram stops reading as connected */
-.stn .side li::after, .stn .side li::before {
-  content:""; flex:0 0 clamp(18px,5vw,76px); height:1px; background:var(--hair-2);
-  transition:transform .7s var(--eo); }
-.stn .r li { justify-content:flex-start; }
-.js .stn .side li::after, .js .stn .side li::before { transform:scaleX(0); }
-.stn .l li { justify-content:flex-end; }
-.stn .l li::after  { margin-left:9px;  transform-origin:100% 50%; }
-.stn .l li::before { display:none; }
-.stn .r li::before { margin-right:9px; transform-origin:0 50%; }
-.stn .r li::after  { display:none; }
-.stn.on .side li::after, .stn.on .side li::before { transform:scaleX(1); }
-.stn.on .side b { color:var(--ink); border-color:rgba(15,203,136,.45); background:rgba(15,203,136,.07); }
-.stn.on .side li:nth-child(2) b, .stn.on .side li:nth-child(2)::after,
-.stn.on .side li:nth-child(2)::before { transition-delay:.1s }
-.stn.on .side li:nth-child(3) b, .stn.on .side li:nth-child(3)::after,
-.stn.on .side li:nth-child(3)::before { transition-delay:.2s }
+/* wires */
+.wire-p { fill:none; stroke:var(--hair-2); stroke-width:1.6; stroke-linecap:round; }
+.js .wire-p { stroke-dasharray:var(--len); stroke-dashoffset:var(--len); }
+.js .on .wire-p { stroke-dashoffset:0; transition:stroke-dashoffset 1.1s var(--eo); }
+.on .wire-p { stroke:rgba(15,203,136,.55); }
+/* the loop keeps its dash pattern, so it fades in rather than drawing —
+   a dashoffset tween on a 5/7 dash just shuffles the dashes */
+.wire-p.loop { stroke-dasharray:5 7 !important; stroke-dashoffset:0 !important;
+  stroke:rgba(15,203,136,.3); stroke-width:1.4; }
+.js .wire-p.loop { opacity:0; }
+.js .on .wire-p.loop { opacity:1; transition:opacity .9s var(--eo) .35s; }
 
-.hub { position:relative; z-index:2; text-align:center; background:var(--bg);
-  border:1px solid var(--hair-2); border-radius:100px; padding:11px 20px;
-  min-width:clamp(120px,13vw,168px);
-  transition:border-color .6s var(--eo), box-shadow .6s var(--eo), transform .6s var(--eo); }
-.hub span { font-weight:900; font-size:clamp(13px,1.25vw,16.5px); letter-spacing:-.01em; }
-.stn.on .hub { border-color:var(--jade); transform:scale(1.04);
-  box-shadow:0 0 0 5px rgba(15,203,136,.09); }
-/* the AI station: rings that keep turning, so the centre reads as the brain */
-.hub.ai { padding:18px 24px; border-color:rgba(15,203,136,.5); }
-.hub.ai::before, .hub.ai::after { content:""; position:absolute; inset:-9px;
-  border-radius:100px; border:1px dashed rgba(15,203,136,.4); animation:spin 14s linear infinite; }
-.hub.ai::after { inset:-17px; border-style:dotted; border-color:rgba(15,203,136,.22);
-  animation-duration:22s; animation-direction:reverse; }
-@keyframes spin { to { transform:rotate(360deg); } }
-.stn.on .hub.ai { box-shadow:0 0 0 6px rgba(15,203,136,.1), 0 0 34px rgba(15,203,136,.22); }
+/* nodes */
+.nd { transform-box:fill-box; transform-origin:center; }
+.js .nd { opacity:0; transform:scale(.72); }
+.js .on .nd { opacity:1; transform:none;
+  transition:opacity .55s var(--eo), transform .75s var(--eo); }
+.nd .box { fill:rgba(255,255,255,.045); stroke:var(--hair-2); stroke-width:1.4; }
+.on .nd .box { fill:rgba(15,203,136,.09); stroke:rgba(15,203,136,.55); }
+.nd .ico { fill:none; stroke:var(--sub); stroke-width:1.9;
+  stroke-linecap:round; stroke-linejoin:round; }
+.on .nd .ico { stroke:var(--jade); }
+.nd .box, .nd .ico { transition:fill .6s var(--eo), stroke .6s var(--eo); }
+/* the label lands after its node — text follows the picture */
+.lbl { fill:var(--sub); font-family:var(--goth); font-weight:700; font-size:13px;
+  text-anchor:middle; }
+.js .lbl { opacity:0; transform:translateY(6px); transform-box:fill-box; }
+.js .on .lbl { opacity:1; transform:none;
+  transition:opacity .5s var(--eo) .3s, transform .5s var(--eo) .3s; }
 
-/* the loop back up the side */
-.back { position:relative; display:flex; align-items:center; gap:12px; flex-wrap:wrap;
-  margin-top:clamp(14px,2vh,22px); padding:clamp(14px,2vh,20px) clamp(16px,2.2vw,24px);
-  border:1px dashed rgba(15,203,136,.4); border-radius:14px; }
-.back p { font-size:clamp(12.5px,1.1vw,15px); color:var(--sub); line-height:1.75; }
-.back b { color:var(--jade); font-weight:900; }
-.back svg { flex:none; animation:spin 9s linear infinite; }
+/* the AI core */
+.core .disc { fill:#08120e; stroke:var(--jade); stroke-width:2; }
+.core .ring { fill:none; stroke:rgba(15,203,136,.4); stroke-width:1.2;
+  transform-box:fill-box; transform-origin:center; animation:spin 16s linear infinite; }
+.core .ring.r2 { stroke:rgba(15,203,136,.22); stroke-dasharray:2 8;
+  animation-duration:26s; animation-direction:reverse; }
+.core .ring.r1 { stroke-dasharray:9 11; }
+.core .glyph { fill:var(--jade); }
+.core .cap { fill:var(--jade); font-family:var(--goth); font-weight:900;
+  font-size:19px; text-anchor:middle; letter-spacing:.06em; }
+.js .core { opacity:0; transform-box:fill-box; transform-origin:center; transform:scale(.6); }
+.js .on .core { opacity:1; transform:none;
+  transition:opacity .6s var(--eo), transform .95s var(--eo); }
+.on .core .disc { filter:drop-shadow(0 0 16px rgba(15,203,136,.5)); }
 
-/* result strip — replaces the old comparison table */
-.gains { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
-  gap:clamp(12px,2vw,26px); margin-top:clamp(26px,4vh,40px);
-  border-top:1px solid var(--hair); padding-top:clamp(20px,3vh,28px); }
-.gains div { display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
-.gains .was { font-size:clamp(12px,1.1vw,14px); color:var(--faint);
-  text-decoration:line-through; text-decoration-color:rgba(255,255,255,.25); }
-.gains .now { font-size:clamp(17px,1.8vw,24px); font-weight:900; color:var(--jade); letter-spacing:-.02em; }
-.gains p { flex-basis:100%; font-size:clamp(11.5px,1vw,13px); color:var(--faint); }
+/* particles running the wires */
+.pk { fill:#dfffee; }
+.on .pk { filter:drop-shadow(0 0 5px var(--jade)); }
 
-@media (max-width:760px){
-  .spine { left:9px; }
-  .stn { grid-template-columns:1fr; padding-left:34px; gap:8px; }
-  .stn .side { gap:8px; }
-  /* one column: every chip hangs off the left-hand spine by a short
-     leader, so nothing drifts to the far edge of the screen */
-  .stn .l li, .stn .r li { justify-content:flex-start; flex-direction:row; }
-  .stn .l li::after { display:none; }
-  .stn .l li::before, .stn .r li::before { display:block; content:"";
-    flex:0 0 17px; margin:0 9px 0 0; transform-origin:0 50%; }
-  .hub { justify-self:start; }
+/* stage captions: compact single-line chips that ride the flow line and
+   mask the wire behind them, so they read as labelled junctions */
+.cap-chip { position:absolute; left:50%; z-index:2; white-space:nowrap;
+  display:flex; align-items:center; gap:8px;
+  background:var(--bg); border:1px solid var(--hair-2); border-radius:100px;
+  padding:7px 16px 7px 9px;
+  font-size:clamp(12.5px,1.2vw,15px); font-weight:900; letter-spacing:-.01em;
+  transform:translate(-50%,-50%);
+  transition:border-color .6s var(--eo), background .6s var(--eo),
+             opacity .55s var(--eo), transform .6s var(--eo); }
+.js .cap-chip { opacity:0; transform:translate(-50%,calc(-50% + 12px)); }
+.js .cap-chip.lit { opacity:1; transform:translate(-50%,-50%); }
+.cap-chip.lit { border-color:rgba(15,203,136,.5); background:#08120e; }
+.cap-chip em { font-style:normal; flex:none; display:grid; place-items:center;
+  width:22px; height:22px; border-radius:100px; font-size:12px;
+  color:var(--jade-ink); background:var(--jade); }
+
+@media (max-width:520px){
+  .lbl { font-size:17px; }
+  .cap-chip { padding:6px 13px 6px 7px; }
+}
+@media (prefers-reduced-motion:reduce){
+  .core .ring { animation:none !important; }
 }
 
 /* ---------- how it connects (old, unused) ----------
@@ -792,7 +794,7 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
 <!-- the sky: light fields + orbit wires + drifting work-objects -->
 <div id="sky" aria-hidden="true">
   <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
-  <div class="spark s1"></div><div class="spark s2"></div><div class="spark s3"></div><div class="spark s4"></div>
+  <div class="spark s1"></div><div class="spark s2"></div><div class="spark s3"></div><div class="spark s4"></div><div class="spark s5"></div><div class="spark s6"></div><div class="spark s7"></div><div class="spark s8"></div><div class="spark u1"></div><div class="spark u2"></div><div class="spark u3"></div><div class="spark u4"></div>
   <svg class="orbits" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
     <g fill="none" stroke="rgba(255,255,255,.07)" stroke-width="1" stroke-dasharray="1 8">
       <ellipse cx="1050" cy="330" rx="520" ry="210" transform="rotate(-16 1050 330)"/>
@@ -923,32 +925,169 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
       スクロールすると、線が引かれていきます。お店がいつも通りに動いて生まれるものが上から入り、
       使える形になって下から出てきます。</p>
 
-    <div class="wire">
-      <div class="spine" aria-hidden="true"><span class="fill"></span><i></i><i></i><i></i></div>
+    <div class="dia">
+      <svg viewBox="0 0 480 1020" data-nophrase xmlns:xlink="http://www.w3.org/1999/xlink"
+           role="img" aria-label="お店から出たデータが、AIを通って、スプレッドシートやダッシュボードに戻るまでの流れ図">
+        <defs>
+          <marker id="ah" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse">
+            <path d="M0 1.2L8.6 5L0 8.8z" fill="rgba(15,203,136,.85)"/>
+          </marker>
+        </defs>
 
-      <div class="stn">
-        <ul class="side l"><li><b data-en="The LINE report">LINEの報告</b></li><li><b data-en="Register / POS">レジ・POS</b></li><li><b data-en="Receipts">領収書</b></li></ul>
-        <div class="hub"><span data-en="It comes in">入ってくる</span></div>
-        <ul class="side r"><li><b data-en="Email">メール</b></li><li><b data-en="Bookings">予約</b></li><li><b data-en="Photos">写真</b></li></ul>
-      </div>
+        <!-- 1 ── 入ってくる -->
+        <g class="st">
+          <path class="wire-p" id="w1" marker-end="url(#ah)" d="M78,140 C78,198 152,210 236,258"/>
+          <path class="wire-p" id="w2" marker-end="url(#ah)" d="M186,140 C186,198 214,218 238,258"/>
+          <path class="wire-p" id="w3" marker-end="url(#ah)" d="M294,140 C294,198 266,218 242,258"/>
+          <path class="wire-p" id="w4" marker-end="url(#ah)" d="M402,140 C402,198 328,210 244,258"/>
 
-      <div class="stn">
-        <ul class="side l"><li><b data-en="Reads it">読み取る</b></li><li><b data-en="Checks it">確かめる</b></li></ul>
-        <div class="hub ai"><span data-en="The AI decides">AIが判断する</span></div>
-        <ul class="side r"><li><b data-en="Sorts it">仕分ける</b></li><li><b data-en="Stops if it looks wrong">おかしければ止める</b></li></ul>
-      </div>
+          <g transform="translate(78,112)"><g class="nd">
+            <rect class="box" x="-26" y="-26" width="52" height="52" rx="16"/>
+            <g class="ico" transform="translate(-12,-12)">
+              <path d="M3 5.6A2.6 2.6 0 015.6 3h12.8A2.6 2.6 0 0121 5.6v7.8a2.6 2.6 0 01-2.6 2.6H9.5L5 20v-4h-.4A2.6 2.6 0 013 13.4z"/>
+              <path d="M7.4 8h9.2M7.4 11.4h5.6"/>
+            </g>
+            <text class="lbl" y="47" data-en="LINE report">LINEの報告</text>
+          </g></g>
 
-      <div class="stn">
-        <ul class="side l"><li><b data-en="Spreadsheets">スプレッドシート</b></li><li><b data-en="Drive folders">ドライブのフォルダ</b></li></ul>
-        <div class="hub"><span data-en="It is stored">しまわれる</span></div>
-        <ul class="side r"><li><b data-en="Backup">バックアップ</b></li><li><b data-en="Searchable history">検索できる履歴</b></li></ul>
-      </div>
+          <g transform="translate(186,112)"><g class="nd">
+            <rect class="box" x="-26" y="-26" width="52" height="52" rx="16"/>
+            <g class="ico" transform="translate(-12,-12)">
+              <path d="M3 4.8h18v10.4H3z"/><path d="M9 19.4h6M12 15.2v4.2"/><path d="M6.8 8.6h6.4"/>
+            </g>
+            <text class="lbl" y="47" data-en="Register / POS">レジ・POS</text>
+          </g></g>
 
-      <div class="stn">
-        <ul class="side l"><li><b data-en="Dashboard">ダッシュボード</b></li><li><b data-en="LINE confirmation">LINEの確認</b></li></ul>
-        <div class="hub"><span data-en="It comes back">返ってくる</span></div>
-        <ul class="side r"><li><b data-en="Calendar">カレンダー</b></li><li><b data-en="Your website">お店のサイト</b></li></ul>
-      </div>
+          <g transform="translate(294,112)"><g class="nd">
+            <rect class="box" x="-26" y="-26" width="52" height="52" rx="16"/>
+            <g class="ico" transform="translate(-12,-12)">
+              <path d="M2.6 5.6h18.8v13H2.6z"/><path d="M2.6 6.8l9.4 6.4 9.4-6.4"/>
+            </g>
+            <text class="lbl" y="47" data-en="Email">メール</text>
+          </g></g>
+
+          <g transform="translate(402,112)"><g class="nd">
+            <rect class="box" x="-26" y="-26" width="52" height="52" rx="16"/>
+            <g class="ico" transform="translate(-12,-12)">
+              <path d="M3.4 5.6h17.2v15.2H3.4z"/><path d="M3.4 10.2h17.2M8 3v4.6M16 3v4.6"/>
+            </g>
+            <text class="lbl" y="47" data-en="Bookings">予約</text>
+          </g></g>
+        </g>
+
+        <!-- 2 ── AI -->
+        <g class="st">
+          <g transform="translate(240,336)"><g class="core">
+            <circle class="ring r1" r="62"/>
+            <circle class="ring r2" r="76"/>
+            <circle class="disc" r="48"/>
+            <text class="cap" y="8">AI</text>
+          </g></g>
+        </g>
+
+        <!-- 3 ── しまわれる -->
+        <g class="st">
+          <path class="wire-p" id="w5" marker-end="url(#ah)" d="M240,386 C240,470 128,506 92,598"/>
+          <path class="wire-p" id="w6" marker-end="url(#ah)" d="M240,386 L240,598"/>
+          <path class="wire-p" id="w7" marker-end="url(#ah)" d="M240,386 C240,470 352,506 388,598"/>
+
+          <g transform="translate(92,626)"><g class="nd">
+            <rect class="box" x="-26" y="-26" width="52" height="52" rx="16"/>
+            <g class="ico" transform="translate(-12,-12)">
+              <path d="M3.2 4h17.6v16H3.2z"/><path d="M3.2 9.4h17.6M3.2 14.8h17.6M9.4 4v16"/>
+            </g>
+            <text class="lbl" y="47" data-en="Spreadsheets">スプレッドシート</text>
+          </g></g>
+
+          <g transform="translate(240,626)"><g class="nd">
+            <rect class="box" x="-26" y="-26" width="52" height="52" rx="16"/>
+            <g class="ico" transform="translate(-12,-12)">
+              <path d="M2.6 6.6a2 2 0 012-2h5.2l2.2 2.6h8.4a2 2 0 012 2v8.2a2 2 0 01-2 2H4.6a2 2 0 01-2-2z"/>
+            </g>
+            <text class="lbl" y="47" data-en="Drive folders">ドライブ</text>
+          </g></g>
+
+          <g transform="translate(388,626)"><g class="nd">
+            <rect class="box" x="-26" y="-26" width="52" height="52" rx="16"/>
+            <g class="ico" transform="translate(-12,-12)">
+              <path d="M12 2.8l7.6 3v6.4c0 4.6-3.2 7.8-7.6 9.2-4.4-1.4-7.6-4.6-7.6-9.2V5.8z"/>
+              <path d="M8.6 11.8l2.6 2.6 4.6-5"/>
+            </g>
+            <text class="lbl" y="47" data-en="Backup">バックアップ</text>
+          </g></g>
+        </g>
+
+        <!-- 4 ── 返ってくる -->
+        <g class="st">
+          <path class="wire-p" id="w8"  d="M92,654 C92,706 180,716 236,740"/>
+          <path class="wire-p" id="w9"  d="M240,654 L240,740"/>
+          <path class="wire-p" id="w10" d="M388,654 C388,706 300,716 244,740"/>
+          <path class="wire-p" id="w11" marker-end="url(#ah)" d="M240,748 C240,790 130,792 84,813"/>
+          <path class="wire-p" id="w12" marker-end="url(#ah)" d="M240,748 C240,786 206,794 188,813"/>
+          <path class="wire-p" id="w13" marker-end="url(#ah)" d="M240,748 C240,786 274,794 292,813"/>
+          <path class="wire-p" id="w14" marker-end="url(#ah)" d="M240,748 C240,790 350,792 396,813"/>
+
+          <g transform="translate(84,838)"><g class="nd">
+            <rect class="box" x="-23" y="-23" width="46" height="46" rx="14"/>
+            <g class="ico" transform="translate(-11,-11)" stroke-width="2.2">
+              <path d="M2.6 19.4h18.8"/><path d="M6 19.4v-7M11 19.4V4.8M16 19.4v-4.8M20.4 19.4V8.8"/>
+            </g>
+            <text class="lbl" y="42" data-en="Dashboard">ダッシュボード</text>
+          </g></g>
+
+          <g transform="translate(188,838)"><g class="nd">
+            <rect class="box" x="-23" y="-23" width="46" height="46" rx="14"/>
+            <g class="ico" transform="translate(-11,-11)">
+              <path d="M2.8 5.4A2.4 2.4 0 015.2 3h11.6a2.4 2.4 0 012.4 2.4v7.2a2.4 2.4 0 01-2.4 2.4H8.8L4.8 19v-3.6h-.4A2.4 2.4 0 012.8 12.6z"/>
+              <path d="M7.6 9.2l2.4 2.4 4.4-4.6"/>
+            </g>
+            <text class="lbl" y="64" data-en="LINE reply">LINEの確認</text>
+          </g></g>
+
+          <g transform="translate(292,838)"><g class="nd">
+            <rect class="box" x="-23" y="-23" width="46" height="46" rx="14"/>
+            <g class="ico" transform="translate(-11,-11)">
+              <path d="M3.4 5.6h17.2v15.2H3.4z"/><path d="M3.4 10.2h17.2M8 3v4.6M16 3v4.6"/>
+              <path d="M8.4 15.2l2.4 2.4 4.8-5"/>
+            </g>
+            <text class="lbl" y="42" data-en="Calendar">カレンダー</text>
+          </g></g>
+
+          <g transform="translate(396,838)"><g class="nd">
+            <rect class="box" x="-23" y="-23" width="46" height="46" rx="14"/>
+            <g class="ico" transform="translate(-11,-11)">
+              <path d="M2.8 4.6h18.4v14.8H2.8z"/><path d="M2.8 9h18.4"/>
+              <path d="M6 6.8h.02M8.8 6.8h.02"/><path d="M7 13h10M7 16h6"/>
+            </g>
+            <text class="lbl" y="64" data-en="Your website">お店のサイト</text>
+          </g></g>
+
+          <!-- and back into the AI, every month -->
+          <path class="wire-p loop" id="w15" marker-end="url(#ah)"
+                d="M240,902 C118,944 24,850 24,660 C24,486 100,350 186,330"/>
+        </g>
+
+        <!-- particles riding the wires -->
+        <g class="pks">
+          <circle class="pk" r="2.7"><animateMotion dur="2.6s" repeatCount="indefinite"><mpath href="#w1" xlink:href="#w1"/></animateMotion></circle>
+          <circle class="pk" r="2.7"><animateMotion dur="3.1s" begin="0.5s" repeatCount="indefinite"><mpath href="#w2" xlink:href="#w2"/></animateMotion></circle>
+          <circle class="pk" r="2.7"><animateMotion dur="2.9s" begin="1.1s" repeatCount="indefinite"><mpath href="#w3" xlink:href="#w3"/></animateMotion></circle>
+          <circle class="pk" r="2.7"><animateMotion dur="3.4s" begin="0.8s" repeatCount="indefinite"><mpath href="#w4" xlink:href="#w4"/></animateMotion></circle>
+          <circle class="pk" r="2.7"><animateMotion dur="3.2s" begin="0.2s" repeatCount="indefinite"><mpath href="#w5" xlink:href="#w5"/></animateMotion></circle>
+          <circle class="pk" r="2.7"><animateMotion dur="2.7s" begin="0.9s" repeatCount="indefinite"><mpath href="#w6" xlink:href="#w6"/></animateMotion></circle>
+          <circle class="pk" r="2.7"><animateMotion dur="3.3s" begin="1.4s" repeatCount="indefinite"><mpath href="#w7" xlink:href="#w7"/></animateMotion></circle>
+          <circle class="pk" r="2.4"><animateMotion dur="2.8s" begin="0.3s" repeatCount="indefinite"><mpath href="#w11" xlink:href="#w11"/></animateMotion></circle>
+          <circle class="pk" r="2.4"><animateMotion dur="2.5s" begin="1.0s" repeatCount="indefinite"><mpath href="#w12" xlink:href="#w12"/></animateMotion></circle>
+          <circle class="pk" r="2.4"><animateMotion dur="2.9s" begin="1.6s" repeatCount="indefinite"><mpath href="#w13" xlink:href="#w13"/></animateMotion></circle>
+          <circle class="pk" r="2.4"><animateMotion dur="3.0s" begin="0.6s" repeatCount="indefinite"><mpath href="#w14" xlink:href="#w14"/></animateMotion></circle>
+          <circle class="pk" r="2.2" opacity=".65"><animateMotion dur="10s" repeatCount="indefinite"><mpath href="#w15" xlink:href="#w15"/></animateMotion></circle>
+        </g>
+      </svg>
+
+      <div class="cap-chip" data-cap="1" style="top:1.6%"><em>1</em><span data-en="It comes in">入ってくる</span></div>
+      <div class="cap-chip" data-cap="2" style="top:42.6%"><em>2</em><span data-en="The AI reads and decides">AIが読んで、判断する</span></div>
+      <div class="cap-chip" data-cap="3" style="top:53.8%"><em>3</em><span data-en="It is stored">しまわれる</span></div>
+      <div class="cap-chip" data-cap="4" style="top:74.6%"><em>4</em><span data-en="It comes back">返ってくる</span></div>
     </div>
 
     <div class="back rv">
@@ -1306,40 +1445,47 @@ const prog = document.querySelector('#prog i');
 const hd = document.getElementById('hd');
 const bottom = document.getElementById('bottom');
 const closing = document.getElementById('contact');
-const wire = document.querySelector('.wire');
-const spine = document.querySelector('.spine');
-const stns = [...document.querySelectorAll('.stn')];
+const dia = document.querySelector('.dia');
+const stages = [...document.querySelectorAll('.st')];
+const caps = [...document.querySelectorAll('.cap-chip')];
 let cur = 0, target = 0, raf = null;
 
-/* the falling packets need to know how far to fall */
-const sizeSpine = () => {
-  if (spine) spine.style.setProperty('--spineH', spine.getBoundingClientRect().height + 'px');
-};
-sizeSpine();
-/* recompute on resize and after load: fonts and images settle late, and a
-   browser restoring a scroll position lands mid-diagram without a scroll
-   event ever firing */
-addEventListener('resize', () => { sizeSpine(); drawWire(); }, { passive: true });
-addEventListener('load', () => { sizeSpine(); drawWire(); });
+/* Each wire needs its own length before it can be drawn stroke-first. */
+function measureWires() {
+  document.querySelectorAll('.wire-p').forEach(pth => {
+    const len = Math.ceil(pth.getTotalLength());
+    pth.style.setProperty('--len', len);
+    if (pth.classList.contains('loop')) pth.style.strokeDashoffset = len;
+  });
+}
+measureWires();
+/* fonts and layout settle after first paint, and a restored scroll position
+   can land mid-diagram without any scroll event ever firing */
+addEventListener('load', () => { measureWires(); drawDiagram(); });
+addEventListener('resize', () => { measureWires(); drawDiagram(); }, { passive: true });
 
-/* draw the spine from scroll position, and switch each station on as the
-   drawn line reaches it — the diagram builds itself while you read */
-function drawWire() {
-  if (!wire) return;
-  if (reduce || isStatic) {                 // show it complete, don't animate it
-    wire.style.setProperty('--p', '1');
-    stns.forEach(s => s.classList.add('on'));
+/* SMIL ignores prefers-reduced-motion, so pull the particles off the wires */
+if (reduce) document.querySelectorAll('animateMotion').forEach(a => a.remove());
+
+/* Light each stage as the scroll reaches it: the wires draw, the node pops
+   in, then its label lands a beat later. */
+function drawDiagram() {
+  if (!dia) return;
+  if (reduce || isStatic) {
+    stages.forEach(s => s.classList.add('on'));
+    caps.forEach(c => c.classList.add('lit'));
     return;
   }
-  const r = wire.getBoundingClientRect();
-  const start = innerHeight * 0.82;                 // begins as it enters
-  const p = Math.min(Math.max((start - r.top) / (r.height * 0.92), 0), 1);
-  wire.style.setProperty('--p', p.toFixed(4));
-  const head = r.top + r.height * p;                // where the line has got to
-  for (const s of stns) {
-    const b = s.getBoundingClientRect();
-    s.classList.toggle('on', head >= b.top + b.height * 0.35);
-  }
+  const r = dia.getBoundingClientRect();
+  const trigger = innerHeight * 0.78;
+  stages.forEach(g => {
+    const b = g.getBoundingClientRect();
+    g.classList.toggle('on', b.top < trigger);
+  });
+  caps.forEach(c => {
+    const b = c.getBoundingClientRect();
+    c.classList.toggle('lit', b.top < trigger);
+  });
 }
 
 const frame = () => {
@@ -1350,11 +1496,11 @@ const frame = () => {
   }
   const max = document.documentElement.scrollHeight - innerHeight;
   prog.style.transform = `scaleX(${Math.min(cur / Math.max(max, 1), 1)})`;
-  drawWire();
+  drawDiagram();
   if (Math.abs(target - cur) > 0.1) raf = requestAnimationFrame(frame);
   else raf = null;
 };
-drawWire();   // correct state on load, not only after the first scroll
+drawDiagram();   // correct state on load, not only after the first scroll
 addEventListener('scroll', () => {
   target = scrollY;
   hd.classList.toggle('stuck', scrollY > 40);
