@@ -250,11 +250,15 @@ html[data-lang="en"] .disp { word-break:normal; }
 
 /* ---------- section shell ---------- */
 main { position:relative; z-index:var(--z-content); }
+/* Only the hero and the two drenched statements get a full screen. Every
+   other section is sized by its content: a landing page that takes 17
+   screens to read is a landing page nobody finishes. */
 section {
-  min-height:100svh; position:relative; display:flex; flex-direction:column;
-  justify-content:center; padding:16vh clamp(20px,7vw,88px);
+  position:relative; display:flex; flex-direction:column; justify-content:center;
+  padding:clamp(64px,9vh,104px) clamp(20px,7vw,88px);
 }
-section.short { min-height:0; padding:0; }
+section.full { min-height:100svh; }
+section.short { padding:0; }
 .wrap { width:100%; max-width:1180px; margin:0 auto; }
 
 /* jade drench — statement moments. Solid (no backdrop-filter: a
@@ -365,8 +369,8 @@ section.drench > * { position:relative; z-index:1; }
 
 /* ---------- ruled rows ---------- */
 .rows { border-top:1px solid var(--hair); margin-top:clamp(34px,5vh,56px); max-width:900px; }
-.row { display:grid; grid-template-columns:minmax(9em,15em) 1fr; gap:clamp(18px,3.4vw,52px);
-  padding:clamp(20px,3vh,30px) 0; border-bottom:1px solid var(--hair); align-items:start; }
+.row { display:grid; grid-template-columns:minmax(9em,15em) 1fr; gap:clamp(14px,3.4vw,52px);
+  padding:clamp(15px,2.2vh,24px) 0; border-bottom:1px solid var(--hair); align-items:start; }
 .row dt { font-weight:900; font-size:clamp(16px,1.5vw,20px); letter-spacing:-.01em; }
 .row dd { font-size:clamp(14px,1.25vw,16.5px); color:var(--sub); line-height:1.95; text-wrap:pretty; }
 .row .fig { font-size:clamp(17px,1.7vw,23px); color:var(--jade); font-weight:900; letter-spacing:-.02em; }
@@ -487,15 +491,15 @@ section.drench > * { position:relative; z-index:1; }
    Not cards: a heading column and an item column, so the eye reads
    "this area of work → these concrete things" without a grid of boxes. */
 .grp { display:grid; grid-template-columns:minmax(11em,17em) 1fr;
-  gap:clamp(16px,3vw,48px); padding:clamp(26px,4vh,40px) 0;
+  gap:clamp(12px,3vw,48px); padding:clamp(18px,2.6vh,28px) 0;
   border-bottom:1px solid var(--hair); align-items:start; }
 .grp:first-of-type { border-top:1px solid var(--hair); }
 .grp h3 { font-size:clamp(18px,1.7vw,24px); font-weight:900; letter-spacing:-.015em; }
 .grp .why { margin-top:10px; font-size:clamp(12.5px,1.1vw,14.5px); color:var(--faint); line-height:1.85; }
-.grp ul { list-style:none; display:grid; grid-template-columns:repeat(auto-fit,minmax(255px,1fr));
-  gap:10px clamp(16px,2.4vw,34px); }
-.grp li { position:relative; padding-left:26px; font-size:clamp(13.5px,1.2vw,16px);
-  line-height:1.8; color:var(--ink); }
+.grp ul { list-style:none; display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:7px clamp(16px,2.4vw,34px); }
+.grp li { position:relative; padding-left:24px; font-size:clamp(13.5px,1.2vw,15.5px);
+  line-height:1.65; color:var(--ink); }
 .grp li::before { content:""; position:absolute; left:2px; top:.62em; width:10px; height:6px;
   border-left:2px solid var(--jade); border-bottom:2px solid var(--jade);
   transform:rotate(-45deg); }
@@ -505,7 +509,103 @@ section.drench > * { position:relative; z-index:1; }
 .grp li span:not(.u) { display:block; color:var(--faint); font-size:.85em;
   line-height:1.7; margin-top:2px; }
 
-/* ---------- how it connects (infographic) ----------
+/* ---------- the wire: vertical scroll-drawn system diagram ----------
+   A spine down the middle that literally draws itself as you scroll
+   (--p is written from the scroll loop). Tools sit either side and snap
+   in with their connector lines when the spine reaches them, and packets
+   fall continuously down the line so the system always looks alive. */
+.wire { position:relative; margin-top:clamp(30px,4.5vh,48px); padding:8px 0 4px; }
+.spine { position:absolute; top:0; bottom:0; left:50%; width:2px; margin-left:-1px;
+  background:var(--hair); overflow:hidden; border-radius:2px; }
+.spine .fill { position:absolute; inset:0; transform-origin:50% 0;
+  transform:scaleY(var(--p,0));
+  background:linear-gradient(180deg, var(--jade), #7ce8ac 55%, var(--jade)); }
+.spine i { position:absolute; left:-2px; width:6px; height:6px; border-radius:100px;
+  background:#dfffee; box-shadow:0 0 10px var(--jade); animation:fall 3.4s linear infinite; }
+.spine i:nth-child(3){ animation-delay:1.1s } .spine i:nth-child(4){ animation-delay:2.3s }
+@keyframes fall { from{ transform:translate3d(0,-20px,0); opacity:0 }
+  12%{ opacity:1 } 88%{ opacity:1 }
+  to  { transform:translate3d(0,var(--spineH,900px),0); opacity:0 } }
+
+.stn { position:relative; display:grid; grid-template-columns:1fr auto 1fr;
+  align-items:center; gap:0 clamp(10px,1.6vw,20px);
+  padding:clamp(12px,2vh,20px) 0; }
+.stn .side { display:flex; flex-direction:column; gap:9px; }
+.stn .side li { display:flex; align-items:center; list-style:none; }
+.stn .side b { flex:none; font-weight:700; font-size:clamp(11.5px,1.05vw,14px);
+  color:var(--sub); border:1px solid var(--hair-2); background:rgba(255,255,255,.03);
+  border-radius:100px; padding:7px 13px; white-space:nowrap;
+  transition:color .5s var(--eo), border-color .5s var(--eo), background .5s var(--eo); }
+/* the connector: a line that grows out of the spine toward the chip.
+   Drawn by default; only `.js` collapses it, so a no-JS or print render
+   still shows a complete, connected diagram. */
+/* fixed-length leaders, not flex:1 — a growing line shoves every chip out
+   to the window edge and the diagram stops reading as connected */
+.stn .side li::after, .stn .side li::before {
+  content:""; flex:0 0 clamp(18px,5vw,76px); height:1px; background:var(--hair-2);
+  transition:transform .7s var(--eo); }
+.stn .r li { justify-content:flex-start; }
+.js .stn .side li::after, .js .stn .side li::before { transform:scaleX(0); }
+.stn .l li { justify-content:flex-end; }
+.stn .l li::after  { margin-left:9px;  transform-origin:100% 50%; }
+.stn .l li::before { display:none; }
+.stn .r li::before { margin-right:9px; transform-origin:0 50%; }
+.stn .r li::after  { display:none; }
+.stn.on .side li::after, .stn.on .side li::before { transform:scaleX(1); }
+.stn.on .side b { color:var(--ink); border-color:rgba(15,203,136,.45); background:rgba(15,203,136,.07); }
+.stn.on .side li:nth-child(2) b, .stn.on .side li:nth-child(2)::after,
+.stn.on .side li:nth-child(2)::before { transition-delay:.1s }
+.stn.on .side li:nth-child(3) b, .stn.on .side li:nth-child(3)::after,
+.stn.on .side li:nth-child(3)::before { transition-delay:.2s }
+
+.hub { position:relative; z-index:2; text-align:center; background:var(--bg);
+  border:1px solid var(--hair-2); border-radius:100px; padding:11px 20px;
+  min-width:clamp(120px,13vw,168px);
+  transition:border-color .6s var(--eo), box-shadow .6s var(--eo), transform .6s var(--eo); }
+.hub span { font-weight:900; font-size:clamp(13px,1.25vw,16.5px); letter-spacing:-.01em; }
+.stn.on .hub { border-color:var(--jade); transform:scale(1.04);
+  box-shadow:0 0 0 5px rgba(15,203,136,.09); }
+/* the AI station: rings that keep turning, so the centre reads as the brain */
+.hub.ai { padding:18px 24px; border-color:rgba(15,203,136,.5); }
+.hub.ai::before, .hub.ai::after { content:""; position:absolute; inset:-9px;
+  border-radius:100px; border:1px dashed rgba(15,203,136,.4); animation:spin 14s linear infinite; }
+.hub.ai::after { inset:-17px; border-style:dotted; border-color:rgba(15,203,136,.22);
+  animation-duration:22s; animation-direction:reverse; }
+@keyframes spin { to { transform:rotate(360deg); } }
+.stn.on .hub.ai { box-shadow:0 0 0 6px rgba(15,203,136,.1), 0 0 34px rgba(15,203,136,.22); }
+
+/* the loop back up the side */
+.back { position:relative; display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+  margin-top:clamp(14px,2vh,22px); padding:clamp(14px,2vh,20px) clamp(16px,2.2vw,24px);
+  border:1px dashed rgba(15,203,136,.4); border-radius:14px; }
+.back p { font-size:clamp(12.5px,1.1vw,15px); color:var(--sub); line-height:1.75; }
+.back b { color:var(--jade); font-weight:900; }
+.back svg { flex:none; animation:spin 9s linear infinite; }
+
+/* result strip — replaces the old comparison table */
+.gains { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+  gap:clamp(12px,2vw,26px); margin-top:clamp(26px,4vh,40px);
+  border-top:1px solid var(--hair); padding-top:clamp(20px,3vh,28px); }
+.gains div { display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
+.gains .was { font-size:clamp(12px,1.1vw,14px); color:var(--faint);
+  text-decoration:line-through; text-decoration-color:rgba(255,255,255,.25); }
+.gains .now { font-size:clamp(17px,1.8vw,24px); font-weight:900; color:var(--jade); letter-spacing:-.02em; }
+.gains p { flex-basis:100%; font-size:clamp(11.5px,1vw,13px); color:var(--faint); }
+
+@media (max-width:760px){
+  .spine { left:9px; }
+  .stn { grid-template-columns:1fr; padding-left:34px; gap:8px; }
+  .stn .side { gap:8px; }
+  /* one column: every chip hangs off the left-hand spine by a short
+     leader, so nothing drifts to the far edge of the screen */
+  .stn .l li, .stn .r li { justify-content:flex-start; flex-direction:row; }
+  .stn .l li::after { display:none; }
+  .stn .l li::before, .stn .r li::before { display:block; content:"";
+    flex:0 0 17px; margin:0 9px 0 0; transform-origin:0 50%; }
+  .hub { justify-self:start; }
+}
+
+/* ---------- how it connects (old, unused) ----------
    A real sequence, so it is numbered and railed. Pulses travel the rail
    to show direction; the loop underneath shows it feeding back. */
 .map { position:relative; margin-top:clamp(36px,5.5vh,60px); }
@@ -568,7 +668,7 @@ section.drench > * { position:relative; z-index:1; }
 .pt { width:100%; border-collapse:collapse; }
 .pt th { text-align:left; font-size:clamp(11px,.95vw,13px); color:var(--faint); font-weight:700;
   padding:22px clamp(14px,2vw,26px) 14px; border-bottom:1px solid var(--hair); }
-.pt td { padding:clamp(20px,2.8vh,28px) clamp(14px,2vw,26px); border-bottom:1px solid var(--hair);
+.pt td { padding:clamp(15px,2.1vh,22px) clamp(14px,2vw,26px); border-bottom:1px solid var(--hair);
   vertical-align:baseline; }
 .pt tr:last-child td { border-bottom:none; }
 .pt tbody tr { transition:background .35s var(--eo); }
@@ -743,7 +843,7 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
 <main id="main">
 
 <!-- 1 ── HERO ─────────────────────────────────────────────── -->
-<section id="hero">
+<section class="full" id="hero">
   <div class="wrap">
     <h1 class="disp h-hero">
       <span class="mask"><span data-en="Just send it.">送るだけ。</span></span>
@@ -813,27 +913,65 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
   </div>
 </section>
 
-<!-- 5 ── 流れ ─────────────────────────────────────────────── -->
-<section id="flow">
+
+<!-- 4 ── つながり図（スクロールで描かれる）────────────────── -->
+<section id="wire">
   <div class="wrap">
-    <h2 class="h-fact rv" data-en="Sent at &lt;span class='tnum'&gt;22:14&lt;/span&gt;. Finished by &lt;span class='tnum'&gt;22:15&lt;/span&gt;."><span class="tnum">22:14</span>に送信。<span class="tnum">22:15</span>には、終わっている。</h2>
-    <div class="tl">
-      <div class="st rv d1"><p class="t tnum">22:14:05</p><p data-en="Closing up. A staff member posts the usual sales report in the LINE group.">閉店作業。スタッフがいつもの売上報告を、LINEグループに貼ります。</p></div>
-      <div class="st rv d2"><p class="t tnum">22:14:06</p><p data-en="The AI reads it the moment it arrives, checking the date, the day and the totals against each other.">AIが受信と同時に読み取り。日付・曜日・合計の整合を、その場で検証。</p></div>
-      <div class="st rv d3"><p class="t tnum">22:14:38</p><p data-en="It writes the row into the sales sheet, then reads that row back and reconciles it to the yen.">売上表へ自動で記入。書き込んだ行を読み戻し、1円単位で照合します。</p></div>
-      <div class="st rv d4"><p class="t tnum">22:15:02</p><p data-en="A “✓ recorded” goes back to the group. The owner receives a fuller summary privately.">グループへ「✓ 入力済み」。オーナーには詳しいまとめが個別に届きます。</p></div>
+    <h2 class="h-fact rv" data-en="How it all connects.">どうつながるのか。</h2>
+    <p class="lede rv d1" style="margin-top:clamp(14px,2vh,22px)"
+       data-en="Scroll, and the line draws itself. What your shop already produces goes in at the top, and comes back out at the bottom in a form you can use.">
+      スクロールすると、線が引かれていきます。お店がいつも通りに動いて生まれるものが上から入り、
+      使える形になって下から出てきます。</p>
+
+    <div class="wire">
+      <div class="spine" aria-hidden="true"><span class="fill"></span><i></i><i></i><i></i></div>
+
+      <div class="stn">
+        <ul class="side l"><li><b data-en="The LINE report">LINEの報告</b></li><li><b data-en="Register / POS">レジ・POS</b></li><li><b data-en="Receipts">領収書</b></li></ul>
+        <div class="hub"><span data-en="It comes in">入ってくる</span></div>
+        <ul class="side r"><li><b data-en="Email">メール</b></li><li><b data-en="Bookings">予約</b></li><li><b data-en="Photos">写真</b></li></ul>
+      </div>
+
+      <div class="stn">
+        <ul class="side l"><li><b data-en="Reads it">読み取る</b></li><li><b data-en="Checks it">確かめる</b></li></ul>
+        <div class="hub ai"><span data-en="The AI decides">AIが判断する</span></div>
+        <ul class="side r"><li><b data-en="Sorts it">仕分ける</b></li><li><b data-en="Stops if it looks wrong">おかしければ止める</b></li></ul>
+      </div>
+
+      <div class="stn">
+        <ul class="side l"><li><b data-en="Spreadsheets">スプレッドシート</b></li><li><b data-en="Drive folders">ドライブのフォルダ</b></li></ul>
+        <div class="hub"><span data-en="It is stored">しまわれる</span></div>
+        <ul class="side r"><li><b data-en="Backup">バックアップ</b></li><li><b data-en="Searchable history">検索できる履歴</b></li></ul>
+      </div>
+
+      <div class="stn">
+        <ul class="side l"><li><b data-en="Dashboard">ダッシュボード</b></li><li><b data-en="LINE confirmation">LINEの確認</b></li></ul>
+        <div class="hub"><span data-en="It comes back">返ってくる</span></div>
+        <ul class="side r"><li><b data-en="Calendar">カレンダー</b></li><li><b data-en="Your website">お店のサイト</b></li></ul>
+      </div>
     </div>
-    <p class="lede rv d5" style="margin-top:clamp(36px,5.5vh,60px); border-top:1px solid var(--hair);
-       padding-top:clamp(24px,3.4vh,34px); max-width:40em"
-       data-en="&lt;strong&gt;Odd numbers never get written.&lt;/strong&gt; A wrong date, a total that doesn’t add up, the same report sent twice: the AI holds it and asks the owner, with the evidence attached. It never guesses its way into your books. Everything runs in the cloud, so there is no PC to keep at the shop.">
-      <strong>おかしい数字は、書きません。</strong>
-      日付の誤り、計算違い、二重報告。AIはそれを自動で保留し、証拠を添えてオーナーに確認します。
-      推測で帳簿を汚すことはありません。すべてクラウドで動くので、店にパソコンを置く必要もありません。
-    </p>
+
+    <div class="back rv">
+      <svg width="26" height="26" viewBox="0 0 30 30" fill="none" aria-hidden="true">
+        <path d="M26 15a11 11 0 11-3.2-7.8" stroke="#0FCB88" stroke-width="2.6" stroke-linecap="round"/>
+        <path d="M27 3v6h-6" stroke="#0FCB88" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <p data-en="&lt;b&gt;And it loops.&lt;/b&gt; Every month the AI reviews its own work and we improve what needs it. The day you buy it is the worst it will ever be.">
+        <b>そして、ここで終わりません。</b>毎月AIは自分の仕事を見直し、こちらは必要な部分に手を入れます。買った日が、いちばん出来の悪い状態です。</p>
+    </div>
+
+    <div class="gains rv">
+      <div><span class="was" data-en="15–30 min a day">毎日15〜30分</span><span class="now" data-en="0 min">0分</span>
+        <p data-en="Time spent retyping">転記の時間</p></div>
+      <div><span class="was" data-en="Next day at best">翌日以降</span><span class="now" data-en="About 1 min">約1分</span>
+        <p data-en="Until you can see the numbers">数字が見えるまで</p></div>
+      <div><span class="was" data-en="Slips through unseen">気づかず残る</span><span class="now" data-en="Stopped and checked">止めて確認</span>
+        <p data-en="Figures that look wrong">おかしな数字</p></div>
+    </div>
   </div>
 </section>
 
-<!-- 6 ── 製品（デバイス）──────────────────────────────────── -->
+<!-- 5 ── 製品（デバイス）──────────────────────────────────── -->
 <section id="phone">
   <div class="wrap stage">
     <div class="float rv-s">
@@ -895,12 +1033,8 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
       <dl class="rows" style="max-width:none">
         <div class="row rv d2"><dt data-en="No refresh button">更新ボタンがない</dt>
           <dd data-en="Sales, covers, yesterday, last month. Open it and it is current. Nothing to press.">売上、客数、昨日、前月比。開けば最新の状態です。操作は要りません。</dd></div>
-        <div class="row rv d3"><dt data-en="Compare with last year">前年と比べられる</dt>
-          <dd data-en="The monthly trend laid over the same month last year. By weekday, by time of day, down to the breakdown of sales.">月ごとの推移を前年の同じ月と重ねて表示。曜日別、時間帯別、売上の内訳まで見えます。</dd></div>
         <div class="row rv d4"><dt data-en="Add what you want to see">見たい数字は、足せる</dt>
           <dd data-en="“I want cost ratio too.” “Split out lunch.” The screen can be edited and extended later. You are not locked into a fixed template.">「原価率も見たい」「ランチだけ分けたい」。画面は後からでも編集・追加できます。決まった型に合わせる必要はありません。</dd></div>
-        <div class="row rv d5"><dt data-en="Matched to your shop">店の見た目に合わせる</dt>
-          <dd data-en="Your colours, your logo. It looks like a screen built for your shop alone, because it is.">色もロゴも、お店の世界観のまま。自分の店のためだけに作られた画面になります。</dd></div>
         <div class="row rv d6"><dt data-en="The data is yours">データは店のもの</dt>
           <dd data-en="Everything is stored in your own Google account. If the contract ever ends, the numbers stay with you.">保存先はお店ご自身のGoogleアカウント。契約が終わっても、数字はお店に残ります。</dd></div>
       </dl>
@@ -920,134 +1054,48 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
     </p>
 
     <div class="grp rv-l d2">
-      <div><h3 data-en="Building the base">土台をつくる</h3>
-        <p class="why" data-en="The plumbing every business needs but nobody sells you: a proper address, a proper place to keep things.">
-          どの商売にも要るのに、誰も売ってくれない部分です。会社としての住所と、物を置く場所をつくります。</p></div>
+      <div><h3 data-en="Building the base">土台をつくる</h3></div>
       <ul>
-        <li data-en="Google Workspace set up&lt;span&gt;A company email address, shared calendar and storage. Your business stops running on a personal address.&lt;/span&gt;">Google Workspaceの設置<span>会社のメールアドレス、共有カレンダー、保存場所。個人のアドレスで商売を回す状態を終わりにします。</span></li>
-        <li data-en="Google Business Profile, properly done&lt;span&gt;The card that appears when someone searches your shop or finds it on Maps. Photos, hours, menu, replies to reviews.&lt;/span&gt;">Googleビジネスプロフィールの整備<span>お客様が検索したときや、マップで見つけたときに出てくる情報のことです。写真、営業時間、メニュー、口コミへの返信まで整えます。</span></li>
-        <li data-en="Spreadsheet templates&lt;span&gt;Where sales, costs and stock land and stay. Built to your shop, not a generic form.&lt;/span&gt;">スプレッドシートの雛形<span>売上、費用、在庫が入って残っていく表です。汎用の型ではなく、お店に合わせてつくります。</span></li>
-        <li data-en="A folder structure on Google Drive&lt;span&gt;So anyone can find last March’s invoice in seconds, without asking you.&lt;/span&gt;">Googleドライブのフォルダ整理<span>「去年3月の請求書」を、誰かに聞かなくても数秒で出せる並びにします。</span></li>
-        <li data-en="Backups of everything&lt;span&gt;Every file copied to Drive automatically. Nothing you do can be lost for good.&lt;/span&gt;">すべてのバックアップ<span>作ったものは自動でドライブに控えが残ります。取り返しがつかなくなることがありません。</span></li>
+        <li data-en="Google Workspace set up&lt;span&gt;A company email address, shared calendar and storage.&lt;/span&gt;">Google Workspaceの設置<span>会社のメールと共有カレンダー、保存場所を用意します。</span></li>
+        <li data-en="Google Business Profile, properly done&lt;span&gt;What customers see when they search you or find you on Maps. Photos, hours, replies to reviews.&lt;/span&gt;">Googleビジネスプロフィールの整備<span>検索やマップで見つけたお客様に出る情報を整えます。写真、営業時間、口コミへの返信まで。</span></li>
+        <li data-en="Spreadsheet templates&lt;span&gt;Sales, costs and stock, in sheets shaped to your shop.&lt;/span&gt;">スプレッドシートの雛形<span>売上・費用・在庫が入って残る表を、お店に合わせて。</span></li>
+        <li data-en="A folder structure on Google Drive&lt;span&gt;Last March’s invoice, found in seconds.&lt;/span&gt;">Googleドライブのフォルダ整理<span>「去年3月の請求書」が、数秒で出る並びに。</span></li>
+        <li data-en="Backups of everything&lt;span&gt;Copied to Drive automatically. Nothing is lost for good.&lt;/span&gt;">すべてのバックアップ<span>自動で控えが残り、取り返しがつかなくなりません。</span></li>
       </ul>
     </div>
 
     <div class="grp rv-l d3">
-      <div><h3 data-en="Putting the AI inside">AIを店に住まわせる</h3>
-        <p class="why" data-en="Not a chatbot you have to visit. It sits where the work happens and knows your shop.">
-          こちらから会いに行くチャットではありません。仕事が起きている場所に置き、お店のことを分かった状態にします。</p></div>
+      <div><h3 data-en="Putting the AI inside">AIを店に住まわせる</h3></div>
       <ul>
-        <li data-en="A working environment for the AI&lt;span&gt;Its own place to run, with a copy kept locally so it keeps working and stays yours.&lt;/span&gt;">AIの作業場所を用意<span>AIが動くための専用の場所です。手元にも控えを置くので、止まりにくく、お店のものとして残ります。</span></li>
-        <li data-en="Connecting your tools to it&lt;span&gt;Register, payments, mail, sheets, calendar. The AI reads across all of them instead of one.&lt;/span&gt;">ツールとAIをつなぐ<span>レジ、決済、メール、表、カレンダー。ひとつずつではなく、まとめて見られる状態にします。</span></li>
-        <li data-en="Workflows and routines&lt;span&gt;Your procedures taught to the AI as jobs it can repeat, at the times they need doing.&lt;/span&gt;">手順を仕事として登録<span>お店のやり方をAIの仕事として覚えさせ、必要な時間に自動で回します。</span></li>
-        <li data-en="Calendar linked up&lt;span&gt;Deliveries, shifts, payment dates, bookings. Written in and updated without anyone typing.&lt;/span&gt;">カレンダー連携<span>納品、シフト、支払日、予約。誰も入力しなくても書き込まれ、更新されます。</span></li>
-        <li data-en="A communication system if you need one&lt;span&gt;Slack or similar, set up for you, with the AI sitting in it and answering.&lt;/span&gt;">連絡の仕組み（必要な場合）<span>Slackのような連絡の場を用意し、そこにAIを入れて、聞けば答える状態にします。</span></li>
-        <li data-en="Conversation read as context&lt;span&gt;What was said and what the numbers did, held together, so tasks and schedules follow on their own.&lt;/span&gt;">会話と数字をまとめて文脈に<span>「何を話したか」と「数字がどう動いたか」を一緒に持たせます。だから、やることや予定が自然に出てきます。</span></li>
+        <li data-en="A working environment for the AI&lt;span&gt;Its own place to run, with a local copy kept.&lt;/span&gt;">AIの作業場所を用意<span>AIが動く専用の場所。手元にも控えを置きます。</span></li>
+        <li data-en="Connecting your tools to it&lt;span&gt;Register, payments, mail, sheets and calendar, read together.&lt;/span&gt;">ツールとAIをつなぐ<span>レジ、決済、メール、表、カレンダーをまとめて見ます。</span></li>
+        <li data-en="Workflows and routines&lt;span&gt;Your procedures, repeated on schedule.&lt;/span&gt;">手順を仕事として登録<span>お店のやり方を覚えさせ、必要な時間に自動で回します。</span></li>
+        <li data-en="Calendar linked up&lt;span&gt;Deliveries, shifts, payment dates and bookings, written in.&lt;/span&gt;">カレンダー連携<span>納品、シフト、支払日、予約が自動で入ります。</span></li>
+        <li data-en="A communication system if you need one&lt;span&gt;Slack or similar, set up with the AI sitting in it.&lt;/span&gt;">連絡の仕組み（必要な場合）<span>Slackのような連絡の場を用意し、AIを常駐させます。</span></li>
+        <li data-en="Conversation read as context&lt;span&gt;What was said and what the numbers did, held together.&lt;/span&gt;">会話と数字をまとめて文脈に<span>話した内容と数字を一緒に持たせ、やることが自然に出ます。</span></li>
       </ul>
     </div>
 
     <div class="grp rv-l d4">
-      <div><h3 data-en="Making it look like you">お店の顔をつくる</h3>
-        <p class="why" data-en="Everything you and your customers look at is designed for your brand, not dropped from a template.">
-          お店の方とお客様が目にするものは、テンプレートではなく、お店のブランドに合わせて設計します。</p></div>
+      <div><h3 data-en="Making it look like you">お店の顔をつくる</h3></div>
       <ul>
-        <li data-en="Dashboards&lt;span&gt;The one screen that answers “how are we doing?” without you asking anyone.&lt;/span&gt;">ダッシュボード<span>「今どうなっている？」に、誰にも聞かずに答えが出る画面のことです。</span></li>
-        <li data-en="Websites and landing pages&lt;span&gt;Built to bring customers in, not just to exist.&lt;/span&gt;">Webサイト・ランディングページ<span>「あるだけ」ではなく、お客様が来るための作りにします。</span></li>
-        <li data-en="Your colours, type and design elements&lt;span&gt;Applied across the screens, the site and the documents so everything looks like one shop.&lt;/span&gt;">色・書体・デザイン要素<span>画面もサイトも書類も、同じお店のものに見えるよう統一します。</span></li>
+        <li data-en="Dashboards&lt;span&gt;The one screen that answers “how are we doing?”&lt;/span&gt;">ダッシュボード<span>「今どうなっている？」に答えが出る画面です。</span></li>
+        <li data-en="Websites and landing pages&lt;span&gt;Built to bring customers in, not just exist.&lt;/span&gt;">Webサイト・ランディングページ<span>あるだけでなく、お客様が来るための作りに。</span></li>
+        <li data-en="Your colours, type and design elements&lt;span&gt;Screens, site and documents, all clearly one shop.&lt;/span&gt;">色・書体・デザイン要素<span>画面もサイトも書類も、同じお店のものに見せます。</span></li>
       </ul>
     </div>
 
     <div class="grp rv-l d5">
-      <div><h3 data-en="Keeping it alive">毎月、良くしていく</h3>
-        <p class="why" data-en="Software rots when nobody tends it. This is the part most vendors leave to you.">
-          誰も手を入れないと、仕組みは古びます。多くの業者がお店任せにする部分を、こちらが持ちます。</p></div>
+      <div><h3 data-en="Keeping it alive">毎月、良くしていく</h3></div>
       <ul>
-        <li data-en="Monthly improvement and maintenance&lt;span&gt;Faults, changes to your formats, the yearly rollover, new requests.&lt;/span&gt;">毎月の改善と保守<span>不具合、書式の変化、年次の切り替え、新しいご要望に対応します。</span></li>
-        <li data-en="The AI learns your business&lt;span&gt;It reviews its own work and gets sharper about your shop over time, instead of staying the same.&lt;/span&gt;">AIがお店に詳しくなっていく<span>自分の仕事を見直し、お店のことに詳しくなっていきます。買った日のまま止まりません。</span></li>
+        <li data-en="Monthly improvement and maintenance&lt;span&gt;Faults, format changes, the yearly rollover, new requests.&lt;/span&gt;">毎月の改善と保守<span>不具合、書式の変化、年次の切り替え、新しいご要望。</span></li>
+        <li data-en="The AI learns your business&lt;span&gt;It reviews its own work instead of standing still.&lt;/span&gt;">AIがお店に詳しくなっていく<span>自分の仕事を見直し、買った日のまま止まりません。</span></li>
       </ul>
     </div>
   </div>
 </section>
 
-<!-- 6.7 ── つながり方（インフォグラフィック）───────────────── -->
-<section id="map">
-  <div class="wrap">
-    <h2 class="h-fact rv" data-en="How it all connects.">どうつながるのか。</h2>
-    <p class="lede rv d1" style="margin-top:clamp(18px,2.6vh,26px)"
-       data-en="Four steps. Everything on this page sits somewhere in this picture.">
-      流れは4つです。このページに出てくるものは、すべてこの図のどこかに入ります。</p>
 
-    <div class="map">
-      <div class="rail" aria-hidden="true"><span></span><span></span><span></span></div>
-      <ol class="steps">
-        <li class="step rv d2">
-          <p class="no" data-en="STEP 1">STEP 1</p>
-          <h3 data-en="It comes in">入ってくる</h3>
-          <p data-en="Whatever your shop already produces. Nobody changes how they work.">お店がいつも通りに動くだけで生まれるもの。やり方は変えません。</p>
-          <ul><li data-en="The LINE report">LINEの報告</li><li data-en="Register / POS">レジ・POS</li><li data-en="Receipts">領収書</li><li data-en="Email">メール</li><li data-en="Bookings">予約</li></ul>
-        </li>
-        <li class="step rv d3">
-          <p class="no" data-en="STEP 2">STEP 2</p>
-          <h3 data-en="The AI reads it">AIが読む</h3>
-          <p data-en="It checks before it writes. Anything that does not add up is held, not guessed.">書く前に確かめます。合わないものは、推測せずに保留します。</p>
-          <ul><li data-en="Reads">読み取り</li><li data-en="Checks">検証</li><li data-en="Sorts">仕分け</li><li data-en="Holds the doubtful">保留</li></ul>
-        </li>
-        <li class="step rv d4">
-          <p class="no" data-en="STEP 3">STEP 3</p>
-          <h3 data-en="It is stored">しまわれる</h3>
-          <p data-en="Into your own Google account, in a place with a name, with a backup behind it.">お店ご自身のGoogleアカウントの中へ。名前のついた場所に入り、控えも残ります。</p>
-          <ul><li data-en="Spreadsheets">スプレッドシート</li><li data-en="Drive folders">ドライブのフォルダ</li><li data-en="Backup">バックアップ</li></ul>
-        </li>
-        <li class="step rv d5">
-          <p class="no" data-en="STEP 4">STEP 4</p>
-          <h3 data-en="It comes back to you">返ってくる</h3>
-          <p data-en="As a screen you can read in seconds, and as messages that arrive without being asked for.">数秒で読める画面と、こちらから聞かなくても届く連絡として返ります。</p>
-          <ul><li data-en="Dashboard">ダッシュボード</li><li data-en="LINE confirmation">LINEの確認</li><li data-en="Calendar">カレンダー</li><li data-en="Tasks">やること</li><li data-en="Website">サイト</li></ul>
-        </li>
-      </ol>
-
-      <div class="loop rv d6">
-        <svg width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden="true">
-          <path d="M26 15a11 11 0 11-3.2-7.8" stroke="#0FCB88" stroke-width="2.4" stroke-linecap="round"/>
-          <path d="M27 3v6h-6" stroke="#0FCB88" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <p data-en="&lt;b&gt;And it loops.&lt;/b&gt; Every month the AI reviews its own work, and we improve the parts that need it. The setup you buy is the worst it will ever be.">
-          <b>そして、ここで終わりません。</b>
-          毎月、AIは自分の仕事を見直し、こちらは必要な部分に手を入れます。買った時点が、いちばん出来の悪い状態です。</p>
-      </div>
-    </div>
-
-    <p class="note rv" style="margin-top:clamp(26px,4vh,38px)"
-       data-en="None of this is quick. Each shop is assembled part by part, connected, and tested against real days of trading. We use AI heavily to do that work, which is the only reason a build at this depth is affordable at these prices. What you receive is not a template with your name on it.">
-      簡単な作業ではありません。1店舗ごとに部品を組み、つなぎ、実際の営業日で試して直します。
-      その作業自体をAIを使って進めているので、この深さの構築がこの価格で成り立ちます。
-      お渡しするのは、名前を入れ替えただけのテンプレートではありません。
-    </p>
-  </div>
-</section>
-
-<!-- 7 ── 比較 ─────────────────────────────────────────────── -->
-<section id="compare">
-  <div class="wrap">
-    <h2 class="h-fact rv" style="max-width:15em" data-en="Nobody types it in,&lt;br&gt;so there is nothing to get wrong.">人が入力しないので、<br>そもそも間違いが起きません。</h2>
-    <table class="cmp">
-      <caption class="rv d1" data-en="Handling one day of sales reporting">1日あたりの売上報告を処理する場合の比較</caption>
-      <thead><tr><th scope="col" data-en="">項目</th><th scope="col" data-en="By hand, until now">これまでの手作業</th><th scope="col" class="us" data-en="MISELOG">ミセログ</th></tr></thead>
-      <tbody>
-        <tr class="rv-l d2"><td data-en="Time spent retyping">転記にかかる時間</td><td class="was" data-en="15–30 min, every day">毎日 15〜30分</td><td class="us tnum" data-en="0 min">0分</td></tr>
-        <tr class="rv-l d3"><td data-en="Typos">打ち間違い</td><td class="was" data-en="Stay in, unnoticed">気づかないまま残る</td><td class="us" data-en="Read back, reconciled to the yen">読み戻して1円単位で照合</td></tr>
-        <tr class="rv-l d4"><td data-en="Time until you can see it">数字が見えるまで</td><td class="was" data-en="Next day at the earliest">翌日以降</td><td class="us" data-en="About 1 minute">約1分</td></tr>
-        <tr class="rv-l d5"><td data-en="Figures that look wrong">おかしな数字</td><td class="was" data-en="Go straight into the books">そのまま帳簿へ</td><td class="us" data-en="Held automatically, then confirmed">自動で保留し、確認</td></tr>
-        <tr class="rv-l d6"><td data-en="When that person is off">担当者が休んだ日</td><td class="was" data-en="It piles up">溜まる</td><td class="us" data-en="Runs exactly as usual">いつも通り動く</td></tr>
-      </tbody>
-    </table>
-    <p class="lede rv" style="margin-top:clamp(30px,4.5vh,48px)"
-       data-en="The hours that used to vanish into retyping come straight back to the shop.&lt;br&gt;&lt;strong&gt;Automation is the cheapest way there is to buy time back.&lt;/strong&gt;">
-      転記に消えていた時間は、そのままお店に返ります。<br>
-      <strong>自動化は、時間を買い戻すいちばん安い方法です。</strong>
-    </p>
-  </div>
-</section>
 
 <!-- 8 ── 料金 ─────────────────────────────────────────────── -->
 <section id="offer">
@@ -1090,25 +1138,9 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
   </div>
 </section>
 
-<!-- 9 ── 実績 ─────────────────────────────────────────────── -->
-<section id="proof">
-  <div class="wrap">
-    <h2 class="h-fact rv" data-en="Running every day, in a Tokyo venue.">東京の店舗で、毎日動いています。</h2>
-    <dl class="rows">
-      <div class="row rv d1"><dt class="fig" data-en="About 1 minute">送信から約1分</dt>
-        <dd data-en="From a staff member pressing send to the entry being finished. Every row written is read back and reconciled to the yen.">スタッフが送ってから記帳が終わるまで。書き込んだ行は読み戻し、1円単位で照合済みです。</dd></div>
-      <div class="row rv d2"><dt class="fig" data-en="3 years of data">3年分のデータ</dt>
-        <dd data-en="Past trading data is already imported. Searchable in seconds, by date or by event name.">過去の営業データを取り込み済み。日付でも、イベント名でも、すぐに検索できます。</dd></div>
-      <div class="row rv d3"><dt class="fig" data-en="600+ reports, 0 mismatches">600通以上／不一致 0</dt>
-        <dd data-en="The AI’s reading was tested against real report messages. Anything doubtful is held automatically, so the books stay clean.">実際の報告文でAIの読み取りを検証しました。疑わしい数字は自動で保留するので、帳簿は汚れません。</dd></div>
-      <div class="row rv d4"><dt data-en="Built by someone on the floor">現場の人間が作りました</dt>
-        <dd data-en="Designed, sold and operated by someone running food and hospitality venues in Tokyo. Built from the side that knows what closing time actually looks like.">設計も、販売も、運用も、東京で飲食・ホスピタリティの現場を回している人間が担当します。営業終わりの現実を知っている側の設計です。</dd></div>
-    </dl>
-  </div>
-</section>
 
 <!-- 10 ── クロージング（ドレンチ）─────────────────────────── -->
-<section class="drench" id="contact">
+<section class="drench full" id="contact">
   <div class="wrap">
     <h2 class="disp rv-s" style="font-size:clamp(36px,5.4vw,74px)" data-en="Start with 15 minutes.">まずは、15分だけ。</h2>
     <p class="rv d2" style="margin-top:clamp(26px,4vh,44px); font-size:clamp(15.5px,1.5vw,20px);
@@ -1274,7 +1306,41 @@ const prog = document.querySelector('#prog i');
 const hd = document.getElementById('hd');
 const bottom = document.getElementById('bottom');
 const closing = document.getElementById('contact');
+const wire = document.querySelector('.wire');
+const spine = document.querySelector('.spine');
+const stns = [...document.querySelectorAll('.stn')];
 let cur = 0, target = 0, raf = null;
+
+/* the falling packets need to know how far to fall */
+const sizeSpine = () => {
+  if (spine) spine.style.setProperty('--spineH', spine.getBoundingClientRect().height + 'px');
+};
+sizeSpine();
+/* recompute on resize and after load: fonts and images settle late, and a
+   browser restoring a scroll position lands mid-diagram without a scroll
+   event ever firing */
+addEventListener('resize', () => { sizeSpine(); drawWire(); }, { passive: true });
+addEventListener('load', () => { sizeSpine(); drawWire(); });
+
+/* draw the spine from scroll position, and switch each station on as the
+   drawn line reaches it — the diagram builds itself while you read */
+function drawWire() {
+  if (!wire) return;
+  if (reduce || isStatic) {                 // show it complete, don't animate it
+    wire.style.setProperty('--p', '1');
+    stns.forEach(s => s.classList.add('on'));
+    return;
+  }
+  const r = wire.getBoundingClientRect();
+  const start = innerHeight * 0.82;                 // begins as it enters
+  const p = Math.min(Math.max((start - r.top) / (r.height * 0.92), 0), 1);
+  wire.style.setProperty('--p', p.toFixed(4));
+  const head = r.top + r.height * p;                // where the line has got to
+  for (const s of stns) {
+    const b = s.getBoundingClientRect();
+    s.classList.toggle('on', head >= b.top + b.height * 0.35);
+  }
+}
 
 const frame = () => {
   cur += (target - cur) * 0.09;                          // lerp = the smoothness
@@ -1284,9 +1350,11 @@ const frame = () => {
   }
   const max = document.documentElement.scrollHeight - innerHeight;
   prog.style.transform = `scaleX(${Math.min(cur / Math.max(max, 1), 1)})`;
+  drawWire();
   if (Math.abs(target - cur) > 0.1) raf = requestAnimationFrame(frame);
   else raf = null;
 };
+drawWire();   // correct state on load, not only after the first scroll
 addEventListener('scroll', () => {
   target = scrollY;
   hd.classList.toggle('stuck', scrollY > 40);
