@@ -123,7 +123,34 @@ body {
 .mark .n { font-family:var(--mincho); font-weight:700; font-size:19px; letter-spacing:.06em; }
 .mark .k { font-size:10.5px; color:var(--faint); letter-spacing:.14em; font-weight:500; }
 .hd .go { font-size:13.5px; padding:11px 22px; }
+.hd .right { display:flex; align-items:center; gap:14px; }
+
+/* language switch */
+.lang { display:flex; align-items:center; padding:3px; border-radius:100px;
+  border:1px solid var(--hair-2); background:rgba(255,255,255,.04); }
+.lang button {
+  font:inherit; font-size:11.5px; font-weight:900; letter-spacing:.08em; cursor:pointer;
+  padding:7px 13px; border:0; border-radius:100px; background:none; color:var(--faint);
+  transition:color .3s var(--eo), background .3s var(--eo);
+}
+.lang button:hover { color:var(--ink); }
+.lang button[aria-pressed="true"] { background:var(--ink); color:var(--bg); }
 @media (max-width:640px){ .hd .go { display:none; } .mark .k { display:none; } }
+
+/* ---------- Japanese line breaking ----------
+   Japanese must wrap at word/phrase boundaries, never mid-word:
+     BAD  これらのサー / ビスを行って / ます。
+     GOOD これらの / サービスを / 行ってます。
+   auto-phrase is the modern answer but Safari doesn't ship it, and this
+   page is reviewed on an iPhone — so JS segments the text and wraps each
+   unit in an inline-block, which the browser cannot break inside.
+   overflow-wrap is the safety net: a unit too long for its column
+   degrades to a normal break instead of overflowing the layout. */
+.u { display:inline-block; }
+[lang="ja"] { word-break:auto-phrase; overflow-wrap:anywhere; }
+/* English needs none of the JP typographic machinery */
+html[data-lang="en"] body { font-feature-settings:normal; }
+html[data-lang="en"] .disp { word-break:normal; }
 
 /* ---------- scroll progress ---------- */
 #prog { position:fixed; inset:0 0 auto 0; height:2px; z-index:var(--z-prog); pointer-events:none; }
@@ -205,13 +232,17 @@ section.drench > * { position:relative; z-index:1; }
         line-height:1.34; text-wrap:balance; word-break:auto-phrase; }
 /* min sized so 「あとは全部、自動。」 stays on ONE line at 375px */
 .h-hero { font-size:clamp(35px,7.6vw,88px); line-height:1.26; }
-.h-big  { font-size:clamp(31px,4.5vw,60px); }
+/* Mobile floors are set so the longest single JP phrase still fits the
+   column. Too large and the phrase overflows, which forces the browser
+   to break inside a word — the exact break we removed. */
+.h-big  { font-size:clamp(27px,4.5vw,60px); }
 /* factual headings stay gothic — the contrast is the system */
 .h-fact { font-family:var(--goth); font-weight:900; letter-spacing:-.015em;
-          font-size:clamp(26px,3.5vw,46px); line-height:1.4; text-wrap:balance; }
+          font-size:clamp(24px,3.5vw,46px); line-height:1.4; text-wrap:balance; }
 .lede { font-size:clamp(15.5px,1.45vw,20px); color:var(--sub); line-height:2.05;
         max-width:34em; text-wrap:pretty; }
 .lede strong { color:var(--ink); font-weight:700; }
+.disp em { font-style:normal; color:var(--jade); }
 .tnum { font-variant-numeric:tabular-nums; font-feature-settings:"tnum" 1; }
 
 /* ---------- reveals (varied per section, never one uniform entrance) --- */
@@ -501,6 +532,7 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
     border:1px solid var(--hair-2); }
   .pt td { border:none; padding:4px 0; }
   .pt td.n::before { content:attr(data-l) "　"; color:var(--faint); font-weight:700; font-size:12px; }
+  html[data-lang="en"] .pt td.n::before { content:attr(data-dl) "  "; }
   /* comparison → stacked records */
   .cmp, .cmp tbody, .cmp tr, .cmp td { display:block; }
   .cmp thead { display:none; }
@@ -532,9 +564,15 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
 
 <header class="hd" id="hd">
   <a class="mark" href="#hero">
-    <span class="n">ミセログ</span><span class="k">仮称 ／ SHIFT GK</span>
+    <span class="n" data-en="MISELOG">ミセログ</span><span class="k" data-en="working title / SHIFT GK">仮称 ／ SHIFT GK</span>
   </a>
-  <a class="go" href="#contact">15分の説明を予約</a>
+  <div class="right">
+    <div class="lang" role="group" aria-label="Language / 言語">
+      <button type="button" data-set="ja" aria-pressed="true" lang="ja">日本語</button>
+      <button type="button" data-set="en" aria-pressed="false" lang="en">EN</button>
+    </div>
+    <a class="go" href="#contact" data-en="Book a 15-min demo">15分の説明を予約</a>
+  </div>
 </header>
 
 <!-- the sky: light fields + orbit wires + drifting work-objects -->
@@ -582,18 +620,18 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
 <section id="hero">
   <div class="wrap">
     <h1 class="disp h-hero">
-      <span class="mask"><span>送るだけ。</span></span>
-      <span class="mask m2"><span>あとは全部、<span style="color:var(--jade)">自動。</span></span></span>
+      <span class="mask"><span data-en="Just send it.">送るだけ。</span></span>
+      <span class="mask m2"><span data-en="Everything else is &lt;em&gt;automatic.&lt;/em&gt;">あとは全部、<em>自動。</em></span></span>
     </h1>
-    <p class="lede hero-sub rv d3">
+    <p class="lede hero-sub rv d3" data-en="Your staff send the same end-of-day report, in the same LINE chat they always use. The AI reads it, writes it into your books, and updates your dashboard in about a minute.">
       スタッフはいつもの売上報告を、いつものLINEに送るだけ。
       AIがそれを読み取り、約1分で帳簿に記入し、スマホの画面を最新にします。
     </p>
     <div class="btns rv d4">
       <a class="go" href="#contact">
         <svg width="17" height="17" viewBox="0 0 17 17" fill="none" aria-hidden="true"><rect x="1.4" y="3" width="10.6" height="11" rx="2.6" stroke="currentColor" stroke-width="1.8"/><path d="M12 8.5l4-2.6v5.2z" fill="currentColor"/></svg>
-        15分のオンライン説明を予約</a>
-      <a class="ghost" href="#flow">仕組みを見る
+        <span data-en="Book a 15-minute demo">15分のオンライン説明を予約</span></a>
+      <a class="ghost" href="#flow"><span data-en="See how it works">仕組みを見る</span>
         <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 2v9M3 7.5L7 11l4-3.5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
     </div>
   </div>
@@ -603,7 +641,7 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
 <!-- 2 ── 業態マーキー ─────────────────────────────────────── -->
 <section class="short" aria-label="対応している業態">
   <div class="march">
-    <div class="track">
+    <div class="track" data-en="&lt;div class='set'&gt;&lt;span&gt;Restaurants&lt;/span&gt;&lt;i&gt;●&lt;/i&gt;&lt;span&gt;Cafés&lt;/span&gt;&lt;i&gt;●&lt;/i&gt;&lt;span&gt;Bars&lt;/span&gt;&lt;i&gt;●&lt;/i&gt;&lt;span&gt;Izakaya&lt;/span&gt;&lt;i&gt;●&lt;/i&gt;&lt;span&gt;Ramen shops&lt;/span&gt;&lt;i&gt;●&lt;/i&gt;&lt;span&gt;Yakiniku&lt;/span&gt;&lt;i&gt;●&lt;/i&gt;&lt;span&gt;Bakeries&lt;/span&gt;&lt;i&gt;●&lt;/i&gt;&lt;span&gt;Lounges&lt;/span&gt;&lt;i&gt;●&lt;/i&gt;&lt;span&gt;Hotel F&amp;amp;B&lt;/span&gt;&lt;i&gt;●&lt;/i&gt;&lt;span&gt;Food trucks&lt;/span&gt;&lt;i&gt;●&lt;/i&gt;&lt;/div&gt;&lt;div class='set' aria-hidden='true'&gt;&lt;span&gt;Restaurants&lt;/span&gt;&lt;i&gt;●&lt;/i&gt;&lt;span&gt;Cafés&lt;/span&gt;&lt;i&gt;●&lt;/i&gt;&lt;span&gt;Bars&lt;/span&gt;&lt;i&gt;●&lt;/i&gt;&lt;span&gt;Izakaya&lt;/span&gt;&lt;i&gt;●&lt;/i&gt;&lt;span&gt;Ramen shops&lt;/span&gt;&lt;i&gt;●&lt;/i&gt;&lt;span&gt;Yakiniku&lt;/span&gt;&lt;i&gt;●&lt;/i&gt;&lt;span&gt;Bakeries&lt;/span&gt;&lt;i&gt;●&lt;/i&gt;&lt;span&gt;Lounges&lt;/span&gt;&lt;i&gt;●&lt;/i&gt;&lt;span&gt;Hotel F&amp;amp;B&lt;/span&gt;&lt;i&gt;●&lt;/i&gt;&lt;span&gt;Food trucks&lt;/span&gt;&lt;i&gt;●&lt;/i&gt;&lt;/div&gt;">
       <div class="set"><span>レストラン</span><i>●</i><span>カフェ</span><i>●</i><span>バー</span><i>●</i><span>居酒屋</span><i>●</i><span>ラーメン店</span><i>●</i><span>焼肉店</span><i>●</i><span>ベーカリー</span><i>●</i><span>ラウンジ</span><i>●</i><span>ホテル飲食</span><i>●</i><span>キッチンカー</span><i>●</i></div>
       <div class="set" aria-hidden="true"><span>レストラン</span><i>●</i><span>カフェ</span><i>●</i><span>バー</span><i>●</i><span>居酒屋</span><i>●</i><span>ラーメン店</span><i>●</i><span>焼肉店</span><i>●</i><span>ベーカリー</span><i>●</i><span>ラウンジ</span><i>●</i><span>ホテル飲食</span><i>●</i><span>キッチンカー</span><i>●</i></div>
     </div>
@@ -613,17 +651,19 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
 <!-- 3 ── 問題 ─────────────────────────────────────────────── -->
 <section id="problem">
   <div class="wrap">
-    <h2 class="disp h-big rv" style="max-width:16em">数字は毎日生まれている。<br>
+    <h2 class="disp h-big rv" style="max-width:16em"
+        data-en="The numbers already exist.&lt;br&gt;&lt;span style='color:var(--sub)'&gt;They are simply not being used.&lt;/span&gt;">数字は毎日生まれている。<br>
       <span style="color:var(--sub)">活かされていないだけ。</span></h2>
     <dl class="rows">
-      <div class="row rv-l d1"><dt>報告は、もうある</dt>
-        <dd>営業が終われば、売上の報告はLINEやメッセージで毎日届いています。データはずっとそこにありました。</dd></div>
-      <div class="row rv-l d2"><dt>誰かが打ち直す</dt>
-        <dd>翌日、その数字を誰かがExcelへ手で入れ直します。時間が消え、打ち間違いが静かに帳簿へ入り込みます。</dd></div>
-      <div class="row rv-l d3"><dt>経営者に見えない</dt>
-        <dd>「先月はどうだった？」に即答できる店は多くありません。数字はあるのに、見える形になっていないからです。</dd></div>
+      <div class="row rv-l d1"><dt data-en="The report already exists">報告は、もうある</dt>
+        <dd data-en="After close, the sales report already arrives every day by LINE or message. The data has been there the whole time.">営業が終われば、売上の報告はLINEやメッセージで毎日届いています。データはずっとそこにありました。</dd></div>
+      <div class="row rv-l d2"><dt data-en="Someone retypes it">誰かが打ち直す</dt>
+        <dd data-en="The next day, someone copies those numbers into Excel by hand. Time disappears, and typos slip quietly into the books.">翌日、その数字を誰かがExcelへ手で入れ直します。時間が消え、打ち間違いが静かに帳簿へ入り込みます。</dd></div>
+      <div class="row rv-l d3"><dt data-en="The owner cannot see it">経営者に見えない</dt>
+        <dd data-en="Few owners can answer “how was last month?” on the spot. The numbers exist, but not in a form anyone can read.">「先月はどうだった？」に即答できる店は多くありません。数字はあるのに、見える形になっていないからです。</dd></div>
     </dl>
-    <p class="lede rv d4" style="margin-top:clamp(30px,4.5vh,48px)">
+    <p class="lede rv d4" style="margin-top:clamp(30px,4.5vh,48px)"
+       data-en="A new register, training on a new app: a busy floor will accept neither.&lt;br&gt;&lt;strong&gt;That is why “transformation by adding tools” keeps failing at this size of business.&lt;/strong&gt;">
       レジの入れ替えも、新しいアプリの研修も、忙しい現場はまず受け入れません。<br>
       <strong>「新しい道具を入れるDX」が、この規模の店で失敗し続けてきた理由です。</strong>
     </p>
@@ -633,10 +673,12 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
 <!-- 4 ── インサイト（ドレンチ）────────────────────────────── -->
 <section class="drench" id="insight">
   <div class="wrap">
-    <h2 class="disp rv-s" style="font-size:clamp(34px,5.6vw,78px); line-height:1.32">
+    <h2 class="disp rv-s" style="font-size:clamp(34px,5.6vw,78px); line-height:1.32"
+        data-en="Don’t change the habit.&lt;br&gt;Ride it.">
       習慣を変えさせない。<br>習慣に、乗る。</h2>
     <p class="rv d2" style="margin-top:clamp(28px,4.5vh,46px); font-size:clamp(15.5px,1.5vw,21px);
-       line-height:2; max-width:36em; font-weight:700">
+       line-height:2; max-width:36em; font-weight:700"
+       data-en="No training. No new app. No resistance from the floor.&lt;span style='font-weight:400; display:block; margin-top:1em; opacity:.88'&gt;Everyone else asks you to change how you work: new register, new app, new input form. MISELOG asks for nothing, because the AI reads the report your staff already send.&lt;/span&gt;">
       研修ゼロ。新しいアプリ、ゼロ。現場の抵抗も、ゼロ。
       <span style="font-weight:400; display:block; margin-top:1em; opacity:.88">
       他社は「やり方を変えてください」と言います。新しいレジ、新しいアプリ、新しい入力フォーム。
@@ -648,15 +690,16 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
 <!-- 5 ── 流れ ─────────────────────────────────────────────── -->
 <section id="flow">
   <div class="wrap">
-    <h2 class="h-fact rv"><span class="tnum">22:14</span>に送信。<span class="tnum">22:15</span>には、終わっている。</h2>
+    <h2 class="h-fact rv" data-en="Sent at &lt;span class='tnum'&gt;22:14&lt;/span&gt;. Finished by &lt;span class='tnum'&gt;22:15&lt;/span&gt;."><span class="tnum">22:14</span>に送信。<span class="tnum">22:15</span>には、終わっている。</h2>
     <div class="tl">
-      <div class="st rv d1"><p class="t tnum">22:14:05</p><p>閉店作業。スタッフがいつもの売上報告を、LINEグループに貼ります。</p></div>
-      <div class="st rv d2"><p class="t tnum">22:14:06</p><p>AIが受信と同時に読み取り。日付・曜日・合計の整合を、その場で検証。</p></div>
-      <div class="st rv d3"><p class="t tnum">22:14:38</p><p>売上表へ自動で記入。書き込んだ行を読み戻し、1円単位で照合します。</p></div>
-      <div class="st rv d4"><p class="t tnum">22:15:02</p><p>グループへ「✓ 入力済み」。オーナーには詳しいまとめが個別に届きます。</p></div>
+      <div class="st rv d1"><p class="t tnum">22:14:05</p><p data-en="Closing up. A staff member posts the usual sales report in the LINE group.">閉店作業。スタッフがいつもの売上報告を、LINEグループに貼ります。</p></div>
+      <div class="st rv d2"><p class="t tnum">22:14:06</p><p data-en="The AI reads it the moment it arrives, checking the date, the day and the totals against each other.">AIが受信と同時に読み取り。日付・曜日・合計の整合を、その場で検証。</p></div>
+      <div class="st rv d3"><p class="t tnum">22:14:38</p><p data-en="It writes the row into the sales sheet, then reads that row back and reconciles it to the yen.">売上表へ自動で記入。書き込んだ行を読み戻し、1円単位で照合します。</p></div>
+      <div class="st rv d4"><p class="t tnum">22:15:02</p><p data-en="A “✓ recorded” goes back to the group. The owner receives a fuller summary privately.">グループへ「✓ 入力済み」。オーナーには詳しいまとめが個別に届きます。</p></div>
     </div>
     <p class="lede rv d5" style="margin-top:clamp(36px,5.5vh,60px); border-top:1px solid var(--hair);
-       padding-top:clamp(24px,3.4vh,34px); max-width:40em">
+       padding-top:clamp(24px,3.4vh,34px); max-width:40em"
+       data-en="&lt;strong&gt;Odd numbers never get written.&lt;/strong&gt; A wrong date, a total that doesn’t add up, the same report sent twice: the AI holds it and asks the owner, with the evidence attached. It never guesses its way into your books. Everything runs in the cloud, so there is no PC to keep at the shop.">
       <strong>おかしい数字は、書きません。</strong>
       日付の誤り、計算違い、二重報告。AIはそれを自動で保留し、証拠を添えてオーナーに確認します。
       推測で帳簿を汚すことはありません。すべてクラウドで動くので、店にパソコンを置く必要もありません。
@@ -678,16 +721,16 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
             <span class="batt"></span>
           </span></div>
         <div class="top">
-          <p class="d">7月19日（日）<b>昨日の数字、入りました。</b></p>
+          <p class="d" data-en="Sun 19 July&lt;b&gt;Yesterday’s numbers are in.&lt;/b&gt;">7月19日（日）<b>昨日の数字、入りました。</b></p>
           <p class="live"><i></i>LIVE</p>
         </div>
         <div class="card kpi">
-          <p class="k">今月の売上<em>AUTO</em></p>
+          <p class="k" data-en="This month&lt;em&gt;AUTO&lt;/em&gt;">今月の売上<em>AUTO</em></p>
           <p class="v tnum">¥<span data-count="3847200">3,847,200</span></p>
-          <p class="g tnum">▲ 前月の同じ時点より +12.4%</p>
+          <p class="g tnum" data-en="▲ +12.4% vs. same point last month">▲ 前月の同じ時点より +12.4%</p>
         </div>
         <div class="card chartbox">
-          <p class="k"><span>日ごとの推移</span><span class="tnum">30日</span></p>
+          <p class="k" data-en="&lt;span&gt;Daily trend&lt;/span&gt;&lt;span class='tnum'&gt;30 days&lt;/span&gt;"><span>日ごとの推移</span><span class="tnum">30日</span></p>
           <svg class="chart" viewBox="0 0 280 62" width="100%" aria-hidden="true">
             <defs><linearGradient id="gg" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0" stop-color="#0FCB88" stop-opacity=".3"/><stop offset="1" stop-color="#0FCB88" stop-opacity="0"/></linearGradient></defs>
@@ -698,20 +741,20 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
           <div class="wk"><i class="dim" style="height:38%"></i><i class="dim" style="height:52%"></i><i style="height:64%"></i><i class="dim" style="height:44%"></i><i style="height:78%"></i><i style="height:100%"></i><i style="height:88%"></i></div>
         </div>
         <div class="trio">
-          <div class="card"><p class="k">昨日</p><p class="v tnum">¥186,400</p></div>
-          <div class="card"><p class="k">客数</p><p class="v tnum">58<em> 名</em></p></div>
-          <div class="card"><p class="k">客単価</p><p class="v tnum">¥3,214</p></div>
+          <div class="card"><p class="k" data-en="Yesterday">昨日</p><p class="v tnum">¥186,400</p></div>
+          <div class="card"><p class="k" data-en="Covers">客数</p><p class="v tnum">58<em data-en=""> 名</em></p></div>
+          <div class="card"><p class="k" data-en="Per head">客単価</p><p class="v tnum">¥3,214</p></div>
         </div>
         <div class="card ok"><span class="b" aria-hidden="true">✓</span>
-          <p><b class="tnum">22:15</b> 自動入力済み<br>売上表を更新 ／ 1円単位で照合OK</p></div>
+          <p data-en="&lt;b class='tnum'&gt;22:15&lt;/b&gt; recorded automatically&lt;br&gt;Sales sheet updated ／ reconciled to the yen"><b class="tnum">22:15</b> 自動入力済み<br>売上表を更新 ／ 1円単位で照合OK</p></div>
         <div class="card log">
-          <p class="h"><span>最近の記録</span><em>AUTO</em></p>
-          <p class="r"><span>7/18（土）</span><b class="tnum">¥212,300</b><span aria-hidden="true">✓</span></p>
-          <p class="r"><span>7/17（金）</span><b class="tnum">¥198,750</b><span aria-hidden="true">✓</span></p>
-          <p class="r"><span>7/16（木）</span><b class="tnum">¥94,600</b><span aria-hidden="true">✓</span></p>
+          <p class="h" data-en="&lt;span&gt;Recent entries&lt;/span&gt;&lt;em&gt;AUTO&lt;/em&gt;"><span>最近の記録</span><em>AUTO</em></p>
+          <p class="r"><span data-en="Sat 18/7">7/18（土）</span><b class="tnum">¥212,300</b><span aria-hidden="true">✓</span></p>
+          <p class="r"><span data-en="Fri 17/7">7/17（金）</span><b class="tnum">¥198,750</b><span aria-hidden="true">✓</span></p>
+          <p class="r"><span data-en="Thu 16/7">7/16（木）</span><b class="tnum">¥94,600</b><span aria-hidden="true">✓</span></p>
         </div>
-        <p class="find"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><circle cx="5" cy="5" r="4" stroke="#79818c" stroke-width="1.6"/><path d="M8.2 8.2L11 11" stroke="#79818c" stroke-width="1.6" stroke-linecap="round"/></svg>日付やイベント名で、過去を検索</p>
-        <div class="tabs"><b>ホーム</b><span>推移</span><span>検索</span><span>設定</span></div>
+        <p class="find"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><circle cx="5" cy="5" r="4" stroke="#79818c" stroke-width="1.6"/><path d="M8.2 8.2L11 11" stroke="#79818c" stroke-width="1.6" stroke-linecap="round"/></svg><span data-en="Search the past by date or event">日付やイベント名で、過去を検索</span></p>
+        <div class="tabs" data-en="&lt;b&gt;Home&lt;/b&gt;&lt;span&gt;Trend&lt;/span&gt;&lt;span&gt;Search&lt;/span&gt;&lt;span&gt;Settings&lt;/span&gt;"><b>ホーム</b><span>推移</span><span>検索</span><span>設定</span></div>
         <div class="home"></div>
       </div></div>
       <div class="glare"></div>
@@ -719,18 +762,18 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
     </div>
 
     <div>
-      <h2 class="disp h-big rv">開いた瞬間、<br>もう最新。</h2>
+      <h2 class="disp h-big rv" data-en="Open it.&lt;br&gt;It’s already current.">開いた瞬間、<br>もう最新。</h2>
       <dl class="rows" style="max-width:none">
-        <div class="row rv d2"><dt>更新ボタンがない</dt>
-          <dd>売上、客数、昨日、前月比。開けば最新の状態です。操作は要りません。</dd></div>
-        <div class="row rv d3"><dt>前年と比べられる</dt>
-          <dd>月ごとの推移を前年の同じ月と重ねて表示。曜日別、時間帯別、売上の内訳まで見えます。</dd></div>
-        <div class="row rv d4"><dt>見たい数字は、足せる</dt>
-          <dd>「原価率も見たい」「ランチだけ分けたい」。画面は後からでも編集・追加できます。決まった型に合わせる必要はありません。</dd></div>
-        <div class="row rv d5"><dt>店の見た目に合わせる</dt>
-          <dd>色もロゴも、お店の世界観のまま。自分の店のためだけに作られた画面になります。</dd></div>
-        <div class="row rv d6"><dt>データは店のもの</dt>
-          <dd>保存先はお店ご自身のGoogleアカウント。契約が終わっても、数字はお店に残ります。</dd></div>
+        <div class="row rv d2"><dt data-en="No refresh button">更新ボタンがない</dt>
+          <dd data-en="Sales, covers, yesterday, last month. Open it and it is current. Nothing to press.">売上、客数、昨日、前月比。開けば最新の状態です。操作は要りません。</dd></div>
+        <div class="row rv d3"><dt data-en="Compare with last year">前年と比べられる</dt>
+          <dd data-en="The monthly trend laid over the same month last year. By weekday, by time of day, down to the breakdown of sales.">月ごとの推移を前年の同じ月と重ねて表示。曜日別、時間帯別、売上の内訳まで見えます。</dd></div>
+        <div class="row rv d4"><dt data-en="Add what you want to see">見たい数字は、足せる</dt>
+          <dd data-en="“I want cost ratio too.” “Split out lunch.” The screen can be edited and extended later. You are not locked into a fixed template.">「原価率も見たい」「ランチだけ分けたい」。画面は後からでも編集・追加できます。決まった型に合わせる必要はありません。</dd></div>
+        <div class="row rv d5"><dt data-en="Matched to your shop">店の見た目に合わせる</dt>
+          <dd data-en="Your colours, your logo. It looks like a screen built for your shop alone, because it is.">色もロゴも、お店の世界観のまま。自分の店のためだけに作られた画面になります。</dd></div>
+        <div class="row rv d6"><dt data-en="The data is yours">データは店のもの</dt>
+          <dd data-en="Everything is stored in your own Google account. If the contract ever ends, the numbers stay with you.">保存先はお店ご自身のGoogleアカウント。契約が終わっても、数字はお店に残ります。</dd></div>
       </dl>
     </div>
   </div>
@@ -739,19 +782,20 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
 <!-- 7 ── 比較 ─────────────────────────────────────────────── -->
 <section id="compare">
   <div class="wrap">
-    <h2 class="h-fact rv" style="max-width:15em">人が入力しないので、<br>そもそも間違いが起きません。</h2>
+    <h2 class="h-fact rv" style="max-width:15em" data-en="Nobody types it in,&lt;br&gt;so there is nothing to get wrong.">人が入力しないので、<br>そもそも間違いが起きません。</h2>
     <table class="cmp">
-      <caption class="rv d1">1日あたりの売上報告を処理する場合の比較</caption>
-      <thead><tr><th scope="col">項目</th><th scope="col">これまでの手作業</th><th scope="col" class="us">ミセログ</th></tr></thead>
+      <caption class="rv d1" data-en="Handling one day of sales reporting">1日あたりの売上報告を処理する場合の比較</caption>
+      <thead><tr><th scope="col" data-en="">項目</th><th scope="col" data-en="By hand, until now">これまでの手作業</th><th scope="col" class="us" data-en="MISELOG">ミセログ</th></tr></thead>
       <tbody>
-        <tr class="rv-l d2"><td>転記にかかる時間</td><td class="was">毎日 15〜30分</td><td class="us tnum">0分</td></tr>
-        <tr class="rv-l d3"><td>打ち間違い</td><td class="was">気づかないまま残る</td><td class="us">読み戻して1円単位で照合</td></tr>
-        <tr class="rv-l d4"><td>数字が見えるまで</td><td class="was">翌日以降</td><td class="us">約1分</td></tr>
-        <tr class="rv-l d5"><td>おかしな数字</td><td class="was">そのまま帳簿へ</td><td class="us">自動で保留し、確認</td></tr>
-        <tr class="rv-l d6"><td>担当者が休んだ日</td><td class="was">溜まる</td><td class="us">いつも通り動く</td></tr>
+        <tr class="rv-l d2"><td data-en="Time spent retyping">転記にかかる時間</td><td class="was" data-en="15–30 min, every day">毎日 15〜30分</td><td class="us tnum" data-en="0 min">0分</td></tr>
+        <tr class="rv-l d3"><td data-en="Typos">打ち間違い</td><td class="was" data-en="Stay in, unnoticed">気づかないまま残る</td><td class="us" data-en="Read back, reconciled to the yen">読み戻して1円単位で照合</td></tr>
+        <tr class="rv-l d4"><td data-en="Time until you can see it">数字が見えるまで</td><td class="was" data-en="Next day at the earliest">翌日以降</td><td class="us" data-en="About 1 minute">約1分</td></tr>
+        <tr class="rv-l d5"><td data-en="Figures that look wrong">おかしな数字</td><td class="was" data-en="Go straight into the books">そのまま帳簿へ</td><td class="us" data-en="Held automatically, then confirmed">自動で保留し、確認</td></tr>
+        <tr class="rv-l d6"><td data-en="When that person is off">担当者が休んだ日</td><td class="was" data-en="It piles up">溜まる</td><td class="us" data-en="Runs exactly as usual">いつも通り動く</td></tr>
       </tbody>
     </table>
-    <p class="lede rv" style="margin-top:clamp(30px,4.5vh,48px)">
+    <p class="lede rv" style="margin-top:clamp(30px,4.5vh,48px)"
+       data-en="The hours that used to vanish into retyping come straight back to the shop.&lt;br&gt;&lt;strong&gt;Automation is the cheapest way there is to buy time back.&lt;/strong&gt;">
       転記に消えていた時間は、そのままお店に返ります。<br>
       <strong>自動化は、時間を買い戻すいちばん安い方法です。</strong>
     </p>
@@ -761,35 +805,37 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
 <!-- 8 ── 料金 ─────────────────────────────────────────────── -->
 <section id="offer">
   <div class="wrap">
-    <h2 class="disp h-big rv">今日はLINE。<br>明日レジ直結でも、同じ。</h2>
-    <p class="lede rv d1" style="margin-top:clamp(20px,3vh,30px)">
+    <h2 class="disp h-big rv" data-en="LINE today.&lt;br&gt;Straight from the register tomorrow.">今日はLINE。<br>明日レジ直結でも、同じ。</h2>
+    <p class="lede rv d1" style="margin-top:clamp(20px,3vh,30px)"
+       data-en="A LINE report, Square or a POS app, a CSV from the register. Only the intake piece is swapped to suit the shop. Checking, recording, visualising, notifying: that core is identical everywhere, which is what makes it hard to break and easy to fit.">
       LINEの報告、Square・POSアプリ、レジのCSV。入口の部品だけをお店に合わせて差し替えます。
       検証、記帳、見える化、通知。その中身は全店で共通なので、壊れにくく、業態を選びません。
     </p>
     <div class="panel rv-s d2">
       <table class="pt">
-        <thead><tr><th scope="col">プラン</th><th scope="col">導入費</th><th scope="col">月額</th><th scope="col">含まれるもの</th></tr></thead>
+        <thead><tr><th scope="col" data-en="Plan">プラン</th><th scope="col" data-en="Setup">導入費</th><th scope="col" data-en="Monthly">月額</th><th scope="col" data-en="What’s included">含まれるもの</th></tr></thead>
         <tbody>
-          <tr><td class="plan">ゼロから開通</td>
-              <td class="n tnum" data-l="導入費">¥400,000〜¥500,000</td>
-              <td class="n" data-l="月額">—</td>
-              <td class="what">Google環境、売上・費用シート、フォルダ整理、報告テンプレートまで一式を構築</td></tr>
-          <tr class="pick"><td class="plan">スタンダード<span class="tag">おすすめ</span></td>
-              <td class="n tnum" data-l="導入費">¥250,000〜¥350,000</td>
-              <td class="n tnum" data-l="月額">¥30,000</td>
-              <td class="what">自動記帳＋ダッシュボード＋保守一式（不具合対応、書式変化への追従、年次更新、保留の確認）</td></tr>
-          <tr><td class="plan">顧問プラン</td>
-              <td class="n" data-l="導入費">スタンダードと同じ</td>
-              <td class="n tnum" data-l="月額">¥45,000〜¥50,000</td>
-              <td class="what">スタンダードに加えて、月次のご相談と改修リクエスト（上限あり）</td></tr>
-          <tr><td class="plan">ライト</td>
-              <td class="n tnum" data-l="導入費">¥100,000〜¥150,000</td>
-              <td class="n tnum" data-l="月額">¥10,000〜¥15,000</td>
-              <td class="what">自動記帳とLINEでの確認のみ（小規模のお店向け）</td></tr>
+          <tr><td class="plan" data-en="Full setup">ゼロから開通</td>
+              <td class="n tnum" data-l="導入費" data-dl="Setup">¥400,000〜¥500,000</td>
+              <td class="n" data-l="月額" data-dl="Monthly">—</td>
+              <td class="what" data-en="The Google environment, sales and cost sheets, folder structure and report templates, all built from scratch.">Google環境、売上・費用シート、フォルダ整理、報告テンプレートまで一式を構築</td></tr>
+          <tr class="pick"><td class="plan" data-en="Standard&lt;span class='tag'&gt;Recommended&lt;/span&gt;">スタンダード<span class="tag">おすすめ</span></td>
+              <td class="n tnum" data-l="導入費" data-dl="Setup">¥250,000〜¥350,000</td>
+              <td class="n tnum" data-l="月額" data-dl="Monthly">¥30,000</td>
+              <td class="what" data-en="Automated bookkeeping, dashboard and full maintenance: faults, changes to your report format, the yearly rollover, and chasing anything held for review.">自動記帳＋ダッシュボード＋保守一式（不具合対応、書式変化への追従、年次更新、保留の確認）</td></tr>
+          <tr><td class="plan" data-en="Retainer">顧問プラン</td>
+              <td class="n" data-l="導入費" data-dl="Setup" data-en="Same as Standard">スタンダードと同じ</td>
+              <td class="n tnum" data-l="月額" data-dl="Monthly">¥45,000〜¥50,000</td>
+              <td class="what" data-en="Everything in Standard, plus a monthly review and change requests (capped).">スタンダードに加えて、月次のご相談と改修リクエスト（上限あり）</td></tr>
+          <tr><td class="plan" data-en="Light">ライト</td>
+              <td class="n tnum" data-l="導入費" data-dl="Setup">¥100,000〜¥150,000</td>
+              <td class="n tnum" data-l="月額" data-dl="Monthly">¥10,000〜¥15,000</td>
+              <td class="what" data-en="Automated bookkeeping and the LINE confirmation only. For smaller shops.">自動記帳とLINEでの確認のみ（小規模のお店向け）</td></tr>
         </tbody>
       </table>
     </div>
-    <p class="note rv d3">
+    <p class="note rv d3"
+       data-en="For reference: restaurant POS software alone runs about ¥10,000 a month, and custom development typically starts at ¥500,000 plus ¥30,000 a month to maintain. &lt;b&gt;MISELOG includes the person who runs it, at that same price.&lt;/b&gt; For the monthly cost of a single part-time shift, the numbers are simply ready every morning.">
       参考：飲食店向けPOSはソフトのみで月額 約¥10,000、受託開発なら¥500,000〜に保守 ¥30,000/月が一般的です。
       <b>ミセログはその価格帯に「運用する人」まで含みます。</b>
       アルバイト1シフト分の月額で、毎朝、数字が揃っている状態を買えます。
@@ -800,16 +846,16 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
 <!-- 9 ── 実績 ─────────────────────────────────────────────── -->
 <section id="proof">
   <div class="wrap">
-    <h2 class="h-fact rv">東京の店舗で、毎日動いています。</h2>
+    <h2 class="h-fact rv" data-en="Running every day, in a Tokyo venue.">東京の店舗で、毎日動いています。</h2>
     <dl class="rows">
-      <div class="row rv d1"><dt class="fig">送信から約1分</dt>
-        <dd>スタッフが送ってから記帳が終わるまで。書き込んだ行は読み戻し、1円単位で照合済みです。</dd></div>
-      <div class="row rv d2"><dt class="fig">3年分のデータ</dt>
-        <dd>過去の営業データを取り込み済み。日付でも、イベント名でも、すぐに検索できます。</dd></div>
-      <div class="row rv d3"><dt class="fig">600通以上／不一致 0</dt>
-        <dd>実際の報告文でAIの読み取りを検証しました。疑わしい数字は自動で保留するので、帳簿は汚れません。</dd></div>
-      <div class="row rv d4"><dt>現場の人間が作りました</dt>
-        <dd>設計も、販売も、運用も、東京で飲食・ホスピタリティの現場を回している人間が担当します。営業終わりの現実を知っている側の設計です。</dd></div>
+      <div class="row rv d1"><dt class="fig" data-en="About 1 minute">送信から約1分</dt>
+        <dd data-en="From a staff member pressing send to the entry being finished. Every row written is read back and reconciled to the yen.">スタッフが送ってから記帳が終わるまで。書き込んだ行は読み戻し、1円単位で照合済みです。</dd></div>
+      <div class="row rv d2"><dt class="fig" data-en="3 years of data">3年分のデータ</dt>
+        <dd data-en="Past trading data is already imported. Searchable in seconds, by date or by event name.">過去の営業データを取り込み済み。日付でも、イベント名でも、すぐに検索できます。</dd></div>
+      <div class="row rv d3"><dt class="fig" data-en="600+ reports, 0 mismatches">600通以上／不一致 0</dt>
+        <dd data-en="The AI’s reading was tested against real report messages. Anything doubtful is held automatically, so the books stay clean.">実際の報告文でAIの読み取りを検証しました。疑わしい数字は自動で保留するので、帳簿は汚れません。</dd></div>
+      <div class="row rv d4"><dt data-en="Built by someone on the floor">現場の人間が作りました</dt>
+        <dd data-en="Designed, sold and operated by someone running food and hospitality venues in Tokyo. Built from the side that knows what closing time actually looks like.">設計も、販売も、運用も、東京で飲食・ホスピタリティの現場を回している人間が担当します。営業終わりの現実を知っている側の設計です。</dd></div>
     </dl>
   </div>
 </section>
@@ -817,9 +863,10 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
 <!-- 10 ── クロージング（ドレンチ）─────────────────────────── -->
 <section class="drench" id="contact">
   <div class="wrap">
-    <h2 class="disp rv-s" style="font-size:clamp(36px,5.4vw,74px)">まずは、15分だけ。</h2>
+    <h2 class="disp rv-s" style="font-size:clamp(36px,5.4vw,74px)" data-en="Start with 15 minutes.">まずは、15分だけ。</h2>
     <p class="rv d2" style="margin-top:clamp(26px,4vh,44px); font-size:clamp(15.5px,1.5vw,20px);
-       line-height:2; max-width:38em; font-weight:700">
+       line-height:2; max-width:38em; font-weight:700"
+       data-en="We share a screen on Zoom and show you the real thing working. There is nothing for you to prepare.&lt;span style='font-weight:400; display:block; margin-top:1em; opacity:.88'&gt;We handle the whole setup. All we ask of the shop is permission to connect the account, and that your staff keep sending the report exactly as they do now.&lt;/span&gt;">
       Zoomで画面をお見せしながら、実際の動きをご説明します。ご用意いただくものはありません。
       <span style="font-weight:400; display:block; margin-top:1em; opacity:.88">
       導入の作業はすべてこちらで行います。お店にお願いするのは、アカウントの連携を許可していただくことと、
@@ -828,12 +875,12 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
     <div class="btns rv d3">
       <a class="go go-dark" href="#contact">
         <svg width="17" height="17" viewBox="0 0 17 17" fill="none" aria-hidden="true"><rect x="1.4" y="3" width="10.6" height="11" rx="2.6" stroke="currentColor" stroke-width="1.8"/><path d="M12 8.5l4-2.6v5.2z" fill="currentColor"/></svg>
-        オンライン説明を予約する（15分・無料）</a>
+        <span data-en="Book the demo (15 min, free)">オンライン説明を予約する（15分・無料）</span></a>
     </div>
     <dl class="contact rv d4">
-      <div><dt>お問い合わせ</dt><dd>準備中</dd></div>
-      <div><dt>運営</dt><dd>SHIFT GK（東京）</dd></div>
-      <div><dt>対応エリア</dt><dd>全国／オンライン</dd></div>
+      <div><dt data-en="Contact">お問い合わせ</dt><dd data-en="Coming soon">準備中</dd></div>
+      <div><dt data-en="Operated by">運営</dt><dd data-en="SHIFT GK (Tokyo)">SHIFT GK（東京）</dd></div>
+      <div><dt data-en="Coverage">対応エリア</dt><dd data-en="Nationwide / online">全国／オンライン</dd></div>
     </dl>
   </div>
 </section>
@@ -843,12 +890,12 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
 <div class="bottom" id="bottom">
   <a class="go" href="#contact">
     <svg width="16" height="16" viewBox="0 0 17 17" fill="none" aria-hidden="true"><rect x="1.4" y="3" width="10.6" height="11" rx="2.6" stroke="currentColor" stroke-width="1.8"/><path d="M12 8.5l4-2.6v5.2z" fill="currentColor"/></svg>
-    15分の説明を予約（無料）</a>
+    <span data-en="Book a free 15-min demo">15分の説明を予約（無料）</span></a>
 </div>
 
 <footer>
-  <p>ミセログ（仮称）／ SHIFT GK</p>
-  <p>いつもの報告を、そのまま経営数字に。</p>
+  <p data-en="MISELOG (working title) / SHIFT GK">ミセログ（仮称）／ SHIFT GK</p>
+  <p data-en="The report you already send, turned into the numbers you need.">いつもの報告を、そのまま経営数字に。</p>
 </footer>
 
 <script>
@@ -859,6 +906,91 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const isStatic = location.search.includes('static');
 if (!isStatic) document.documentElement.classList.add('js');
+
+/* ── Japanese line breaking ───────────────────────────────────
+   Japanese must wrap at word/phrase boundaries, never mid-word:
+     BAD  これらのサー / ビスを行って / ます。
+     GOOD これらの / サービスを / 行ってます。
+   Intl.Segmenter finds the word boundaries (it ships in Safari, which
+   `word-break:auto-phrase` still does not), and each unit goes into an
+   inline-block the browser is unable to break inside. Particles and
+   punctuation are pulled onto the preceding word so the units land as
+   文節 rather than bare dictionary words. */
+/* Any run of kana is a particle or an inflection tail, so it belongs to the
+   word in front of it. Do NOT cap this by length: capping is what splits
+   ありました into ありま／した, which is the exact break we're preventing. */
+const KANA     = /^[ぁ-んー]+$/;
+const TRAILING = /^[、。，．・！？…〜ー」』）】〉》］｝：；:;\/]/;
+/* prev ends with an opener or a currency mark, so the next piece belongs
+   to it: 「+運用する, ¥+10,000, 30,000/+月 */
+const OPENING  = /[「『（【〈《［｛¥￥＄$€£\/]$/;
+/* a lone kanji after a kanji or a number is a suffix or a counter
+   (原価+率, 売上+表, 1+円) and must not be stranded on its own line */
+const SUFFIX   = /^[一-鿿]$/;
+const STEM     = /[一-鿿0-9０-９]$/;
+/* katakana must NEVER be cut: the segmenter doesn't know invented words,
+   and left alone it splits ミセログ into ミセ／ログ and would do the same
+   to サービス. Any katakana run rejoins the katakana (or number) before it. */
+const KATA     = /^[ァ-ヶーヴ・]+$/;
+const KATA_END = /[ァ-ヶーヴ・0-9０-９]$/;
+const segmenter = ('Segmenter' in Intl) ? new Intl.Segmenter('ja', { granularity: 'word' }) : null;
+
+function phrase(root) {
+  if (!segmenter) return;
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  const nodes = [];
+  for (let n; (n = walker.nextNode()); ) {
+    if (n.nodeValue.trim() && !n.parentElement.closest('.u,.march,[data-nophrase]')) nodes.push(n);
+  }
+  for (const node of nodes) {
+    const units = [];
+    for (const { segment } of segmenter.segment(node.nodeValue)) {
+      const prev = units[units.length - 1];
+      // glue on: particles/inflection, closing punctuation, or after an opening bracket
+      const glue = prev && (TRAILING.test(segment) || OPENING.test(prev) || KANA.test(segment) ||
+                            (SUFFIX.test(segment) && STEM.test(prev)) ||
+                            (KATA.test(segment) && KATA_END.test(prev)));
+      if (glue) units[units.length - 1] = prev + segment;
+      else units.push(segment);
+    }
+    const frag = document.createDocumentFragment();
+    for (const u of units) {
+      if (!u.trim()) { frag.append(u); continue; }        // keep real spaces breakable
+      const s = document.createElement('span');
+      s.className = 'u';
+      s.textContent = u;
+      frag.append(s);
+    }
+    node.replaceWith(frag);
+  }
+}
+
+/* ── language ─────────────────────────────────────────────────
+   Japanese is the source of truth in the markup; English lives in
+   data-en. Original JA is captured BEFORE any phrase-wrapping so
+   switching back restores clean text and re-segments it. */
+const i18n = [...document.querySelectorAll('[data-en]')];
+i18n.forEach(el => { el.dataset.ja = el.innerHTML; });
+
+function setLang(lang) {
+  const doc = document.documentElement;
+  doc.lang = lang;
+  doc.dataset.lang = lang;
+  i18n.forEach(el => { el.innerHTML = lang === 'en' ? el.dataset.en : el.dataset.ja; });
+  document.querySelectorAll('.lang button').forEach(b =>
+    b.setAttribute('aria-pressed', String(b.dataset.set === lang)));
+  if (lang === 'ja') { phrase(document.querySelector('main')); phrase(document.querySelector('footer')); }
+  try { localStorage.setItem('miselog-lang', lang); } catch (e) {}
+}
+
+let saved = null;
+try { saved = localStorage.getItem('miselog-lang'); } catch (e) {}
+/* Japanese is the default for everyone: this is sold into Japan, and a
+   predictable landing state beats locale-guessing. A remembered choice
+   wins, so switching to EN sticks on the next visit. */
+setLang(saved === 'en' ? 'en' : 'ja');
+document.querySelectorAll('.lang button').forEach(b =>
+  b.addEventListener('click', () => setLang(b.dataset.set)));
 
 const only = new URLSearchParams(location.search).get('only');
 if (only) document.querySelectorAll('main > section').forEach(s => {
