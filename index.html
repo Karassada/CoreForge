@@ -276,20 +276,21 @@ section.full { min-height:100svh; }
 section.short { padding:0; }
 .wrap { width:100%; max-width:1180px; margin:0 auto; }
 
-/* jade drench — statement moments. Solid (no backdrop-filter: a
-   full-viewport blur is the single most expensive thing a phone can
-   be asked to do on scroll). Its own slow light-sweep keeps motion
-   continuous while the object-sky is deliberately covered. */
+/* Statement bands. NOT solid green slabs: a tinted, transparent field
+   the drifting sky still shows through, edged with hairlines so it reads
+   as a deliberate band rather than a painted block. */
 section.drench {
-  z-index:var(--z-drench); color:var(--jade-ink);
-  background:linear-gradient(148deg, #12d891 0%, #0FCB88 42%, #06a56d 100%);
-  overflow:hidden;
+  z-index:var(--z-drench); color:var(--ink); overflow:hidden;
+  background:
+    linear-gradient(152deg, rgba(15,203,136,.17) 0%, rgba(6,165,109,.05) 48%, rgba(15,203,136,.13) 100%);
+  border-block:1px solid rgba(15,203,136,.26);
 }
 section.drench::after {
   content:""; position:absolute; inset:-40%; pointer-events:none;
-  background:radial-gradient(42% 42% at 50% 50%, rgba(255,255,255,.16), transparent 62%);
+  background:radial-gradient(40% 40% at 50% 50%, rgba(15,203,136,.16), transparent 64%);
   animation:sweep 19s ease-in-out infinite alternate;
 }
+section.drench .disp em { color:var(--jade); font-style:normal; }
 @keyframes sweep { from{transform:translate3d(-18%,-12%,0)} to{transform:translate3d(20%,14%,0)} }
 section.drench > * { position:relative; z-index:1; }
 
@@ -356,8 +357,6 @@ section.drench > * { position:relative; z-index:1; }
 }
 .ghost:hover { background:rgba(255,255,255,.06); border-color:rgba(255,255,255,.32); transform:translateY(-2px); }
 .ghost:active { transform:scale(.98); }
-.go-dark { background:#05221a; color:#d6ffee; box-shadow:0 8px 22px -8px rgba(0,0,0,.45); }
-.go-dark:hover { background:#073024; }
 .btns { display:flex; gap:14px; flex-wrap:wrap; align-items:center; margin-top:clamp(30px,4.5vh,48px); }
 
 /* ---------- hero ---------- */
@@ -386,7 +385,8 @@ section.drench > * { position:relative; z-index:1; }
 .rows { border-top:1px solid var(--hair); margin-top:clamp(34px,5vh,56px); max-width:900px; }
 .row { display:grid; grid-template-columns:minmax(9em,15em) 1fr; gap:clamp(14px,3.4vw,52px);
   padding:clamp(15px,2.2vh,24px) 0; border-bottom:1px solid var(--hair); align-items:start; }
-.row dt { font-weight:900; font-size:clamp(16px,1.5vw,20px); letter-spacing:-.01em; }
+.row dt { font-weight:900; font-size:clamp(16px,1.5vw,20px); letter-spacing:-.01em;
+  color:var(--jade); }
 .row dd { font-size:clamp(14px,1.25vw,16.5px); color:var(--sub); line-height:1.95; text-wrap:pretty; }
 .row .fig { font-size:clamp(17px,1.7vw,23px); color:var(--jade); font-weight:900; letter-spacing:-.02em; }
 
@@ -509,15 +509,22 @@ section.drench > * { position:relative; z-index:1; }
   gap:clamp(12px,3vw,48px); padding:clamp(18px,2.6vh,28px) 0;
   border-bottom:1px solid var(--hair); align-items:start; }
 .grp:first-of-type { border-top:1px solid var(--hair); }
-.grp h3 { font-size:clamp(18px,1.7vw,24px); font-weight:900; letter-spacing:-.015em; }
+.grp h3 { font-size:clamp(18px,1.7vw,24px); font-weight:900; letter-spacing:-.015em;
+  color:var(--jade); }
 .grp .why { margin-top:10px; font-size:clamp(12.5px,1.1vw,14.5px); color:var(--faint); line-height:1.85; }
 .grp ul { list-style:none; display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
   gap:7px clamp(16px,2.4vw,34px); }
-.grp li { position:relative; padding-left:24px; font-size:clamp(13.5px,1.2vw,15.5px);
-  line-height:1.65; color:var(--ink); }
-.grp li::before { content:""; position:absolute; left:2px; top:.62em; width:10px; height:6px;
+/* each item in its own quiet panel — a wall of ticked lines is hard to
+   read; a bounded block per idea is not */
+.grp li { position:relative; padding:13px 15px 13px 38px; border-radius:14px;
+  font-size:clamp(13.5px,1.2vw,15.5px); line-height:1.65; color:var(--ink);
+  background:rgba(255,255,255,.028); border:1px solid var(--hair);
+  transition:background .4s var(--eo), border-color .4s var(--eo); }
+.grp li:hover { background:rgba(15,203,136,.05); border-color:rgba(15,203,136,.3); }
+.grp li::before { content:""; position:absolute; left:15px; top:1.15em; width:10px; height:6px;
   border-left:2px solid var(--jade); border-bottom:2px solid var(--jade);
   transform:rotate(-45deg); }
+.grp li b { display:block; font-weight:900; color:var(--jade); letter-spacing:-.01em; }
 /* :not(.u) is load-bearing — a bare `span` selector here outranks
    `.u{display:inline-block}` and would turn every phrase unit into a
    block, stacking the text one word per line. */
@@ -607,59 +614,35 @@ section.drench > * { position:relative; z-index:1; }
   .core .ring { animation:none !important; }
 }
 
-/* ---------- how it connects (old, unused) ----------
-   A real sequence, so it is numbered and railed. Pulses travel the rail
-   to show direction; the loop underneath shows it feeding back. */
-.map { position:relative; margin-top:clamp(36px,5.5vh,60px); }
-.rail { position:absolute; inset:0 0 auto 0; height:2px; background:var(--hair); overflow:hidden; }
-.rail span { position:absolute; top:0; left:0; width:70px; height:2px;
-  background:linear-gradient(90deg, transparent, var(--jade), transparent);
-  animation:run 4.5s linear infinite; }
-.rail span:nth-child(2){ animation-delay:1.5s } .rail span:nth-child(3){ animation-delay:3s }
-@keyframes run { from{transform:translate3d(-70px,0,0)} to{transform:translate3d(calc(100vw + 70px),0,0)} }
-.steps { display:grid; grid-template-columns:repeat(4,1fr); gap:clamp(18px,2.6vw,36px);
-  list-style:none; padding-top:clamp(22px,3vh,32px); }
-.step { position:relative; }
-.step::before { content:""; position:absolute; top:calc(-1 * clamp(22px,3vh,32px) - 5px);
-  left:0; width:12px; height:12px; border-radius:100px; background:var(--jade);
-  box-shadow:0 0 0 5px var(--bg); }
-.step .no { font-size:11.5px; font-weight:900; letter-spacing:.14em; color:var(--jade); }
-.step h3 { font-size:clamp(17px,1.65vw,23px); font-weight:900; margin-top:6px; letter-spacing:-.015em; }
-.step p { margin-top:9px; font-size:clamp(12.5px,1.1vw,14.5px); color:var(--faint); line-height:1.8; }
-.step ul { list-style:none; margin-top:14px; display:flex; flex-wrap:wrap; gap:6px; }
-.step li { font-size:12px; padding:5px 11px; border-radius:100px; color:var(--sub);
-  border:1px solid var(--hair-2); background:rgba(255,255,255,.025); }
-.loop { margin-top:clamp(26px,4vh,40px); padding:clamp(18px,2.6vh,24px) clamp(18px,2.4vw,28px);
-  border:1px dashed rgba(15,203,136,.42); border-radius:16px;
-  display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
-.loop svg { flex:none; }
-.loop p { font-size:clamp(13px,1.15vw,15.5px); color:var(--sub); line-height:1.8; }
-.loop b { color:var(--jade); font-weight:900; }
+/* ---------- the loop callout + results, under the diagram ---------- */
+.back { display:flex; align-items:flex-start; gap:14px; flex-wrap:nowrap;
+  margin-top:clamp(24px,3.6vh,38px);
+  padding:clamp(16px,2.4vh,22px) clamp(16px,2.2vw,26px);
+  border:1px solid rgba(15,203,136,.32); border-radius:18px;
+  background:linear-gradient(150deg, rgba(15,203,136,.09), rgba(15,203,136,.02) 60%); }
+.back svg { flex:none; margin-top:2px; animation:spin 11s linear infinite; }
+.back p { font-size:clamp(13px,1.15vw,15.5px); color:var(--sub); line-height:1.85; }
+.back b { color:var(--jade); font-weight:900; }
 
-@media (max-width:900px){ .steps { grid-template-columns:1fr 1fr; row-gap:clamp(28px,4vh,40px); } }
+.gains { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+  gap:clamp(10px,1.6vw,16px); margin-top:clamp(14px,2vh,20px); }
+.gains div { background:rgba(255,255,255,.028); border:1px solid var(--hair);
+  border-radius:16px; padding:clamp(14px,2vh,18px) clamp(14px,1.8vw,20px);
+  transition:background .4s var(--eo), border-color .4s var(--eo); }
+.gains div:hover { background:rgba(15,203,136,.05); border-color:rgba(15,203,136,.3); }
+.gains p { font-size:clamp(11.5px,1vw,13px); color:var(--faint); font-weight:700;
+  letter-spacing:.02em; }
+.gains .was { display:inline-block; margin-top:7px; font-size:clamp(12px,1.05vw,13.5px);
+  color:var(--faint); text-decoration:line-through;
+  text-decoration-color:rgba(255,255,255,.28); }
+.gains .now { display:inline-block; margin-left:9px; font-size:clamp(17px,1.7vw,23px);
+  font-weight:900; color:var(--jade); letter-spacing:-.02em; }
+
 @media (max-width:640px){
   .grp { grid-template-columns:1fr; gap:14px; }
   .grp ul { grid-template-columns:1fr; }
-  .steps { grid-template-columns:1fr; padding-top:0; padding-left:26px; gap:clamp(24px,3.6vh,34px); }
-  .rail { inset:0 auto 0 0; width:2px; height:auto; }
-  .rail span { width:2px; height:70px;
-    background:linear-gradient(180deg, transparent, var(--jade), transparent);
-    animation-name:runY; }
-  @keyframes runY { from{transform:translate3d(0,-70px,0)} to{transform:translate3d(0,calc(100vh + 70px),0)} }
-  .step::before { top:4px; left:-26px; }
+  .back { gap:11px; padding:15px 16px; }
 }
-
-/* ---------- comparison (replaces the metric-card template) ---------- */
-.cmp { width:100%; border-collapse:collapse; margin-top:clamp(34px,5vh,56px); max-width:940px; }
-.cmp caption { text-align:left; font-size:13px; color:var(--faint); padding-bottom:14px; }
-.cmp th { font-weight:700; font-size:clamp(12px,1.1vw,14px); text-align:left;
-  padding:0 clamp(12px,2vw,26px) 14px 0; border-bottom:1px solid var(--hair-2); color:var(--faint); }
-.cmp th.us { color:var(--jade); font-weight:900; }
-.cmp td { padding:clamp(16px,2.4vh,24px) clamp(12px,2vw,26px) clamp(16px,2.4vh,24px) 0;
-  border-bottom:1px solid var(--hair); vertical-align:baseline; font-size:clamp(13.5px,1.2vw,16px); }
-.cmp td:first-child { color:var(--sub); }
-.cmp td.was { color:var(--faint); text-decoration:line-through; text-decoration-color:rgba(255,255,255,.22); }
-.cmp td.us { color:var(--ink); font-weight:900; letter-spacing:-.01em; font-size:clamp(15px,1.45vw,20px); }
 
 /* ---------- pricing (glass, spent deliberately) ---------- */
 .panel { margin-top:clamp(30px,4.5vh,50px); border-radius:24px; overflow:hidden;
@@ -684,15 +667,17 @@ section.drench > * { position:relative; z-index:1; }
 .tag { display:inline-block; font-size:10px; font-weight:900; letter-spacing:.06em;
   color:var(--jade-ink); background:var(--jade); border-radius:100px;
   padding:3px 10px; margin-left:10px; vertical-align:2px; }
-.note { margin-top:clamp(20px,3vh,30px); font-size:clamp(12px,1.05vw,13.5px);
-  color:var(--faint); line-height:1.95; max-width:62em; }
-.note b { color:var(--sub); font-weight:700; }
+.note { margin-top:clamp(20px,3vh,30px); font-size:clamp(12.5px,1.05vw,14px);
+  color:var(--sub); line-height:1.95; max-width:62em;
+  background:rgba(255,255,255,.028); border:1px solid var(--hair);
+  border-radius:16px; padding:clamp(16px,2.2vh,22px) clamp(16px,2vw,24px); }
+.note b { color:var(--jade); font-weight:900; }
 
 /* ---------- contact ---------- */
-.contact { margin-top:clamp(34px,5vh,54px); display:flex; flex-wrap:wrap; gap:12px 40px;
-  padding-top:clamp(24px,3.4vh,34px); border-top:1px solid rgba(4,33,26,.22); }
+.contact { margin-top:clamp(30px,4.5vh,48px); display:flex; flex-wrap:wrap; gap:12px 40px;
+  padding-top:clamp(24px,3.4vh,34px); border-top:1px solid rgba(15,203,136,.24); }
 .contact div { font-size:14px; }
-.contact dt { font-size:11px; font-weight:900; letter-spacing:.1em; opacity:.62; margin-bottom:5px; }
+.contact dt { font-size:11px; font-weight:900; letter-spacing:.1em; color:var(--jade); margin-bottom:5px; }
 .contact dd { font-weight:700; font-size:clamp(15px,1.4vw,18px); }
 /* mobile action bar — the header CTA is hidden below 640px, so the
    only persistent way to convert on a phone lives here. Appears once
@@ -750,13 +735,7 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
   .pt td.n::before { content:attr(data-l) "　"; color:var(--faint); font-weight:700; font-size:12px; }
   html[data-lang="en"] .pt td.n::before { content:attr(data-dl) "  "; }
   /* comparison → stacked records */
-  .cmp, .cmp tbody, .cmp tr, .cmp td { display:block; }
-  .cmp thead { display:none; }
-  .cmp tr { padding:18px 0; border-bottom:1px solid var(--hair); }
-  .cmp td { border:none; padding:2px 0; }
-  .cmp td.was::before { content:"これまで　"; text-decoration:none; color:var(--faint); font-size:12px; }
-  .cmp td.us::before  { content:"ミセログ　"; color:var(--jade); font-size:12px; font-weight:700; }
-}
+            }
 
 @media (prefers-reduced-motion:reduce) {
   html { scroll-behavior:auto; }
@@ -906,9 +885,9 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
       習慣を変えさせない。<br>習慣に、乗る。</h2>
     <p class="rv d2" style="margin-top:clamp(28px,4.5vh,46px); font-size:clamp(15.5px,1.5vw,21px);
        line-height:2; max-width:36em; font-weight:700"
-       data-en="No training. No new app. No resistance from the floor.&lt;span style='font-weight:400; display:block; margin-top:1em; opacity:.88'&gt;Everyone else asks you to change how you work: new register, new app, new input form. MISELOG asks for nothing, because the AI reads the report your staff already send.&lt;/span&gt;">
+       data-en="No training. No new app. No resistance from the floor.&lt;span style='font-weight:400; display:block; margin-top:1em; color:var(--sub)'&gt;Everyone else asks you to change how you work: new register, new app, new input form. MISELOG asks for nothing, because the AI reads the report your staff already send.&lt;/span&gt;">
       研修ゼロ。新しいアプリ、ゼロ。現場の抵抗も、ゼロ。
-      <span style="font-weight:400; display:block; margin-top:1em; opacity:.88">
+      <span style="font-weight:400; display:block; margin-top:1em; color:var(--sub)">
       他社は「やり方を変えてください」と言います。新しいレジ、新しいアプリ、新しい入力フォーム。
       ミセログは店に何も要求しません。いつもの報告を、AIがそのまま読むからです。</span>
     </p>
@@ -1100,12 +1079,18 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
     </div>
 
     <div class="gains rv">
-      <div><span class="was" data-en="15–30 min a day">毎日15〜30分</span><span class="now" data-en="0 min">0分</span>
-        <p data-en="Time spent retyping">転記の時間</p></div>
-      <div><span class="was" data-en="Next day at best">翌日以降</span><span class="now" data-en="About 1 min">約1分</span>
-        <p data-en="Until you can see the numbers">数字が見えるまで</p></div>
-      <div><span class="was" data-en="Slips through unseen">気づかず残る</span><span class="now" data-en="Stopped and checked">止めて確認</span>
-        <p data-en="Figures that look wrong">おかしな数字</p></div>
+      <div>
+        <p data-en="Time spent retyping">転記にかかる時間</p>
+        <span class="was" data-en="15–30 min a day">毎日15〜30分</span><span class="now" data-en="0 min">0分</span>
+      </div>
+      <div>
+        <p data-en="Until you can see the numbers">数字が見えるまで</p>
+        <span class="was" data-en="Next day at best">翌日以降</span><span class="now" data-en="About 1 min">約1分</span>
+      </div>
+      <div>
+        <p data-en="Figures that look wrong">おかしな数字</p>
+        <span class="was" data-en="Slips through unseen">気づかず残る</span><span class="now" data-en="Stopped &amp; checked">止めて確認</span>
+      </div>
     </div>
   </div>
 </section>
@@ -1195,40 +1180,40 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
     <div class="grp rv-l d2">
       <div><h3 data-en="Building the base">土台をつくる</h3></div>
       <ul>
-        <li data-en="Google Workspace set up&lt;span&gt;A company email address, shared calendar and storage.&lt;/span&gt;">Google Workspaceの設置<span>会社のメールと共有カレンダー、保存場所を用意します。</span></li>
-        <li data-en="Google Business Profile, properly done&lt;span&gt;What customers see when they search you or find you on Maps. Photos, hours, replies to reviews.&lt;/span&gt;">Googleビジネスプロフィールの整備<span>検索やマップで見つけたお客様に出る情報を整えます。写真、営業時間、口コミへの返信まで。</span></li>
-        <li data-en="Spreadsheet templates&lt;span&gt;Sales, costs and stock, in sheets shaped to your shop.&lt;/span&gt;">スプレッドシートの雛形<span>売上・費用・在庫が入って残る表を、お店に合わせて。</span></li>
-        <li data-en="A folder structure on Google Drive&lt;span&gt;Last March’s invoice, found in seconds.&lt;/span&gt;">Googleドライブのフォルダ整理<span>「去年3月の請求書」が、数秒で出る並びに。</span></li>
-        <li data-en="Backups of everything&lt;span&gt;Copied to Drive automatically. Nothing is lost for good.&lt;/span&gt;">すべてのバックアップ<span>自動で控えが残り、取り返しがつかなくなりません。</span></li>
+        <li data-en="&lt;b&gt;Google Workspace set up&lt;/b&gt;&lt;span&gt;A company email address, shared calendar and storage.&lt;/span&gt;"><b>Google Workspaceの設置</b><span>会社のメールと共有カレンダー、保存場所を用意します。</span></li>
+        <li data-en="&lt;b&gt;Google Business Profile, properly done&lt;/b&gt;&lt;span&gt;What customers see when they search you or find you on Maps. Photos, hours, replies to reviews.&lt;/span&gt;"><b>Googleビジネスプロフィールの整備</b><span>検索やマップで見つけたお客様に出る情報を整えます。写真、営業時間、口コミへの返信まで。</span></li>
+        <li data-en="&lt;b&gt;Spreadsheet templates&lt;/b&gt;&lt;span&gt;Sales, costs and stock, in sheets shaped to your shop.&lt;/span&gt;"><b>スプレッドシートの雛形</b><span>売上・費用・在庫が入って残る表を、お店に合わせて。</span></li>
+        <li data-en="&lt;b&gt;A folder structure on Google Drive&lt;/b&gt;&lt;span&gt;Last March’s invoice, found in seconds.&lt;/span&gt;"><b>Googleドライブのフォルダ整理</b><span>「去年3月の請求書」が、数秒で出る並びに。</span></li>
+        <li data-en="&lt;b&gt;Backups of everything&lt;/b&gt;&lt;span&gt;Copied to Drive automatically. Nothing is lost for good.&lt;/span&gt;"><b>すべてのバックアップ</b><span>自動で控えが残り、取り返しがつかなくなりません。</span></li>
       </ul>
     </div>
 
     <div class="grp rv-l d3">
       <div><h3 data-en="Putting the AI inside">AIを店に住まわせる</h3></div>
       <ul>
-        <li data-en="A working environment for the AI&lt;span&gt;Its own place to run, with a local copy kept.&lt;/span&gt;">AIの作業場所を用意<span>AIが動く専用の場所。手元にも控えを置きます。</span></li>
-        <li data-en="Connecting your tools to it&lt;span&gt;Register, payments, mail, sheets and calendar, read together.&lt;/span&gt;">ツールとAIをつなぐ<span>レジ、決済、メール、表、カレンダーをまとめて見ます。</span></li>
-        <li data-en="Workflows and routines&lt;span&gt;Your procedures, repeated on schedule.&lt;/span&gt;">手順を仕事として登録<span>お店のやり方を覚えさせ、必要な時間に自動で回します。</span></li>
-        <li data-en="Calendar linked up&lt;span&gt;Deliveries, shifts, payment dates and bookings, written in.&lt;/span&gt;">カレンダー連携<span>納品、シフト、支払日、予約が自動で入ります。</span></li>
-        <li data-en="A communication system if you need one&lt;span&gt;Slack or similar, set up with the AI sitting in it.&lt;/span&gt;">連絡の仕組み（必要な場合）<span>Slackのような連絡の場を用意し、AIを常駐させます。</span></li>
-        <li data-en="Conversation read as context&lt;span&gt;What was said and what the numbers did, held together.&lt;/span&gt;">会話と数字をまとめて文脈に<span>話した内容と数字を一緒に持たせ、やることが自然に出ます。</span></li>
+        <li data-en="&lt;b&gt;A working environment for the AI&lt;/b&gt;&lt;span&gt;Its own place to run, with a local copy kept.&lt;/span&gt;"><b>AIの作業場所を用意</b><span>AIが動く専用の場所。手元にも控えを置きます。</span></li>
+        <li data-en="&lt;b&gt;Connecting your tools to it&lt;/b&gt;&lt;span&gt;Register, payments, mail, sheets and calendar, read together.&lt;/span&gt;"><b>ツールとAIをつなぐ</b><span>レジ、決済、メール、表、カレンダーをまとめて見ます。</span></li>
+        <li data-en="&lt;b&gt;Workflows and routines&lt;/b&gt;&lt;span&gt;Your procedures, repeated on schedule.&lt;/span&gt;"><b>手順を仕事として登録</b><span>お店のやり方を覚えさせ、必要な時間に自動で回します。</span></li>
+        <li data-en="&lt;b&gt;Calendar linked up&lt;/b&gt;&lt;span&gt;Deliveries, shifts, payment dates and bookings, written in.&lt;/span&gt;"><b>カレンダー連携</b><span>納品、シフト、支払日、予約が自動で入ります。</span></li>
+        <li data-en="&lt;b&gt;A communication system if you need one&lt;/b&gt;&lt;span&gt;Slack or similar, set up with the AI sitting in it.&lt;/span&gt;"><b>連絡の仕組み（必要な場合）</b><span>Slackのような連絡の場を用意し、AIを常駐させます。</span></li>
+        <li data-en="&lt;b&gt;Conversation read as context&lt;/b&gt;&lt;span&gt;What was said and what the numbers did, held together.&lt;/span&gt;"><b>会話と数字をまとめて文脈に</b><span>話した内容と数字を一緒に持たせ、やることが自然に出ます。</span></li>
       </ul>
     </div>
 
     <div class="grp rv-l d4">
       <div><h3 data-en="Making it look like you">お店の顔をつくる</h3></div>
       <ul>
-        <li data-en="Dashboards&lt;span&gt;The one screen that answers “how are we doing?”&lt;/span&gt;">ダッシュボード<span>「今どうなっている？」に答えが出る画面です。</span></li>
-        <li data-en="Websites and landing pages&lt;span&gt;Built to bring customers in, not just exist.&lt;/span&gt;">Webサイト・ランディングページ<span>あるだけでなく、お客様が来るための作りに。</span></li>
-        <li data-en="Your colours, type and design elements&lt;span&gt;Screens, site and documents, all clearly one shop.&lt;/span&gt;">色・書体・デザイン要素<span>画面もサイトも書類も、同じお店のものに見せます。</span></li>
+        <li data-en="&lt;b&gt;Dashboards&lt;/b&gt;&lt;span&gt;The one screen that answers “how are we doing?”&lt;/span&gt;"><b>ダッシュボード</b><span>「今どうなっている？」に答えが出る画面です。</span></li>
+        <li data-en="&lt;b&gt;Websites and landing pages&lt;/b&gt;&lt;span&gt;Built to bring customers in, not just exist.&lt;/span&gt;"><b>Webサイト・ランディングページ</b><span>あるだけでなく、お客様が来るための作りに。</span></li>
+        <li data-en="&lt;b&gt;Your colours, type and design elements&lt;/b&gt;&lt;span&gt;Screens, site and documents, all clearly one shop.&lt;/span&gt;"><b>色・書体・デザイン要素</b><span>画面もサイトも書類も、同じお店のものに見せます。</span></li>
       </ul>
     </div>
 
     <div class="grp rv-l d5">
       <div><h3 data-en="Keeping it alive">毎月、良くしていく</h3></div>
       <ul>
-        <li data-en="Monthly improvement and maintenance&lt;span&gt;Faults, format changes, the yearly rollover, new requests.&lt;/span&gt;">毎月の改善と保守<span>不具合、書式の変化、年次の切り替え、新しいご要望。</span></li>
-        <li data-en="The AI learns your business&lt;span&gt;It reviews its own work instead of standing still.&lt;/span&gt;">AIがお店に詳しくなっていく<span>自分の仕事を見直し、買った日のまま止まりません。</span></li>
+        <li data-en="&lt;b&gt;Monthly improvement and maintenance&lt;/b&gt;&lt;span&gt;Faults, format changes, the yearly rollover, new requests.&lt;/span&gt;"><b>毎月の改善と保守</b><span>不具合、書式の変化、年次の切り替え、新しいご要望。</span></li>
+        <li data-en="&lt;b&gt;The AI learns your business&lt;/b&gt;&lt;span&gt;It reviews its own work instead of standing still.&lt;/span&gt;"><b>AIがお店に詳しくなっていく</b><span>自分の仕事を見直し、買った日のまま止まりません。</span></li>
       </ul>
     </div>
   </div>
@@ -1284,14 +1269,14 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
     <h2 class="disp rv-s" style="font-size:clamp(36px,5.4vw,74px)" data-en="Start with 15 minutes.">まずは、15分だけ。</h2>
     <p class="rv d2" style="margin-top:clamp(26px,4vh,44px); font-size:clamp(15.5px,1.5vw,20px);
        line-height:2; max-width:38em; font-weight:700"
-       data-en="We share a screen on Zoom and show you the real thing working. There is nothing for you to prepare.&lt;span style='font-weight:400; display:block; margin-top:1em; opacity:.88'&gt;We handle the whole setup. All we ask of the shop is permission to connect the account, and that your staff keep sending the report exactly as they do now.&lt;/span&gt;">
+       data-en="We share a screen on Zoom and show you the real thing working. There is nothing for you to prepare.&lt;span style='font-weight:400; display:block; margin-top:1em; color:var(--sub)'&gt;We handle the whole setup. All we ask of the shop is permission to connect the account, and that your staff keep sending the report exactly as they do now.&lt;/span&gt;">
       Zoomで画面をお見せしながら、実際の動きをご説明します。ご用意いただくものはありません。
-      <span style="font-weight:400; display:block; margin-top:1em; opacity:.88">
+      <span style="font-weight:400; display:block; margin-top:1em; color:var(--sub)">
       導入の作業はすべてこちらで行います。お店にお願いするのは、アカウントの連携を許可していただくことと、
       いつも通り報告を送っていただくことだけです。</span>
     </p>
     <div class="btns rv d3">
-      <a class="go go-dark" href="#contact">
+      <a class="go" href="#contact">
         <svg width="17" height="17" viewBox="0 0 17 17" fill="none" aria-hidden="true"><rect x="1.4" y="3" width="10.6" height="11" rx="2.6" stroke="currentColor" stroke-width="1.8"/><path d="M12 8.5l4-2.6v5.2z" fill="currentColor"/></svg>
         <span data-en="Book the demo (15 min, free)">オンライン説明を予約する（15分・無料）</span></a>
     </div>
