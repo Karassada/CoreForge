@@ -3,394 +3,522 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ミセログ（仮称）— 送るだけ。あとは全部、自動。</title>
+<title>ミセログ（仮称）｜送るだけ。あとは全部、自動。</title>
+<meta name="description" content="いつもの売上報告をLINEに送るだけ。AIが読み取り、約1分で帳簿に記入、スマホのダッシュボードに反映。飲食店・バー・カフェの手入力をゼロにする、設置から運用まで込みの自動化サービス。">
+<meta name="theme-color" content="#07080b">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:title" content="ミセログ（仮称）｜送るだけ。あとは全部、自動。">
+<meta property="og:description" content="いつもの売上報告をLINEに送るだけ。AIが読み取り、約1分で帳簿とダッシュボードに反映。手入力ゼロ、転記ミスゼロ。">
+<meta property="og:url" content="https://karassada.github.io/OSBS/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2307080b'/%3E%3Cpath d='M9 16.5l4.6 4.6L23 11.8' stroke='%230FCB88' stroke-width='3.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Zen+Old+Mincho:wght@600;700;900&display=swap">
 <style>
 /* ============================================================
-   MISELOG pitch site v2 — standalone sales page for cold leads.
-   Register: high-end Apple liquid-glass over a living sky.
-   The sky (orbits + drifting work-objects + ambient light blobs)
-   is FIXED and visible through every section — nothing solid
-   buries it. Sections are frosted-glass surfaces floating on it.
-   De-1OAK'd, de-nighted: hospitality-generic story and numbers.
-   Zero dependencies: offline-safe. Hooks: ?static (no JS gating,
-   print/capture/old devices), ?only=<id> (render one section).
-   Motion: transform/opacity only, ease-out(0.16,1,0.3,1),
-   reveals once, count-ups, chart draw-ins, marquee, parallax,
-   phone tilt. prefers-reduced-motion ⇒ crossfades, loops off.
+   MISELOG landing page v3 — standalone sales page for cold leads.
+
+   TYPE SYSTEM (deliberate, not decorative):
+     Zen Old Mincho    → emotional/brand statements only
+     Zen Kaku Gothic   → every factual, operational, numeric thing
+   The split IS the voice: feeling is set in mincho, facts in gothic.
+   Google Fonts with a full JP system fallback chain, so an offline
+   client meeting degrades to Hiragino/Yu rather than to nothing.
+
+   COLOR: Committed dark. ONE luminous jade (#0FCB88) carries the
+   brand. LINE's own green (#06C755) is reserved EXCLUSIVELY for
+   literal LINE elements — using LINE's trademark colour as our
+   identity would read as "LINE's product", not ours. Brass is the
+   money/receipt hue. Text/BG pairs verified ≥4.5:1.
+
+   MOTION: varied per section, never one uniform entrance —
+   mask-wipe (hero), stagger (lists), line-draw (timeline),
+   scale+tilt (product), count-up (figures). Reveals ENHANCE an
+   already-visible default: content is visible without JS, the
+   `.js` class opts into hiding, so a headless render never ships
+   blank. prefers-reduced-motion ⇒ crossfade, all loops off.
+
+   PERF: no full-viewport backdrop-filter and no blend-mode grain
+   (both stutter on the mid-range phones our buyers actually use).
+   Glass is expensive, so it is spent only where it means something:
+   the header, the product device, the price panel.
+
+   Hooks kept: ?static (no reveal gating — print/capture/old
+   tablets), ?only=<id> (render one section alone).
    ============================================================ */
-* { margin:0; padding:0; box-sizing:border-box; }
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
 :root {
-  --bg:#0a0c10; --ink:#f4f5f6; --sub:#aab0ba; --faint:#7d838e;
-  --hair:rgba(255,255,255,.13);
-  --g:#06C755; --g-deep:#04a648; --g-ink:#05130b;
-  --amber:#e0a63f;
-  --glass:linear-gradient(165deg, rgba(255,255,255,.085), rgba(255,255,255,.03) 48%);
-  --glass-edge:rgba(255,255,255,.12);
-  --mincho:"Hiragino Mincho ProN","Yu Mincho",serif;
-  --goth:"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
-  --num:"Helvetica Neue",Helvetica,Arial,sans-serif;
-  --mono:"SF Mono",Menlo,monospace;
-  --eo:cubic-bezier(0.16,1,0.3,1);
+  /* surface ramp */
+  --bg:#07080b;
+  --bg-2:#0b0d12;
+  --hair:rgba(255,255,255,.11);
+  --hair-2:rgba(255,255,255,.18);
+  /* ink ramp — all verified on --bg */
+  --ink:#f2f4f5;          /* 17.8:1 */
+  --sub:#a9b1bb;          /*  8.7:1 */
+  --faint:#79818c;        /*  4.6:1 — large/secondary only */
+  /* brand */
+  --jade:#0FCB88;         /* 10.4:1 on --bg */
+  --jade-dim:#0a9a67;
+  --jade-ink:#04211a;     /* ink used ON jade surfaces */
+  --brass:#d8a94b;        /* money / receipts */
+  --line:#06C755;         /* LINE brand — LINE elements ONLY */
+  /* type */
+  --mincho:"Zen Old Mincho","Hiragino Mincho ProN","Yu Mincho","YuMincho",serif;
+  --goth:"Zen Kaku Gothic New","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+  /* motion */
+  --eo:cubic-bezier(0.16,1,0.3,1);          /* ease-out-expo-ish */
+  --eo2:cubic-bezier(0.22,0.61,0.36,1);
+  /* z-scale — semantic, never arbitrary */
+  --z-sky:0; --z-content:1; --z-drench:2; --z-header:40; --z-prog:50;
 }
+
 html { background:var(--bg); scroll-behavior:smooth; }
-/* overflow-x:CLIP, not hidden — hidden on body silently promotes body to the
-   scroll container, which breaks fixed-layer compositing in some renderers
-   (blank snapshots). clip clips without creating a scroller. */
+/* overflow-x:CLIP not hidden — `hidden` on body silently promotes body to
+   the scroll container, which breaks fixed-layer compositing in some
+   renderers (blank snapshots). `clip` clips without creating a scroller. */
 html, body { overflow-x:clip; }
-body { font-family:var(--goth); color:var(--ink);
-       font-feature-settings:"palt"; -webkit-font-smoothing:antialiased;
-       background:
-         radial-gradient(120vw 90vh at 82% -10%, #10161c 0%, transparent 60%),
-         radial-gradient(90vw 80vh at -10% 110%, #0d1216 0%, transparent 55%),
-         var(--bg); }
+body {
+  font-family:var(--goth); font-weight:400; color:var(--ink);
+  font-feature-settings:"palt"; -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  background:
+    radial-gradient(120vw 92vh at 84% -12%, #0f1720 0%, transparent 58%),
+    radial-gradient(88vw 78vh at -12% 108%, #0b1014 0%, transparent 52%),
+    var(--bg);
+}
 
-/* ---- scroll progress ---- */
-#prog { position:fixed; top:0; left:0; right:0; height:2px; z-index:60; pointer-events:none; }
-#prog i { display:block; height:100%; background:linear-gradient(90deg, var(--g), #7CE8AC);
-  transform-origin:0 50%; transform:scaleX(0);
-  box-shadow:0 0 12px rgba(6,199,85,.7); }
+::selection { background:var(--jade); color:var(--jade-ink); }
 
-/* ---- the sky: fixed, alive on EVERY screen ---- */
-#sky { position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
+/* keyboard access — never remove focus without replacement */
+:focus-visible {
+  outline:2px solid var(--jade); outline-offset:3px; border-radius:4px;
+}
+.skip {
+  position:absolute; left:-9999px; top:0; z-index:99;
+  background:var(--jade); color:var(--jade-ink);
+  padding:14px 22px; font-weight:700; border-radius:0 0 12px 0;
+}
+.skip:focus { left:0; }
+
+/* ---------- header ---------- */
+.hd {
+  position:fixed; inset:0 0 auto 0; z-index:var(--z-header);
+  display:flex; align-items:center; justify-content:space-between;
+  gap:20px; padding:16px clamp(20px,7vw,88px);
+  /* background/border only — animating padding would reflow the bar on
+     every scroll frame. The material change alone reads as "stuck". */
+  transition:background .5s var(--eo), border-color .5s var(--eo);
+  border-bottom:1px solid transparent;
+}
+.hd.stuck {
+  background:rgba(9,11,15,.72);
+  -webkit-backdrop-filter:blur(18px) saturate(1.4); backdrop-filter:blur(18px) saturate(1.4);
+  border-bottom-color:var(--hair);
+}
+.mark { display:flex; align-items:baseline; gap:11px; text-decoration:none; color:var(--ink); }
+.mark .n { font-family:var(--mincho); font-weight:700; font-size:19px; letter-spacing:.06em; }
+.mark .k { font-size:10.5px; color:var(--faint); letter-spacing:.14em; font-weight:500; }
+.hd .go { font-size:13.5px; padding:11px 22px; }
+@media (max-width:640px){ .hd .go { display:none; } .mark .k { display:none; } }
+
+/* ---------- scroll progress ---------- */
+#prog { position:fixed; inset:0 0 auto 0; height:2px; z-index:var(--z-prog); pointer-events:none; }
+#prog i {
+  display:block; height:100%; background:var(--jade);
+  transform:scaleX(0); transform-origin:0 50%;
+}
+
+/* ---------- the sky (fixed, alive on every screen) ---------- */
+#sky { position:fixed; inset:0; z-index:var(--z-sky); pointer-events:none; overflow:hidden; }
 .blob { position:absolute; border-radius:50%; will-change:transform; }
-.blob.b1 { width:58vmax; height:58vmax; top:-22vmax; right:-16vmax;
-  background:radial-gradient(circle, rgba(6,199,85,.14), transparent 62%);
-  animation:blobA 34s ease-in-out infinite alternate; }
-.blob.b2 { width:46vmax; height:46vmax; bottom:-18vmax; left:-14vmax;
-  background:radial-gradient(circle, rgba(224,166,63,.08), transparent 60%);
-  animation:blobB 41s ease-in-out infinite alternate; }
-.blob.b3 { width:34vmax; height:34vmax; top:34%; left:52%;
-  background:radial-gradient(circle, rgba(120,190,255,.06), transparent 58%);
-  animation:blobC 29s ease-in-out infinite alternate; }
-@keyframes blobA { from{transform:translate(0,0) scale(1)}    to{transform:translate(-9vmax,7vmax) scale(1.14)} }
-@keyframes blobB { from{transform:translate(0,0) scale(1.08)} to{transform:translate(8vmax,-6vmax) scale(.94)} }
-@keyframes blobC { from{transform:translate(0,0)}             to{transform:translate(-7vmax,-9vmax) scale(1.2)} }
+.blob.b1 { width:56vmax; height:56vmax; top:-24vmax; right:-16vmax;
+  background:radial-gradient(circle, rgba(15,203,136,.11), transparent 62%);
+  animation:blobA 38s ease-in-out infinite alternate; }
+.blob.b2 { width:44vmax; height:44vmax; bottom:-18vmax; left:-14vmax;
+  background:radial-gradient(circle, rgba(216,169,75,.055), transparent 60%);
+  animation:blobB 47s ease-in-out infinite alternate; }
+.blob.b3 { width:32vmax; height:32vmax; top:36%; left:54%;
+  background:radial-gradient(circle, rgba(120,170,255,.045), transparent 58%);
+  animation:blobC 33s ease-in-out infinite alternate; }
+@keyframes blobA { from{transform:translate3d(0,0,0) scale(1)}     to{transform:translate3d(-8vmax,6vmax,0) scale(1.12)} }
+@keyframes blobB { from{transform:translate3d(0,0,0) scale(1.06)}  to{transform:translate3d(7vmax,-5vmax,0) scale(.95)} }
+@keyframes blobC { from{transform:translate3d(0,0,0)}              to{transform:translate3d(-6vmax,-8vmax,0) scale(1.18)} }
 
 #sky .layer { position:absolute; inset:-14vh 0; will-change:transform; }
-.orbits { position:absolute; inset:0; width:100%; height:100%; opacity:.5; }
+.orbits { position:absolute; inset:0; width:100%; height:100%; opacity:.45; }
 .obj { position:absolute; will-change:transform; }
 .obj svg { display:block; overflow:visible; }
-.bob  { animation:bob 9s ease-in-out infinite alternate; }
-.bob2 { animation:bob 12s ease-in-out infinite alternate-reverse; }
-.bob3 { animation:bobr 14s ease-in-out infinite alternate; }
-.bob4 { animation:bobr 11s ease-in-out infinite alternate-reverse; }
-@keyframes bob  { from{transform:translateY(-10px) rotate(-3deg)} to{transform:translateY(12px) rotate(4deg)} }
-@keyframes bobr { from{transform:translateY(8px) rotate(5deg)}   to{transform:translateY(-12px) rotate(-4deg)} }
-.far  { filter:blur(1.6px); opacity:.34; }
-.mid  { opacity:.55; }
-.near { opacity:.8; }
+.bob  { animation:bob 11s ease-in-out infinite alternate; }
+.bob2 { animation:bob 14s ease-in-out infinite alternate-reverse; }
+.bob3 { animation:bobr 16s ease-in-out infinite alternate; }
+.bob4 { animation:bobr 13s ease-in-out infinite alternate-reverse; }
+@keyframes bob  { from{transform:translate3d(0,-9px,0) rotate(-3deg)} to{transform:translate3d(0,11px,0) rotate(4deg)} }
+@keyframes bobr { from{transform:translate3d(0,8px,0) rotate(5deg)}   to{transform:translate3d(0,-11px,0) rotate(-4deg)} }
+/* Kept faint on purpose: these drift behind live copy, and anything
+   heavier turns the reading column into a collision. */
+.far  { opacity:.17; }
+.mid  { opacity:.30; }
+.near { opacity:.42; }
+/* grain: plain low-opacity noise. No mix-blend-mode — blending a
+   full-screen fixed layer re-composites on every scroll frame.
+   width/height attrs are REQUIRED: an <svg> keeps its 300x150
+   intrinsic size and `inset:0` alone leaves a noise patch in the
+   corner instead of a full-bleed layer. */
+#grain { position:fixed; inset:0; z-index:3; pointer-events:none; opacity:.03;
+  width:100%; height:100%; }
 
-/* grain */
-#grain { position:fixed; inset:0; z-index:3; pointer-events:none; opacity:.05; mix-blend-mode:overlay; }
-
-/* ---- sections ---- */
-main { position:relative; z-index:1; }
-section { min-height:100vh; position:relative; display:flex; flex-direction:column;
-          justify-content:center; padding:13vh 7vw; }
+/* ---------- section shell ---------- */
+main { position:relative; z-index:var(--z-content); }
+section {
+  min-height:100svh; position:relative; display:flex; flex-direction:column;
+  justify-content:center; padding:16vh clamp(20px,7vw,88px);
+}
 section.short { min-height:0; padding:0; }
+.wrap { width:100%; max-width:1180px; margin:0 auto; }
 
-/* green drench — translucent so the sky keeps moving behind it */
-section.green { background:linear-gradient(125deg, rgba(6,199,85,.90), rgba(4,155,68,.86));
-  -webkit-backdrop-filter:blur(22px) saturate(1.25); backdrop-filter:blur(22px) saturate(1.25);
-  color:var(--g-ink); z-index:2; }
+/* jade drench — statement moments. Solid (no backdrop-filter: a
+   full-viewport blur is the single most expensive thing a phone can
+   be asked to do on scroll). Its own slow light-sweep keeps motion
+   continuous while the object-sky is deliberately covered. */
+section.drench {
+  z-index:var(--z-drench); color:var(--jade-ink);
+  background:linear-gradient(148deg, #12d891 0%, #0FCB88 42%, #06a56d 100%);
+  overflow:hidden;
+}
+section.drench::after {
+  content:""; position:absolute; inset:-40%; pointer-events:none;
+  background:radial-gradient(42% 42% at 50% 50%, rgba(255,255,255,.16), transparent 62%);
+  animation:sweep 19s ease-in-out infinite alternate;
+}
+@keyframes sweep { from{transform:translate3d(-18%,-12%,0)} to{transform:translate3d(20%,14%,0)} }
+section.drench > * { position:relative; z-index:1; }
 
-.disp   { font-family:var(--mincho); font-weight:600; letter-spacing:.01em; }
-.label  { font-size:clamp(12px,1vw,15px); color:var(--faint); font-weight:600; margin-bottom:4vh;
-          display:flex; align-items:center; gap:14px; }
-.label b{ color:var(--g); font-weight:600; }
-.label::before { content:""; width:34px; height:1px; background:var(--g); flex:none;
-  transform:scaleX(0); transform-origin:0 50%; }
-.js .in .label::before { transform:scaleX(1); transition:transform 1s var(--eo) .15s; }
-.hero-h { font-size:clamp(44px,8.6vw,118px); line-height:1.28; }
-.big-h  { font-size:clamp(34px,5.4vw,76px); line-height:1.32; }
-.lede   { font-size:clamp(16px,1.6vw,22px); color:var(--sub); line-height:2.1; }
-.num    { font-family:var(--num); font-variant-numeric:tabular-nums; }
+/* ---------- type ---------- */
+/* mincho = feeling. gothic = fact. never mixed by accident. */
+/* auto-phrase breaks Japanese at phrase boundaries instead of mid-compound
+   (全部 split across two lines); ignored by browsers that lack it. */
+.disp { font-family:var(--mincho); font-weight:600; letter-spacing:-.01em;
+        line-height:1.34; text-wrap:balance; word-break:auto-phrase; }
+/* min sized so 「あとは全部、自動。」 stays on ONE line at 375px */
+.h-hero { font-size:clamp(35px,7.6vw,88px); line-height:1.26; }
+.h-big  { font-size:clamp(31px,4.5vw,60px); }
+/* factual headings stay gothic — the contrast is the system */
+.h-fact { font-family:var(--goth); font-weight:900; letter-spacing:-.015em;
+          font-size:clamp(26px,3.5vw,46px); line-height:1.4; text-wrap:balance; }
+.lede { font-size:clamp(15.5px,1.45vw,20px); color:var(--sub); line-height:2.05;
+        max-width:34em; text-wrap:pretty; }
+.lede strong { color:var(--ink); font-weight:700; }
+.tnum { font-variant-numeric:tabular-nums; font-feature-settings:"tnum" 1; }
 
-/* reveals — visible by default (headless/print safe); .js hides then reveals */
-.js .rv { opacity:0; transform:translateY(30px); }
-.js .in .rv { opacity:1; transform:none;
-  transition:opacity 1s var(--eo), transform 1s var(--eo); }
-.js .rv.zoom { transform:translateY(18px) scale(.96); }
-.js .in .rv.zoom { transform:none; }
-.js .in .rv.d1{ transition-delay:.07s } .js .in .rv.d2{ transition-delay:.14s }
-.js .in .rv.d3{ transition-delay:.21s } .js .in .rv.d4{ transition-delay:.28s }
-.js .in .rv.d5{ transition-delay:.35s } .js .in .rv.d6{ transition-delay:.42s }
-.js .in .rv.d7{ transition-delay:.49s }
-
-/* hero line-mask reveal */
-.mask { display:block; overflow:hidden; }
+/* ---------- reveals (varied per section, never one uniform entrance) --- */
+/* default = visible. `.js` opts into hiding, so no-JS/headless ships full. */
+.js .rv    { opacity:0; transform:translate3d(0,26px,0); }
+.js .in .rv{ opacity:1; transform:none; transition:opacity .85s var(--eo), transform .85s var(--eo); }
+.js .rv-l  { opacity:0; transform:translate3d(-22px,0,0); }
+.js .in .rv-l { opacity:1; transform:none; transition:opacity .8s var(--eo), transform .8s var(--eo); }
+.js .rv-s  { opacity:0; transform:scale(.955) translate3d(0,14px,0); }
+.js .in .rv-s { opacity:1; transform:none; transition:opacity 1s var(--eo), transform 1.1s var(--eo); }
+.js .in .d1{ transition-delay:.06s } .js .in .d2{ transition-delay:.12s }
+.js .in .d3{ transition-delay:.18s } .js .in .d4{ transition-delay:.24s }
+.js .in .d5{ transition-delay:.30s } .js .in .d6{ transition-delay:.36s }
+/* hero line wipe */
+.mask { display:block; overflow:hidden; padding-bottom:.06em; }
 .mask > span { display:block; }
-.js .mask > span { transform:translateY(110%); }
-.js .in .mask > span { transform:none; transition:transform 1.25s var(--eo); }
-.js .in .mask.m2 > span { transition-delay:.14s; }
+.js .mask > span { transform:translate3d(0,108%,0); }
+.js .in .mask > span { transform:none; transition:transform 1.15s var(--eo); }
+.js .in .mask.m2 > span { transition-delay:.11s; }
 
-/* ---- liquid glass surfaces ---- */
-.glass { position:relative; border-radius:26px;
-  background:var(--glass);
-  -webkit-backdrop-filter:blur(24px) saturate(1.5); backdrop-filter:blur(24px) saturate(1.5);
-  border:1px solid var(--glass-edge);
-  box-shadow:0 28px 70px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.16);
-  overflow:hidden; }
-.glass::before { /* top-left specular edge, the "wet" highlight */
-  content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
-  background:radial-gradient(130% 60% at 12% -8%, rgba(255,255,255,.14), transparent 46%); }
-.glass.sweep::after { /* light sweep on hover */
-  content:""; position:absolute; inset:-2px; pointer-events:none;
-  background:linear-gradient(105deg, transparent 42%, rgba(255,255,255,.10) 50%, transparent 58%);
-  transform:translateX(-140%); }
-.glass.sweep:hover::after { transform:translateX(140%); transition:transform 1.1s var(--eo); }
+/* ---------- buttons ---------- */
+.go {
+  display:inline-flex; align-items:center; gap:11px; cursor:pointer;
+  padding:16px 30px; border-radius:100px; text-decoration:none;
+  font-weight:900; font-size:clamp(14px,1.2vw,16px); letter-spacing:.01em;
+  color:var(--jade-ink); background:var(--jade); border:1px solid transparent;
+  /* a crisp seated shadow, NOT a coloured halo — the neon dark-mode
+     glow is the single most recognisable AI-UI tell. */
+  box-shadow:0 1px 0 rgba(255,255,255,.38) inset, 0 6px 18px -6px rgba(0,0,0,.7);
+  transition:transform .3s var(--eo), box-shadow .3s var(--eo), background .3s var(--eo);
+}
+.go:hover { background:#2ee19c; transform:translateY(-2px);
+  box-shadow:0 1px 0 rgba(255,255,255,.5) inset, 0 12px 26px -8px rgba(0,0,0,.75); }
+.go:active { transform:translateY(0) scale(.98); }
+.go svg { flex:none; }
+.ghost {
+  display:inline-flex; align-items:center; gap:9px; cursor:pointer;
+  padding:15px 26px; border-radius:100px; text-decoration:none;
+  font-weight:700; font-size:clamp(13.5px,1.15vw,15.5px); color:var(--ink);
+  border:1px solid var(--hair-2); background:rgba(255,255,255,.02);
+  transition:transform .3s var(--eo), background .3s var(--eo), border-color .3s var(--eo);
+}
+.ghost:hover { background:rgba(255,255,255,.06); border-color:rgba(255,255,255,.32); transform:translateY(-2px); }
+.ghost:active { transform:scale(.98); }
+.go-dark { background:#05221a; color:#d6ffee; box-shadow:0 8px 22px -8px rgba(0,0,0,.45); }
+.go-dark:hover { background:#073024; }
+.btns { display:flex; gap:14px; flex-wrap:wrap; align-items:center; margin-top:clamp(30px,4.5vh,48px); }
 
-/* ---- CTA buttons ---- */
-.cta { display:inline-flex; align-items:center; gap:12px; padding:17px 32px; border-radius:99px;
-  font-weight:800; font-size:clamp(14px,1.3vw,17px); text-decoration:none; cursor:pointer;
-  color:var(--g-ink); background:linear-gradient(165deg, #0BDD66, #05B04E 60%, #049a44);
-  border:1px solid rgba(255,255,255,.28);
-  box-shadow:0 14px 44px rgba(6,199,85,.34), inset 0 1.5px 0 rgba(255,255,255,.45), inset 0 -6px 14px rgba(0,60,25,.25);
-  transition:transform .35s var(--eo), box-shadow .35s var(--eo); position:relative; overflow:hidden; }
-.cta::after { content:""; position:absolute; inset:0;
-  background:linear-gradient(105deg, transparent 40%, rgba(255,255,255,.35) 50%, transparent 60%);
-  transform:translateX(-140%); }
-.cta:hover { transform:translateY(-2px) scale(1.02);
-  box-shadow:0 20px 60px rgba(6,199,85,.5), inset 0 1.5px 0 rgba(255,255,255,.5), inset 0 -6px 14px rgba(0,60,25,.25); }
-.cta:hover::after { transform:translateX(140%); transition:transform .9s var(--eo); }
-.cta:active { transform:translateY(0) scale(.97); }
-.cta svg { flex:none; }
-.cta-ghost { display:inline-flex; align-items:center; gap:10px; padding:16px 28px; border-radius:99px;
-  font-weight:700; font-size:clamp(13px,1.2vw,16px); text-decoration:none; color:var(--ink); cursor:pointer;
-  background:rgba(255,255,255,.05);
-  -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px);
-  border:1px solid rgba(255,255,255,.16); box-shadow:inset 0 1px 0 rgba(255,255,255,.14);
-  transition:transform .35s var(--eo), background .35s var(--eo), border-color .35s var(--eo); }
-.cta-ghost:hover { transform:translateY(-2px); background:rgba(255,255,255,.09); border-color:rgba(255,255,255,.28); }
-.cta-ghost:active { transform:scale(.97); }
-.cta-row { display:flex; gap:18px; flex-wrap:wrap; align-items:center; margin-top:6vh; }
+/* ---------- hero ---------- */
+#hero { padding-top:20vh; }
+.hero-sub { margin-top:clamp(26px,4vh,44px); }
+.cue { position:absolute; bottom:4.5vh; left:clamp(20px,7vw,88px);
+       display:flex; align-items:center; gap:11px; font-size:11px;
+       color:var(--faint); letter-spacing:.16em; font-weight:500; }
+.cue i { display:block; width:1px; height:40px; background:var(--hair); position:relative; overflow:hidden; }
+.cue i::after { content:""; position:absolute; inset:-40% 0 auto 0; height:40%;
+  background:var(--jade); animation:cue 2.4s var(--eo) infinite; }
+@keyframes cue { to { top:132%; } }
 
-/* ---- rows (hairline list) ---- */
-.rows { border-top:1px solid var(--hair); max-width:880px; }
-.rrow { display:flex; gap:4vw; padding:3.4vh 0; border-bottom:1px solid var(--hair); align-items:baseline;
-  transition:padding-left .5s var(--eo); }
-.rrow:hover { padding-left:1vw; }
-.rrow b { font-size:clamp(17px,1.7vw,23px); flex:0 0 11em; font-weight:700; }
-.rrow p { font-size:clamp(14px,1.35vw,18px); color:var(--sub); line-height:1.9; }
-
-.scroll-cue { position:absolute; bottom:5vh; left:7vw; font-size:12px; color:var(--faint);
-  display:flex; align-items:center; gap:10px; }
-.scroll-cue i { display:block; width:1px; height:44px; background:var(--hair); position:relative; overflow:hidden; }
-.scroll-cue i::after { content:""; position:absolute; left:0; top:-40%; width:1px; height:40%;
-  background:var(--g); animation:cue 2.2s var(--eo) infinite; }
-@keyframes cue { to { top:130%; } }
-
-/* ---- hero badge ---- */
-.badge { display:inline-flex; align-items:center; gap:10px; padding:9px 18px; border-radius:99px;
-  font-size:clamp(11px,1vw,13px); font-weight:700; color:#bfe8cf; letter-spacing:.04em;
-  background:rgba(6,199,85,.09); align-self:flex-start;
-  -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px);
-  border:1px solid rgba(6,199,85,.28); box-shadow:inset 0 1px 0 rgba(255,255,255,.1); margin-bottom:5vh; }
-.badge .dot { width:7px; height:7px; border-radius:99px; background:var(--g);
-  box-shadow:0 0 10px var(--g); animation:pulse 2.4s ease-in-out infinite; }
-@keyframes pulse { 0%,100%{opacity:1; transform:scale(1)} 50%{opacity:.45; transform:scale(.8)} }
-
-/* ---- marquee (business types) ---- */
-.march { border-top:1px solid var(--hair); border-bottom:1px solid var(--hair);
-  padding:3.2vh 0; overflow:hidden; position:relative;
-  -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
-  background:rgba(255,255,255,.02);
-  -webkit-mask-image:linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
-  mask-image:linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); }
-.march .track { display:flex; gap:0; width:max-content; animation:mar 44s linear infinite; }
+/* ---------- marquee ---------- */
+.march { border-block:1px solid var(--hair); padding:clamp(18px,2.6vh,30px) 0; overflow:hidden;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 11%,#000 89%,transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 11%,#000 89%,transparent); }
+.march .track { display:flex; width:max-content; animation:mar 52s linear infinite; }
 .march .set { display:flex; align-items:center; white-space:nowrap;
-  font-family:var(--mincho); font-size:clamp(16px,1.7vw,23px); color:var(--sub); }
-.march .set span { padding:0 1.6em; }
-.march .set i { font-style:normal; color:var(--g); font-size:.55em; transform:translateY(-.15em); }
-@keyframes mar { to { transform:translateX(-50%); } }
+  font-family:var(--mincho); font-weight:600; font-size:clamp(15px,1.55vw,21px); color:var(--sub); }
+.march .set span { padding:0 1.5em; }
+.march .set i { font-style:normal; color:var(--jade); font-size:.42em; transform:translateY(-.2em); }
+@keyframes mar { to { transform:translate3d(-50%,0,0); } }
 
-/* ---- timeline ---- */
-.tl { display:flex; gap:3vw; margin-top:7vh; max-width:1200px; position:relative; }
-.tl::before { content:""; position:absolute; top:0; left:0; right:0; height:1px; background:var(--hair); }
-.tl::after  { content:""; position:absolute; top:0; left:0; right:0; height:1px;
-  background:linear-gradient(90deg, var(--g), rgba(6,199,85,.25));
-  transform:scaleX(0); transform-origin:0 50%; }
-.js .in .tl::after { transform:scaleX(1); transition:transform 2.2s var(--eo) .3s; }
-.tl .step { flex:1; padding-top:2.8vh; position:relative; }
-.tl .step::before { content:""; position:absolute; top:-4px; left:0; width:9px; height:9px;
-  border-radius:99px; background:var(--g); box-shadow:0 0 14px rgba(6,199,85,.8); }
-.tl .t { font-family:var(--mono); font-size:clamp(15px,1.5vw,20px); color:var(--ink); }
-.tl p  { margin-top:1.6vh; font-size:clamp(13px,1.2vw,16px); color:var(--sub); line-height:1.85; }
+/* ---------- ruled rows ---------- */
+.rows { border-top:1px solid var(--hair); margin-top:clamp(34px,5vh,56px); max-width:900px; }
+.row { display:grid; grid-template-columns:minmax(9em,15em) 1fr; gap:clamp(18px,3.4vw,52px);
+  padding:clamp(20px,3vh,30px) 0; border-bottom:1px solid var(--hair); align-items:start; }
+.row dt { font-weight:900; font-size:clamp(16px,1.5vw,20px); letter-spacing:-.01em; }
+.row dd { font-size:clamp(14px,1.25vw,16.5px); color:var(--sub); line-height:1.95; text-wrap:pretty; }
+.row .fig { font-size:clamp(17px,1.7vw,23px); color:var(--jade); font-weight:900; letter-spacing:-.02em; }
 
-/* ---- iPhone ---- */
-.phone-wrap { display:flex; gap:6vw; align-items:center; flex-wrap:wrap; perspective:1400px; }
-.phone-float { animation:phoneFloat 8s ease-in-out infinite alternate; flex:none; }
-@keyframes phoneFloat { from{transform:translateY(-8px)} to{transform:translateY(10px)} }
-.iphone { width:min(330px,78vw); aspect-ratio:330/672; border-radius:56px; position:relative;
-  background:linear-gradient(160deg,#3f434a,#17181b 30%,#101114 70%,#282b30);
+/* ---------- timeline ---------- */
+.tl { position:relative; margin-top:clamp(38px,6vh,64px); display:grid;
+  grid-template-columns:repeat(4,1fr); gap:clamp(20px,3vw,42px); }
+.tl::before, .tl::after { content:""; position:absolute; top:0; left:0; right:0; height:1px; }
+.tl::before { background:var(--hair); }
+.tl::after  { background:var(--jade); transform:scaleX(0); transform-origin:0 50%; }
+.js .in .tl::after { transform:scaleX(1); transition:transform 1.9s var(--eo) .25s; }
+.tl .st { padding-top:clamp(18px,2.6vh,28px); position:relative; }
+.tl .st::before { content:""; position:absolute; top:-4px; left:0; width:9px; height:9px;
+  border-radius:100px; background:var(--jade); }
+.tl .t { font-size:clamp(15px,1.45vw,19px); font-weight:900; letter-spacing:.01em; }
+.tl p { margin-top:12px; font-size:clamp(13px,1.15vw,15.5px); color:var(--sub); line-height:1.9; text-wrap:pretty; }
+
+/* ---------- device (the one place glass is the point) ---------- */
+.stage { display:grid; grid-template-columns:auto minmax(300px,1fr);
+  gap:clamp(36px,6vw,92px); align-items:center; perspective:1500px; }
+.float { animation:float 9s ease-in-out infinite alternate; }
+@keyframes float { from{transform:translate3d(0,-7px,0)} to{transform:translate3d(0,9px,0)} }
+.iphone {
+  width:min(328px,80vw); aspect-ratio:328/670; border-radius:56px; position:relative;
+  background:linear-gradient(155deg,#4a4e56,#191a1e 26%,#0e0f12 72%,#2b2e34);
   padding:4px; transform-style:preserve-3d; will-change:transform;
-  transition:transform .7s var(--eo);
-  box-shadow:0 60px 120px rgba(0,0,0,.65), 0 0 0 1px rgba(255,255,255,.07),
-             0 24px 60px rgba(6,199,85,.10); }
-.iphone .screen { position:absolute; inset:4px; border-radius:52px; background:#000; overflow:hidden;
-  border:6px solid #000; }
+  transition:transform .8s var(--eo);
+  /* the jade below the device reads as screen-spill onto the surface,
+     not as a halo — it stays under the object, never around it. */
+  box-shadow:0 50px 100px -20px rgba(0,0,0,.8), 0 0 0 1px rgba(255,255,255,.07),
+             0 34px 60px -34px rgba(15,203,136,.28);
+}
+.iphone .screen { position:absolute; inset:4px; border-radius:52px; background:#000;
+  overflow:hidden; border:6px solid #000; }
 .iphone .glare { position:absolute; inset:4px; border-radius:52px; z-index:9; pointer-events:none;
-  background:linear-gradient(115deg, rgba(255,255,255,.09) 0%, transparent 28%, transparent 70%, rgba(255,255,255,.04) 100%); }
-.iphone .island { position:absolute; top:15px; left:50%; transform:translateX(-50%);
-  width:100px; height:29px; border-radius:99px; background:#000; z-index:5;
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.04); }
+  background:linear-gradient(118deg, rgba(255,255,255,.10) 0%, transparent 26%,
+             transparent 72%, rgba(255,255,255,.045) 100%); }
+.iphone .island { position:absolute; top:14px; left:50%; transform:translateX(-50%);
+  width:100px; height:29px; border-radius:100px; background:#000; z-index:5; }
 .iphone .island::after { content:""; position:absolute; right:11px; top:9px; width:11px; height:11px;
-  border-radius:99px; background:radial-gradient(circle at 35% 35%, #1c2733, #000 65%); }
-.scr { position:absolute; inset:0; padding:58px 16px 12px; font-size:12px;
-  display:flex; flex-direction:column;
+  border-radius:100px; background:radial-gradient(circle at 34% 34%, #1e2a36, #000 66%); }
+.scr { position:absolute; inset:0; padding:56px 15px 11px; display:flex; flex-direction:column;
   background:
-    radial-gradient(90% 46% at 85% -6%, rgba(6,199,85,.16), transparent 60%),
-    radial-gradient(70% 40% at -10% 108%, rgba(6,199,85,.07), transparent 55%),
-    linear-gradient(180deg,#0c0f13,#090b0e 45%); }
-.status { position:absolute; top:16px; left:0; right:0; padding:0 26px; display:flex;
-  justify-content:space-between; font-size:13.5px; font-weight:700; font-family:var(--goth); z-index:6; }
-.sig { display:flex; gap:5px; align-items:center; }
-.sig .bars i { display:inline-block; width:2.6px; background:#fff; border-radius:1px; margin-right:1px; }
+    radial-gradient(88% 44% at 86% -6%, rgba(15,203,136,.15), transparent 60%),
+    radial-gradient(70% 40% at -10% 106%, rgba(15,203,136,.06), transparent 55%),
+    linear-gradient(180deg,#0b0e12,#08090c 46%); }
+.bar { position:absolute; top:15px; inset-inline:0; padding:0 25px; display:flex;
+  justify-content:space-between; font-size:13px; font-weight:700; z-index:6; }
+.bar .sig { display:flex; gap:5px; align-items:center; }
+.bar .bars i { display:inline-block; width:2.6px; background:#fff; border-radius:1px; margin-right:1px; }
 .batt { width:22px; height:11px; border:1px solid rgba(255,255,255,.5); border-radius:3px; position:relative; }
 .batt::before { content:""; position:absolute; inset:1.5px; right:5.5px; background:#fff; border-radius:1px; }
 .batt::after { content:""; position:absolute; right:-3.4px; top:3px; width:2px; height:4.4px;
   background:rgba(255,255,255,.5); border-radius:0 1px 1px 0; }
-
-/* phone dashboard v2 — HUD glass cards */
-.greet { display:flex; justify-content:space-between; align-items:flex-end; }
-.greet .l { color:var(--faint); font-size:11px; }
-.greet .l b { display:block; color:var(--ink); font-size:16.5px; font-weight:800; margin-top:2px; }
-.live { display:flex; align-items:center; gap:5px; font-size:9px; color:var(--g); font-weight:700;
-  letter-spacing:.08em; font-family:var(--mono); }
-.live i { width:6px; height:6px; border-radius:99px; background:var(--g); box-shadow:0 0 8px var(--g);
-  animation:pulse 2s ease-in-out infinite; }
-.pcard { border-radius:17px; position:relative; overflow:hidden;
-  background:linear-gradient(165deg, rgba(255,255,255,.08), rgba(255,255,255,.025) 55%);
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.12); }
-.kpi { margin-top:12px; padding:13px 14px 10px;
-  background:linear-gradient(160deg, rgba(6,199,85,.20), rgba(6,199,85,.05) 60%),
-             linear-gradient(165deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-  border:1px solid rgba(6,199,85,.32); }
-.kpi .k { font-size:10px; color:#9fb3a7; display:flex; justify-content:space-between; align-items:center; }
-.kpi .k em { font-style:normal; font-family:var(--mono); font-size:8.5px; color:var(--g); letter-spacing:.06em; }
-.kpi .v { font-family:var(--num); font-variant-numeric:tabular-nums;
-  font-size:26px; font-weight:800; letter-spacing:.01em; margin-top:3px; text-shadow:0 0 24px rgba(6,199,85,.35); }
-.kpi .d { font-size:10.5px; color:var(--g); margin-top:3px; font-weight:700; }
-.chartbox { margin-top:9px; padding:10px 11px 6px; }
+.top { display:flex; justify-content:space-between; align-items:flex-end; }
+.top .d { font-size:10.5px; color:var(--faint); }
+.top .d b { display:block; color:var(--ink); font-size:16px; font-weight:900; margin-top:2px; letter-spacing:-.01em; }
+.live { display:flex; align-items:center; gap:5px; font-size:9px; color:var(--jade);
+  font-weight:900; letter-spacing:.1em; }
+.live i { width:6px; height:6px; border-radius:100px; background:var(--jade);
+  animation:pulse 2.2s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
+.card { border-radius:16px; position:relative; overflow:hidden;
+  background:linear-gradient(162deg, rgba(255,255,255,.075), rgba(255,255,255,.022) 56%);
+  border:1px solid rgba(255,255,255,.09); }
+.kpi { margin-top:11px; padding:12px 13px 10px;
+  background:linear-gradient(160deg, rgba(15,203,136,.18), rgba(15,203,136,.04) 62%);
+  border-color:rgba(15,203,136,.28); }
+.kpi .k { font-size:10px; color:#93aca1; display:flex; justify-content:space-between; align-items:center; }
+.kpi .k em { font-style:normal; font-size:8.5px; color:var(--jade); letter-spacing:.1em; font-weight:900; }
+.kpi .v { font-size:25px; font-weight:900; margin-top:3px; letter-spacing:-.025em; }
+.kpi .g { font-size:10.5px; color:var(--jade); margin-top:2px; font-weight:700; }
+.chartbox { margin-top:8px; padding:10px 11px 7px; }
 .chartbox .k { font-size:9.5px; color:var(--faint); display:flex; justify-content:space-between; }
-.chartbox .k span:last-child { color:#5b616b; font-family:var(--mono); font-size:8.5px; }
-.chart { display:block; margin-top:4px; }
-.chartline { stroke-dasharray:620; }
-.js .chartline { stroke-dashoffset:620; }
-.js .in .chartline { stroke-dashoffset:0; transition:stroke-dashoffset 2s var(--eo) .5s; }
-.chartfill { opacity:1; }
-.js .chartfill { opacity:0; }
-.js .in .chartfill { opacity:1; transition:opacity 1.4s ease 1.4s; }
-.chips { display:flex; gap:7px; margin-top:9px; }
-.chip { flex:1; padding:9px 10px; }
-.chip .k { font-size:9.5px; color:var(--faint); }
-.chip .v { font-size:14.5px; font-weight:800; margin-top:2px; font-family:var(--num); font-variant-numeric:tabular-nums; }
-.chip .v em { font-style:normal; font-size:9.5px; color:var(--faint); font-weight:400; }
-.wk { display:flex; align-items:flex-end; gap:3.5px; height:26px; margin-top:6px; }
-.wk i { flex:1; border-radius:3px 3px 1px 1px; background:linear-gradient(180deg, var(--g), rgba(6,199,85,.25));
-  transform-origin:50% 100%; }
-.wk i.dim { background:rgba(255,255,255,.14); }
+.chart { display:block; margin-top:5px; }
+.js .cline { stroke-dashoffset:640; }
+.cline { stroke-dasharray:640; }
+.js .in .cline { stroke-dashoffset:0; transition:stroke-dashoffset 1.9s var(--eo) .45s; }
+.js .cfill { opacity:0; }
+.js .in .cfill { opacity:1; transition:opacity 1.2s ease 1.3s; }
+.wk { display:flex; align-items:flex-end; gap:3.5px; height:25px; margin-top:7px; }
+.wk i { flex:1; border-radius:3px 3px 1px 1px; transform-origin:50% 100%;
+  background:linear-gradient(180deg, var(--jade), rgba(15,203,136,.22)); }
+.wk i.dim { background:rgba(255,255,255,.13); }
 .js .wk i { transform:scaleY(0); }
-.js .in .wk i { transform:scaleY(1); transition:transform .9s var(--eo); }
-.js .in .wk i:nth-child(1){transition-delay:.55s} .js .in .wk i:nth-child(2){transition-delay:.62s}
-.js .in .wk i:nth-child(3){transition-delay:.69s} .js .in .wk i:nth-child(4){transition-delay:.76s}
-.js .in .wk i:nth-child(5){transition-delay:.83s} .js .in .wk i:nth-child(6){transition-delay:.90s}
-.js .in .wk i:nth-child(7){transition-delay:.97s}
-.done { margin-top:9px; display:flex; align-items:center; gap:9px; padding:9px 11px;
+.js .in .wk i { transform:scaleY(1); transition:transform .8s var(--eo); }
+.js .in .wk i:nth-child(1){transition-delay:.5s} .js .in .wk i:nth-child(2){transition-delay:.57s}
+.js .in .wk i:nth-child(3){transition-delay:.64s} .js .in .wk i:nth-child(4){transition-delay:.71s}
+.js .in .wk i:nth-child(5){transition-delay:.78s} .js .in .wk i:nth-child(6){transition-delay:.85s}
+.js .in .wk i:nth-child(7){transition-delay:.92s}
+.trio { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-top:8px; }
+.trio .card { padding:8px 9px; }
+.trio .k { font-size:9px; color:var(--faint); }
+.trio .v { font-size:14px; font-weight:900; margin-top:2px; letter-spacing:-.02em; }
+.trio .v em { font-style:normal; font-size:9px; color:var(--faint); font-weight:400; }
+.ok { margin-top:8px; display:flex; align-items:center; gap:9px; padding:9px 11px;
   background:linear-gradient(165deg, rgba(6,199,85,.13), rgba(6,199,85,.04));
-  border:1px solid rgba(6,199,85,.24); }
-.done .ok { width:20px; height:20px; border-radius:99px; background:var(--g); color:#04140b;
-  display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:900; flex:none;
-  box-shadow:0 0 14px rgba(6,199,85,.6); }
-.done p { font-size:10px; color:#bfe8cf; line-height:1.5; }
-.hist { margin-top:9px; padding:9px 12px 4px; }
-.hist .h { font-size:9.5px; color:var(--faint); display:flex; justify-content:space-between; }
-.hist .h span:last-child { font-family:var(--mono); font-size:8.5px; color:var(--g); letter-spacing:.06em; }
-.hist .r { display:flex; justify-content:space-between; align-items:center; padding:6.5px 0;
-  border-bottom:1px solid rgba(255,255,255,.06); font-size:10.5px; color:var(--sub); }
-.hist .r:last-child { border-bottom:none; }
-.hist .r .d { color:var(--faint); }
-.hist .r .v { font-family:var(--num); font-variant-numeric:tabular-nums; font-weight:700; color:var(--ink); }
-.hist .r .c { color:var(--g); font-size:9px; font-weight:900; }
-.search { margin-top:auto; border:1px solid rgba(255,255,255,.12); border-radius:99px;
-  padding:9px 14px; color:var(--faint); font-size:10.5px; display:flex; gap:8px; align-items:center;
-  background:rgba(255,255,255,.03); }
-.search svg { flex:none; }
-.tabbar { display:flex; justify-content:space-around; padding:9px 6px 2px; color:#5b616b; font-size:9px; }
-.tabbar b { color:var(--g); font-weight:600; }
-.homebar { width:120px; height:4px; border-radius:99px; background:rgba(255,255,255,.35); margin:7px auto 0; }
+  border-color:rgba(6,199,85,.24); }
+.ok .b { width:19px; height:19px; border-radius:100px; background:var(--line); color:#04140b;
+  display:grid; place-items:center; font-size:11px; font-weight:900; flex:none; }
+.ok p { font-size:9.8px; color:#b9e6cb; line-height:1.55; }
+.log { margin-top:8px; padding:9px 11px 5px; }
+.log .h { font-size:9.5px; color:var(--faint); display:flex; justify-content:space-between; }
+.log .h em { font-style:normal; color:var(--jade); font-weight:900; letter-spacing:.1em; font-size:8.5px; }
+.log .r { display:flex; justify-content:space-between; align-items:center; padding:6px 0;
+  border-bottom:1px solid rgba(255,255,255,.055); font-size:10.2px; color:var(--sub); }
+.log .r:last-child { border-bottom:none; }
+.log .r b { font-weight:900; color:var(--ink); letter-spacing:-.01em; }
+.log .r span:last-child { color:var(--jade); font-size:9px; font-weight:900; }
+.find { margin-top:auto; border:1px solid rgba(255,255,255,.11); border-radius:100px;
+  padding:9px 13px; color:var(--faint); font-size:10.2px; display:flex; gap:8px;
+  align-items:center; background:rgba(255,255,255,.025); }
+.tabs { display:flex; justify-content:space-around; padding:9px 6px 2px; color:#565c66; font-size:9px; }
+.tabs b { color:var(--jade); font-weight:700; }
+.home { width:118px; height:4px; border-radius:100px; background:rgba(255,255,255,.32); margin:7px auto 0; }
 
-/* ---- AI stats ---- */
-.stats { display:flex; gap:2.4vw; margin-top:7vh; max-width:1100px; flex-wrap:wrap; }
-.stat { flex:1; min-width:220px; padding:4.4vh 2.4vw; text-align:left; }
-.stat .n { font-family:var(--num); font-variant-numeric:tabular-nums; font-weight:800;
-  font-size:clamp(40px,4.6vw,64px); line-height:1;
-  background:linear-gradient(165deg, #eafff2, #7CE8AC 55%, var(--g));
-  -webkit-background-clip:text; background-clip:text; color:transparent; }
-.stat .n small { font-size:.42em; font-weight:700; }
-.stat .t { margin-top:1.8vh; font-size:clamp(13px,1.2vw,16px); color:var(--sub); line-height:1.8; }
-.stat .t b { color:var(--ink); display:block; font-size:clamp(15px,1.4vw,19px); margin-bottom:.6vh; }
+/* ---------- comparison (replaces the metric-card template) ---------- */
+.cmp { width:100%; border-collapse:collapse; margin-top:clamp(34px,5vh,56px); max-width:940px; }
+.cmp caption { text-align:left; font-size:13px; color:var(--faint); padding-bottom:14px; }
+.cmp th { font-weight:700; font-size:clamp(12px,1.1vw,14px); text-align:left;
+  padding:0 clamp(12px,2vw,26px) 14px 0; border-bottom:1px solid var(--hair-2); color:var(--faint); }
+.cmp th.us { color:var(--jade); font-weight:900; }
+.cmp td { padding:clamp(16px,2.4vh,24px) clamp(12px,2vw,26px) clamp(16px,2.4vh,24px) 0;
+  border-bottom:1px solid var(--hair); vertical-align:baseline; font-size:clamp(13.5px,1.2vw,16px); }
+.cmp td:first-child { color:var(--sub); }
+.cmp td.was { color:var(--faint); text-decoration:line-through; text-decoration-color:rgba(255,255,255,.22); }
+.cmp td.us { color:var(--ink); font-weight:900; letter-spacing:-.01em; font-size:clamp(15px,1.45vw,20px); }
 
-/* ---- pricing ---- */
-.pwrap { margin-top:5vh; padding:1vh 2.6vw 1.4vh; max-width:1120px; }
-.ptable { width:100%; border-collapse:collapse; }
-.ptable th { text-align:left; font-size:clamp(11px,1vw,13px); color:var(--faint); font-weight:600;
-  padding:2.2vh 2vw 1.6vh 0; border-bottom:1.5px solid var(--hair); }
-.ptable td { padding:2.8vh 2vw 2.8vh 0; border-bottom:1px solid var(--hair); vertical-align:baseline; }
-.ptable tr:last-child td { border-bottom:none; }
-.ptable tbody tr { transition:background .4s var(--eo); }
-.ptable tbody tr:hover { background:rgba(255,255,255,.03); }
-.ptable td.n { font-family:var(--num); font-variant-numeric:tabular-nums;
-  font-weight:700; white-space:nowrap; font-size:clamp(14px,1.5vw,19px); }
-.ptable td.plan { font-weight:800; font-size:clamp(15px,1.6vw,20px); white-space:nowrap; }
-.ptable td.what { color:var(--sub); font-size:clamp(12.5px,1.2vw,15px); line-height:1.75; }
-.ptable tr.hot td { border-bottom:1.5px solid rgba(6,199,85,.5); }
-.ptable tr.hot .n, .ptable tr.hot .plan { color:var(--g); }
-.ptable tr.hot .plan::after { content:"おすすめ"; font-size:.55em; font-weight:700; color:var(--g-ink);
-  background:var(--g); border-radius:99px; padding:.25em .8em; margin-left:1em; vertical-align:.2em;
-  box-shadow:0 0 16px rgba(6,199,85,.45); }
+/* ---------- pricing (glass, spent deliberately) ---------- */
+.panel { margin-top:clamp(30px,4.5vh,50px); border-radius:24px; overflow:hidden;
+  background:linear-gradient(168deg, rgba(255,255,255,.062), rgba(255,255,255,.018) 52%);
+  -webkit-backdrop-filter:blur(20px) saturate(1.4); backdrop-filter:blur(20px) saturate(1.4);
+  border:1px solid var(--hair-2);
+  box-shadow:0 30px 70px -30px rgba(0,0,0,.8), inset 0 1px 0 rgba(255,255,255,.14); }
+.pt { width:100%; border-collapse:collapse; }
+.pt th { text-align:left; font-size:clamp(11px,.95vw,13px); color:var(--faint); font-weight:700;
+  padding:22px clamp(14px,2vw,26px) 14px; border-bottom:1px solid var(--hair); }
+.pt td { padding:clamp(20px,2.8vh,28px) clamp(14px,2vw,26px); border-bottom:1px solid var(--hair);
+  vertical-align:baseline; }
+.pt tr:last-child td { border-bottom:none; }
+.pt tbody tr { transition:background .35s var(--eo); }
+.pt tbody tr:hover { background:rgba(255,255,255,.028); }
+.pt .plan { font-weight:900; font-size:clamp(15px,1.4vw,19px); white-space:nowrap; letter-spacing:-.01em; }
+.pt .n { font-weight:700; white-space:nowrap; font-size:clamp(13.5px,1.35vw,17px); }
+.pt .what { color:var(--sub); font-size:clamp(12.5px,1.1vw,14.5px); line-height:1.8; }
+.pt tr.pick { background:rgba(15,203,136,.05); }
+.pt tr.pick:hover { background:rgba(15,203,136,.075); }
+.pt tr.pick .plan, .pt tr.pick .n { color:var(--jade); }
+.tag { display:inline-block; font-size:10px; font-weight:900; letter-spacing:.06em;
+  color:var(--jade-ink); background:var(--jade); border-radius:100px;
+  padding:3px 10px; margin-left:10px; vertical-align:2px; }
+.note { margin-top:clamp(20px,3vh,30px); font-size:clamp(12px,1.05vw,13.5px);
+  color:var(--faint); line-height:1.95; max-width:62em; }
+.note b { color:var(--sub); font-weight:700; }
 
-/* ---- close ---- */
-#close .cta-row { margin-top:5vh; }
+/* ---------- contact ---------- */
+.contact { margin-top:clamp(34px,5vh,54px); display:flex; flex-wrap:wrap; gap:12px 40px;
+  padding-top:clamp(24px,3.4vh,34px); border-top:1px solid rgba(4,33,26,.22); }
+.contact div { font-size:14px; }
+.contact dt { font-size:11px; font-weight:900; letter-spacing:.1em; opacity:.62; margin-bottom:5px; }
+.contact dd { font-weight:700; font-size:clamp(15px,1.4vw,18px); }
+/* mobile action bar — the header CTA is hidden below 640px, so the
+   only persistent way to convert on a phone lives here. Appears once
+   the hero is behind you; hides again on the closing section so it
+   never covers the real CTA. */
+.bottom {
+  position:fixed; inset:auto 0 0 0; z-index:var(--z-header); display:none;
+  padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+  background:linear-gradient(180deg, rgba(7,8,11,0), rgba(7,8,11,.94) 42%);
+  transform:translate3d(0,140%,0); transition:transform .5s var(--eo);
+}
+.bottom.up { transform:none; }
+.bottom .go { width:100%; justify-content:center; padding:15px 20px; }
+@media (max-width:640px){ .bottom { display:block; } }
+@media (prefers-reduced-motion:reduce){ .bottom { transition:none; } }
 
-footer-space { display:block; height:8vh; }
+footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid var(--hair);
+  display:flex; flex-wrap:wrap; gap:14px 30px; justify-content:space-between; align-items:center;
+  font-size:12.5px; color:var(--faint); position:relative; z-index:var(--z-content);
+  background:var(--bg); }
 
-@media (max-width:760px) {
-  section { padding:11vh 7vw; }
+/* ---------- responsive ---------- */
+@media (max-width:900px) {
+  .stage { grid-template-columns:1fr; justify-items:center; gap:clamp(34px,6vh,54px); }
+  .tl { grid-template-columns:1fr 1fr; row-gap:clamp(26px,4vh,38px); }
+}
+@media (max-width:640px) {
+  section { padding:13vh clamp(20px,7vw,88px); }
   section.short { padding:0; }
-  .rrow { flex-direction:column; gap:1vh; }
-  .rrow b { flex-basis:auto; }
-  .rrow:hover { padding-left:0; }
-  .tl { flex-direction:column; gap:4.5vh; }
+  /* the objects are fixed-size, so on a 375px screen they read as
+     foreground clutter rather than distant atmosphere — shrink and
+     fade them until they sit behind the copy again. Scale the child
+     svg, not .obj: the bob keyframes own .obj's transform. */
+  #sky .obj svg { transform:scale(.62); }
+  .far { opacity:.10; } .mid { opacity:.17; } .near { opacity:.24; }
+  .row { grid-template-columns:1fr; gap:8px; }
+  .tl { grid-template-columns:1fr; gap:0; }
   .tl::before, .tl::after { top:0; bottom:0; left:0; right:auto; width:1px; height:auto; }
   .js .tl::after { transform:scaleY(0); transform-origin:50% 0; }
   .js .in .tl::after { transform:scaleY(1); }
-  .tl .step { padding-top:0; padding-left:6vw; }
-  .tl .step::before { top:4px; left:-4px; }
-  .phone-wrap { justify-content:center; }
-  .stats { flex-direction:column; }
-  .cta-row { flex-direction:column; align-items:stretch; }
-  .cta, .cta-ghost { justify-content:center; }
-  .pwrap { padding:0; background:none; border:none; box-shadow:none;
-    -webkit-backdrop-filter:none; backdrop-filter:none; overflow:visible; }
-  .pwrap::before { display:none; }
-  .ptable, .ptable tbody, .ptable tr, .ptable td { display:block; }
-  .ptable thead { display:none; }
-  .ptable tr { padding:2.6vh 5vw; margin-bottom:2.4vh; border-radius:20px;
-    background:var(--glass); border:1px solid var(--glass-edge);
-    -webkit-backdrop-filter:blur(20px); backdrop-filter:blur(20px); }
-  .ptable td { padding:.7vh 0; border:none !important; }
+  .tl .st { padding:0 0 clamp(22px,3.4vh,30px) 26px; }
+  .tl .st:last-child { padding-bottom:0; }
+  .tl .st::before { top:5px; left:-4px; }
+  .btns { flex-direction:column; align-items:stretch; }
+  .go, .ghost { justify-content:center; }
+  /* pricing table → stacked records */
+  .panel { background:none; border:none; box-shadow:none; backdrop-filter:none;
+    -webkit-backdrop-filter:none; border-radius:0; overflow:visible; }
+  .pt, .pt tbody, .pt tr, .pt td { display:block; }
+  .pt thead { display:none; }
+  .pt tr { border-radius:18px; padding:20px 22px; margin-bottom:14px;
+    background:linear-gradient(168deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+    border:1px solid var(--hair-2); }
+  .pt td { border:none; padding:4px 0; }
+  .pt td.n::before { content:attr(data-l) "　"; color:var(--faint); font-weight:700; font-size:12px; }
+  /* comparison → stacked records */
+  .cmp, .cmp tbody, .cmp tr, .cmp td { display:block; }
+  .cmp thead { display:none; }
+  .cmp tr { padding:18px 0; border-bottom:1px solid var(--hair); }
+  .cmp td { border:none; padding:2px 0; }
+  .cmp td.was::before { content:"これまで　"; text-decoration:none; color:var(--faint); font-size:12px; }
+  .cmp td.us::before  { content:"ミセログ　"; color:var(--jade); font-size:12px; font-weight:700; }
 }
+
 @media (prefers-reduced-motion:reduce) {
   html { scroll-behavior:auto; }
-  .bob,.bob2,.bob3,.bob4,.scroll-cue i::after,.blob,.march .track,
-  .phone-float,.badge .dot,.live i { animation:none !important; }
-  .js .rv, .js .rv.zoom { transform:none; }
-  .js .in .rv { transition:opacity .3s ease; }
+  .blob,.bob,.bob2,.bob3,.bob4,.cue i::after,.march .track,.float,
+  .live i,section.drench::after { animation:none !important; }
+  .js .rv,.js .rv-l,.js .rv-s { transform:none; }
+  .js .in .rv,.js .in .rv-l,.js .in .rv-s { transition:opacity .3s ease; }
   .js .mask > span { transform:none; opacity:0; }
-  .js .in .mask > span { opacity:1; transition:opacity .4s ease; }
-  .js .chartline { stroke-dashoffset:0; }
+  .js .in .mask > span { opacity:1; transition:opacity .35s ease; }
+  .js .cline { stroke-dashoffset:0; }
   .js .wk i { transform:none; }
   .js .tl::after { transform:none; }
   .iphone { transition:none; }
@@ -399,343 +527,407 @@ footer-space { display:block; height:8vh; }
 </head>
 <body>
 
+<a class="skip" href="#main">本文へskip</a>
 <div id="prog"><i></i></div>
 
-<!-- ═══ the sky: light blobs + orbit wires + drifting work-objects — alive on every screen ═══ -->
-<div id="sky" aria-hidden="true">
-  <div class="blob b1"></div>
-  <div class="blob b2"></div>
-  <div class="blob b3"></div>
+<header class="hd" id="hd">
+  <a class="mark" href="#hero">
+    <span class="n">ミセログ</span><span class="k">仮称 ／ SHIFT GK</span>
+  </a>
+  <a class="go" href="#contact">15分の説明を予約</a>
+</header>
 
+<!-- the sky: light fields + orbit wires + drifting work-objects -->
+<div id="sky" aria-hidden="true">
+  <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
   <svg class="orbits" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
-    <g fill="none" stroke="rgba(255,255,255,.09)" stroke-width="1" stroke-dasharray="1 7">
+    <g fill="none" stroke="rgba(255,255,255,.07)" stroke-width="1" stroke-dasharray="1 8">
       <ellipse cx="1050" cy="330" rx="520" ry="210" transform="rotate(-16 1050 330)"/>
       <ellipse cx="1120" cy="420" rx="330" ry="480" transform="rotate(24 1120 420)"/>
       <ellipse cx="260"  cy="760" rx="420" ry="180" transform="rotate(-10 260 760)"/>
     </g>
-    <g fill="none" stroke="rgba(6,199,85,.16)" stroke-width="1" stroke-dasharray="1 6">
+    <g fill="none" stroke="rgba(15,203,136,.13)" stroke-width="1" stroke-dasharray="1 7">
       <ellipse cx="1010" cy="360" rx="430" ry="160" transform="rotate(-16 1010 360)"/>
     </g>
   </svg>
 
   <div class="layer" data-p="0.05">
-    <div class="obj far bob"  style="top:12%; left:66%"><svg width="46" height="38" viewBox="0 0 46 38"><path d="M2 8a4 4 0 014-4h10l4 5h18a4 4 0 014 4v17a4 4 0 01-4 4H6a4 4 0 01-4-4z" fill="none" stroke="#aab0ba" stroke-width="2"/></svg></div>
-    <div class="obj far bob2" style="top:64%; left:12%"><svg width="42" height="50" viewBox="0 0 42 50"><rect x="2" y="2" width="38" height="46" rx="4" fill="none" stroke="#aab0ba" stroke-width="2"/><path d="M2 14h38M14 2v46M2 26h38M2 38h38" stroke="#aab0ba" stroke-width="1.2" opacity=".6"/></svg></div>
-    <div class="obj far bob3" style="top:38%; left:8%"><svg width="34" height="40" viewBox="0 0 34 40"><path d="M4 2h20l8 8v28H4z" fill="none" stroke="#aab0ba" stroke-width="2"/><path d="M10 18h14M10 25h14M10 32h9" stroke="#aab0ba" stroke-width="1.5" opacity=".7"/></svg></div>
-    <div class="obj far bob4" style="top:86%; left:58%"><svg width="38" height="34" viewBox="0 0 46 38"><path d="M2 8a4 4 0 014-4h10l4 5h18a4 4 0 014 4v17a4 4 0 01-4 4H6a4 4 0 01-4-4z" fill="none" stroke="#aab0ba" stroke-width="2"/></svg></div>
+    <div class="obj far bob"  style="top:12%; left:66%"><svg width="46" height="38" viewBox="0 0 46 38"><path d="M2 8a4 4 0 014-4h10l4 5h18a4 4 0 014 4v17a4 4 0 01-4 4H6a4 4 0 01-4-4z" fill="none" stroke="#a9b1bb" stroke-width="2"/></svg></div>
+    <div class="obj far bob2" style="top:64%; left:12%"><svg width="42" height="50" viewBox="0 0 42 50"><rect x="2" y="2" width="38" height="46" rx="4" fill="none" stroke="#a9b1bb" stroke-width="2"/><path d="M2 14h38M14 2v46M2 26h38M2 38h38" stroke="#a9b1bb" stroke-width="1.2" opacity=".6"/></svg></div>
+    <div class="obj far bob3" style="top:38%; left:8%"><svg width="34" height="40" viewBox="0 0 34 40"><path d="M4 2h20l8 8v28H4z" fill="none" stroke="#a9b1bb" stroke-width="2"/><path d="M10 18h14M10 25h14M10 32h9" stroke="#a9b1bb" stroke-width="1.5" opacity=".7"/></svg></div>
+    <div class="obj far bob4" style="top:86%; left:58%"><svg width="38" height="34" viewBox="0 0 46 38"><path d="M2 8a4 4 0 014-4h10l4 5h18a4 4 0 014 4v17a4 4 0 01-4 4H6a4 4 0 01-4-4z" fill="none" stroke="#a9b1bb" stroke-width="2"/></svg></div>
   </div>
 
   <div class="layer" data-p="0.12">
     <div class="obj mid bob2" style="top:22%; left:80%"><svg width="66" height="56" viewBox="0 0 66 56"><rect x="2" y="2" width="62" height="42" rx="10" fill="none" stroke="#06C755" stroke-width="2.4"/><path d="M16 44l-4 10 14-10z" fill="none" stroke="#06C755" stroke-width="2.4" stroke-linejoin="round"/><path d="M14 17h38M14 27h26" stroke="#06C755" stroke-width="2.4" stroke-linecap="round"/></svg></div>
-    <div class="obj mid bob"  style="top:74%; left:74%"><svg width="52" height="64" viewBox="0 0 52 64"><path d="M4 2h44v56l-7-5-7 5-8-5-8 5-7-5-7 5z" fill="none" stroke="#e0a63f" stroke-width="2.2"/><path d="M13 16h26M13 25h26M13 34h16" stroke="#e0a63f" stroke-width="1.6" opacity=".8"/><text x="33" y="40" fill="#e0a63f" font-size="13" font-weight="700" font-family="Helvetica">¥</text></svg></div>
-    <div class="obj mid bob3" style="top:48%; left:88%"><svg width="48" height="44" viewBox="0 0 48 44"><rect x="2" y="2" width="44" height="40" rx="6" fill="none" stroke="#aab0ba" stroke-width="2"/><path d="M10 32V20M19 32V14M28 32v-8M37 32V18" stroke="#06C755" stroke-width="3.4" stroke-linecap="round"/></svg></div>
-    <div class="obj mid bob"  style="top:8%;  left:30%"><svg width="40" height="40" viewBox="0 0 40 40"><rect x="2" y="6" width="36" height="32" rx="5" fill="none" stroke="#aab0ba" stroke-width="2"/><path d="M2 15h36M11 2v8M29 2v8" stroke="#aab0ba" stroke-width="2"/><circle cx="27" cy="27" r="5" fill="none" stroke="#06C755" stroke-width="2"/></svg></div>
-    <div class="obj mid bob4" style="top:90%; left:26%"><svg width="52" height="44" viewBox="0 0 66 56"><rect x="2" y="2" width="62" height="42" rx="10" fill="none" stroke="#06C755" stroke-width="2.4" opacity=".8"/><path d="M16 44l-4 10 14-10z" fill="none" stroke="#06C755" stroke-width="2.4" stroke-linejoin="round" opacity=".8"/><path d="M14 17h38M14 27h20" stroke="#06C755" stroke-width="2.4" stroke-linecap="round" opacity=".8"/></svg></div>
+    <div class="obj mid bob"  style="top:74%; left:74%"><svg width="52" height="64" viewBox="0 0 52 64"><path d="M4 2h44v56l-7-5-7 5-8-5-8 5-7-5-7 5z" fill="none" stroke="#d8a94b" stroke-width="2.2"/><path d="M13 16h26M13 25h26M13 34h16" stroke="#d8a94b" stroke-width="1.6" opacity=".8"/></svg></div>
+    <div class="obj mid bob3" style="top:48%; left:88%"><svg width="48" height="44" viewBox="0 0 48 44"><rect x="2" y="2" width="44" height="40" rx="6" fill="none" stroke="#a9b1bb" stroke-width="2"/><path d="M10 32V20M19 32V14M28 32v-8M37 32V18" stroke="#0FCB88" stroke-width="3.4" stroke-linecap="round"/></svg></div>
+    <div class="obj mid bob"  style="top:8%;  left:30%"><svg width="40" height="40" viewBox="0 0 40 40"><rect x="2" y="6" width="36" height="32" rx="5" fill="none" stroke="#a9b1bb" stroke-width="2"/><path d="M2 15h36M11 2v8M29 2v8" stroke="#a9b1bb" stroke-width="2"/><circle cx="27" cy="27" r="5" fill="none" stroke="#0FCB88" stroke-width="2"/></svg></div>
+    <div class="obj mid bob4" style="top:90%; left:26%"><svg width="52" height="44" viewBox="0 0 66 56"><rect x="2" y="2" width="62" height="42" rx="10" fill="none" stroke="#06C755" stroke-width="2.4"/><path d="M16 44l-4 10 14-10z" fill="none" stroke="#06C755" stroke-width="2.4" stroke-linejoin="round"/><path d="M14 17h38M14 27h20" stroke="#06C755" stroke-width="2.4" stroke-linecap="round"/></svg></div>
   </div>
 
-  <div class="layer" data-p="0.22">
-    <div class="obj near bob3" style="top:30%; left:58%"><svg width="86" height="70" viewBox="0 0 86 70"><path d="M3 12a6 6 0 016-6h20l7 8h41a6 6 0 016 6v38a6 6 0 01-6 6H9a6 6 0 01-6-6z" fill="rgba(10,11,13,.5)" stroke="#06C755" stroke-width="2.6"/></svg></div>
-    <div class="obj near bob"  style="top:60%; left:40%"><svg width="74" height="86" viewBox="0 0 74 86"><rect x="3" y="3" width="68" height="80" rx="7" fill="rgba(10,11,13,.5)" stroke="#aab0ba" stroke-width="2.4"/><path d="M3 22h68M26 3v80M3 42h68M3 62h68" stroke="#aab0ba" stroke-width="1.4" opacity=".55"/><path d="M32 30l6 7 12-13" fill="none" stroke="#06C755" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-    <div class="obj near bob2" style="top:6%;  left:6%"><svg width="60" height="60" viewBox="0 0 60 60"><circle cx="30" cy="30" r="26" fill="none" stroke="#e0a63f" stroke-width="2.4"/><path d="M30 30V12M30 30l13 8" stroke="#e0a63f" stroke-width="2.6" stroke-linecap="round"/></svg></div>
-    <div class="obj near bob4" style="top:82%; left:84%"><svg width="58" height="52" viewBox="0 0 48 44"><rect x="2" y="2" width="44" height="40" rx="6" fill="rgba(10,11,13,.5)" stroke="#aab0ba" stroke-width="2"/><path d="M10 32V22M19 32V12M28 32v-6M37 32V16" stroke="#06C755" stroke-width="3.4" stroke-linecap="round"/></svg></div>
+  <div class="layer" data-p="0.21">
+    <div class="obj near bob3" style="top:30%; left:58%"><svg width="86" height="70" viewBox="0 0 86 70"><path d="M3 12a6 6 0 016-6h20l7 8h41a6 6 0 016 6v38a6 6 0 01-6 6H9a6 6 0 01-6-6z" fill="rgba(7,8,11,.5)" stroke="#0FCB88" stroke-width="2.6"/></svg></div>
+    <div class="obj near bob"  style="top:60%; left:40%"><svg width="74" height="86" viewBox="0 0 74 86"><rect x="3" y="3" width="68" height="80" rx="7" fill="rgba(7,8,11,.5)" stroke="#a9b1bb" stroke-width="2.4"/><path d="M3 22h68M26 3v80M3 42h68M3 62h68" stroke="#a9b1bb" stroke-width="1.4" opacity=".55"/><path d="M32 30l6 7 12-13" fill="none" stroke="#0FCB88" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="obj near bob2" style="top:6%;  left:6%"><svg width="60" height="60" viewBox="0 0 60 60"><circle cx="30" cy="30" r="26" fill="none" stroke="#d8a94b" stroke-width="2.4"/><path d="M30 30V12M30 30l13 8" stroke="#d8a94b" stroke-width="2.6" stroke-linecap="round"/></svg></div>
+    <div class="obj near bob4" style="top:82%; left:84%"><svg width="58" height="52" viewBox="0 0 48 44"><rect x="2" y="2" width="44" height="40" rx="6" fill="rgba(7,8,11,.5)" stroke="#a9b1bb" stroke-width="2"/><path d="M10 32V22M19 32V12M28 32v-6M37 32V16" stroke="#0FCB88" stroke-width="3.4" stroke-linecap="round"/></svg></div>
   </div>
 </div>
 
-<svg id="grain" xmlns="http://www.w3.org/2000/svg"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2"/></filter><rect width="100%" height="100%" filter="url(#n)"/></svg>
+<svg id="grain" aria-hidden="true" width="100%" height="100%" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2"/></filter><rect width="100%" height="100%" filter="url(#n)"/></svg>
 
-<main>
+<main id="main">
 
-<!-- 1 ═══ HERO -->
+<!-- 1 ── HERO ─────────────────────────────────────────────── -->
 <section id="hero">
-  <div class="badge rv"><span class="dot"></span>AI自動記帳 × 経営ダッシュボード</div>
-  <div class="label rv">ミセログ<span style="color:var(--faint)">（仮称）</span> — SHIFT GK</div>
-  <h1 class="disp hero-h">
-    <span class="mask"><span>送るだけ。</span></span>
-    <span class="mask m2"><span>あとは全部、<span style="color:var(--g); text-shadow:0 0 60px rgba(6,199,85,.4)">自動。</span></span></span>
-  </h1>
-  <p class="lede rv d4" style="margin-top:5vh; max-width:680px">
-    スタッフはいつもの売上報告をLINEに送るだけ。<br>
-    AIが読み取り、1分後には帳簿に入り、スマホに映り、LINEに「✓」が返る。
-  </p>
-  <div class="cta-row rv d5">
-    <a class="cta" href="#close">
-      <svg width="17" height="17" viewBox="0 0 17 17" fill="none"><rect x="1.5" y="3" width="10.5" height="11" rx="2.5" stroke="currentColor" stroke-width="1.7"/><path d="M12 8.5l4-2.5v5l-4-2.5z" fill="currentColor"/></svg>
-      15分のオンライン説明を予約</a>
-    <a class="cta-ghost" href="#flow">仕組みを見る
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v9M3 7.5L7 11l4-3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+  <div class="wrap">
+    <h1 class="disp h-hero">
+      <span class="mask"><span>送るだけ。</span></span>
+      <span class="mask m2"><span>あとは全部、<span style="color:var(--jade)">自動。</span></span></span>
+    </h1>
+    <p class="lede hero-sub rv d3">
+      スタッフはいつもの売上報告を、いつものLINEに送るだけ。
+      AIがそれを読み取り、約1分で帳簿に記入し、スマホの画面を最新にします。
+    </p>
+    <div class="btns rv d4">
+      <a class="go" href="#contact">
+        <svg width="17" height="17" viewBox="0 0 17 17" fill="none" aria-hidden="true"><rect x="1.4" y="3" width="10.6" height="11" rx="2.6" stroke="currentColor" stroke-width="1.8"/><path d="M12 8.5l4-2.6v5.2z" fill="currentColor"/></svg>
+        15分のオンライン説明を予約</a>
+      <a class="ghost" href="#flow">仕組みを見る
+        <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 2v9M3 7.5L7 11l4-3.5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    </div>
   </div>
-  <div class="scroll-cue"><i></i><span>SCROLL</span></div>
+  <p class="cue" aria-hidden="true"><i></i>SCROLL</p>
 </section>
 
-<!-- 1.5 ═══ MARQUEE — 業態を選ばない -->
-<section class="short" aria-label="対応業態">
+<!-- 2 ── 業態マーキー ─────────────────────────────────────── -->
+<section class="short" aria-label="対応している業態">
   <div class="march">
     <div class="track">
-      <div class="set"><span>レストラン</span><i>●</i><span>カフェ</span><i>●</i><span>バー</span><i>●</i><span>居酒屋</span><i>●</i><span>ラーメン店</span><i>●</i><span>ベーカリー</span><i>●</i><span>クラブ・ラウンジ</span><i>●</i><span>ホテル飲食</span><i>●</i><span>テイクアウト</span><i>●</i><span>キッチンカー</span><i>●</i></div>
-      <div class="set" aria-hidden="true"><span>レストラン</span><i>●</i><span>カフェ</span><i>●</i><span>バー</span><i>●</i><span>居酒屋</span><i>●</i><span>ラーメン店</span><i>●</i><span>ベーカリー</span><i>●</i><span>クラブ・ラウンジ</span><i>●</i><span>ホテル飲食</span><i>●</i><span>テイクアウト</span><i>●</i><span>キッチンカー</span><i>●</i></div>
+      <div class="set"><span>レストラン</span><i>●</i><span>カフェ</span><i>●</i><span>バー</span><i>●</i><span>居酒屋</span><i>●</i><span>ラーメン店</span><i>●</i><span>焼肉店</span><i>●</i><span>ベーカリー</span><i>●</i><span>ラウンジ</span><i>●</i><span>ホテル飲食</span><i>●</i><span>キッチンカー</span><i>●</i></div>
+      <div class="set" aria-hidden="true"><span>レストラン</span><i>●</i><span>カフェ</span><i>●</i><span>バー</span><i>●</i><span>居酒屋</span><i>●</i><span>ラーメン店</span><i>●</i><span>焼肉店</span><i>●</i><span>ベーカリー</span><i>●</i><span>ラウンジ</span><i>●</i><span>ホテル飲食</span><i>●</i><span>キッチンカー</span><i>●</i></div>
     </div>
   </div>
 </section>
 
-<!-- 2 ═══ PROBLEM -->
+<!-- 3 ── 問題 ─────────────────────────────────────────────── -->
 <section id="problem">
-  <div class="label rv">いま、日本の小さな店で起きていること</div>
-  <h2 class="disp big-h rv d1" style="max-width:900px">数字は毎日生まれている。<br>
-    <span style="color:var(--sub)">誰も活かしていないだけ。</span></h2>
-  <div class="rows" style="margin-top:6vh">
-    <div class="rrow rv d2"><b>報告は既にある</b><p>営業終わり、売上報告はLINEやメッセージで毎日届いている。データはずっとそこにあった。</p></div>
-    <div class="rrow rv d3"><b>誰かが打ち直す</b><p>翌日、その数字を誰かがExcelへ手で転記する。時間が消え、打ち間違いが静かに帳簿へ入り込む。</p></div>
-    <div class="rrow rv d4"><b>経営者に見えない</b><p>「先月どうだった？」に即答できる店は少ない。数字はあるのに、見える形になっていない。</p></div>
+  <div class="wrap">
+    <h2 class="disp h-big rv" style="max-width:16em">数字は毎日生まれている。<br>
+      <span style="color:var(--sub)">活かされていないだけ。</span></h2>
+    <dl class="rows">
+      <div class="row rv-l d1"><dt>報告は、もうある</dt>
+        <dd>営業が終われば、売上の報告はLINEやメッセージで毎日届いています。データはずっとそこにありました。</dd></div>
+      <div class="row rv-l d2"><dt>誰かが打ち直す</dt>
+        <dd>翌日、その数字を誰かがExcelへ手で入れ直します。時間が消え、打ち間違いが静かに帳簿へ入り込みます。</dd></div>
+      <div class="row rv-l d3"><dt>経営者に見えない</dt>
+        <dd>「先月はどうだった？」に即答できる店は多くありません。数字はあるのに、見える形になっていないからです。</dd></div>
+    </dl>
+    <p class="lede rv d4" style="margin-top:clamp(30px,4.5vh,48px)">
+      レジの入れ替えも、新しいアプリの研修も、忙しい現場はまず受け入れません。<br>
+      <strong>「新しい道具を入れるDX」が、この規模の店で失敗し続けてきた理由です。</strong>
+    </p>
   </div>
-  <p class="lede rv d5" style="margin-top:5vh; max-width:760px">
-    POSの入れ替えも、新アプリの研修も、現場は受け入れない。<br>
-    <b style="color:var(--ink)">だから「ツールを導入するDX」は、この規模の店でほぼ失敗してきた。</b>
-  </p>
 </section>
 
-<!-- 3 ═══ INSIGHT — green glass drench -->
-<section class="green" id="insight">
-  <h2 class="disp rv" style="font-size:clamp(38px,6.6vw,96px); line-height:1.3">
-    習慣を変えさせない。<br>習慣に、乗る。</h2>
-  <p class="rv d2" style="margin-top:5vh; font-size:clamp(16px,1.7vw,23px); line-height:2; max-width:820px; font-weight:600">
-    研修ゼロ。新アプリゼロ。現場の抵抗ゼロ。<br>
-    <span style="font-weight:300">他社は店に行動を変えろと言う — 新しいレジ、新しいアプリ、新しい入力フォーム。
-    ミセログは何も要求しない。いつもの報告を、AIがそのまま読む。
-    それが、DXが失敗してきた場所で動く理由。</span>
-  </p>
+<!-- 4 ── インサイト（ドレンチ）────────────────────────────── -->
+<section class="drench" id="insight">
+  <div class="wrap">
+    <h2 class="disp rv-s" style="font-size:clamp(34px,5.6vw,78px); line-height:1.32">
+      習慣を変えさせない。<br>習慣に、乗る。</h2>
+    <p class="rv d2" style="margin-top:clamp(28px,4.5vh,46px); font-size:clamp(15.5px,1.5vw,21px);
+       line-height:2; max-width:36em; font-weight:700">
+      研修ゼロ。新しいアプリ、ゼロ。現場の抵抗も、ゼロ。
+      <span style="font-weight:400; display:block; margin-top:1em; opacity:.88">
+      他社は「やり方を変えてください」と言います。新しいレジ、新しいアプリ、新しい入力フォーム。
+      ミセログは店に何も要求しません。いつもの報告を、AIがそのまま読むからです。</span>
+    </p>
+  </div>
 </section>
 
-<!-- 4 ═══ FLOW -->
+<!-- 5 ── 流れ ─────────────────────────────────────────────── -->
 <section id="flow">
-  <div class="label rv">営業終わりの、1分間</div>
-  <h2 class="disp big-h rv d1"><span style="font-family:var(--mono)">22:14</span>に送信。<span style="font-family:var(--mono)">22:15</span>に完了。</h2>
-  <div class="tl">
-    <div class="step rv d2"><div class="t">22:14:05</div><p>閉店作業。スタッフがいつもの売上報告をLINEグループに貼る。</p></div>
-    <div class="step rv d3"><div class="t">22:14:06</div><p>AIが受信と同時に読み取り。日付・曜日・合計の整合をすべて検証。</p></div>
-    <div class="step rv d4"><div class="t">22:14:38</div><p>売上表へ自動記入。書いた行を読み戻し、1円単位で照合。</p></div>
-    <div class="step rv d5"><div class="t">22:15:02</div><p>グループへ「✓ 入力済み」。オーナーには詳細サマリーが個別に届く。</p></div>
+  <div class="wrap">
+    <h2 class="h-fact rv"><span class="tnum">22:14</span>に送信。<span class="tnum">22:15</span>には、終わっている。</h2>
+    <div class="tl">
+      <div class="st rv d1"><p class="t tnum">22:14:05</p><p>閉店作業。スタッフがいつもの売上報告を、LINEグループに貼ります。</p></div>
+      <div class="st rv d2"><p class="t tnum">22:14:06</p><p>AIが受信と同時に読み取り。日付・曜日・合計の整合を、その場で検証。</p></div>
+      <div class="st rv d3"><p class="t tnum">22:14:38</p><p>売上表へ自動で記入。書き込んだ行を読み戻し、1円単位で照合します。</p></div>
+      <div class="st rv d4"><p class="t tnum">22:15:02</p><p>グループへ「✓ 入力済み」。オーナーには詳しいまとめが個別に届きます。</p></div>
+    </div>
+    <p class="lede rv d5" style="margin-top:clamp(36px,5.5vh,60px); border-top:1px solid var(--hair);
+       padding-top:clamp(24px,3.4vh,34px); max-width:40em">
+      <strong>おかしい数字は、書きません。</strong>
+      日付の誤り、計算違い、二重報告。AIはそれを自動で保留し、証拠を添えてオーナーに確認します。
+      推測で帳簿を汚すことはありません。すべてクラウドで動くので、店にパソコンを置く必要もありません。
+    </p>
   </div>
-  <p class="lede rv d6" style="margin-top:7vh; max-width:820px; border-top:1px solid var(--hair); padding-top:3.5vh">
-    <b style="color:var(--ink)">おかしい数字は、書かない。</b>
-    日付ミス・計算違い・二重報告はAIが自動で保留し、証拠つきでオーナーに確認。
-    推測で帳簿を汚すことはない。すべてクラウド — 店のPCも、誰のPCも要らない。
-  </p>
 </section>
 
-<!-- 5 ═══ PHONE -->
+<!-- 6 ── 製品（デバイス）──────────────────────────────────── -->
 <section id="phone">
-  <div class="phone-wrap">
-    <div class="phone-float rv zoom">
-    <div class="iphone" id="tilt">
+  <div class="wrap stage">
+    <div class="float rv-s">
+    <div class="iphone" id="tilt" role="img" aria-label="ミセログのスマートフォン画面。今月売上¥3,847,200、前月同時点より12.4%増。昨日の売上¥186,400、客数58名、客単価¥3,214。22:15に自動入力済み。">
       <div class="island"></div>
       <div class="screen"><div class="scr">
-        <div class="status"><span class="num">8:24</span>
+        <div class="bar"><span class="tnum">8:24</span>
           <span class="sig">
             <span class="bars"><i style="height:4px"></i><i style="height:6px"></i><i style="height:8px"></i><i style="height:10px"></i></span>
             <svg width="15" height="11" viewBox="0 0 15 11" fill="none"><path d="M7.5 10.2l2.6-3.1a4 4 0 00-5.2 0zM2.2 4.8a7.6 7.6 0 0110.6 0l1.7-2A10.2 10.2 0 00.5 2.8z" fill="#fff"/></svg>
             <span class="batt"></span>
           </span></div>
-        <div class="greet">
-          <div class="l">7月19日（日）おはようございます<b>昨日の数字、入りました。</b></div>
-          <div class="live"><i></i>LIVE</div>
+        <div class="top">
+          <p class="d">7月19日（日）<b>昨日の数字、入りました。</b></p>
+          <p class="live"><i></i>LIVE</p>
         </div>
-        <div class="pcard kpi"><div class="k">今月売上（自動更新）<em>AUTO</em></div>
-          <div class="v">¥<span data-count="3847200">3,847,200</span></div>
-          <div class="d">▲ 先月の同時点より +12.4%</div></div>
-        <div class="pcard chartbox">
-          <div class="k"><span>日次推移</span><span>30 DAYS</span></div>
-          <svg class="chart" viewBox="0 0 280 64" width="100%">
-            <defs><linearGradient id="ga" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stop-color="#06C755" stop-opacity=".32"/><stop offset="1" stop-color="#06C755" stop-opacity="0"/></linearGradient></defs>
-            <path class="chartfill" d="M0 48 26 41 52 45 78 29 104 36 130 21 156 27 182 15 208 22 234 10 260 17 280 7 V64 H0 Z" fill="url(#ga)"/>
-            <path d="M0 54 26 50 52 52 78 44 104 48 130 40 156 44 182 37 208 41 234 35 260 38 280 32" fill="none" stroke="rgba(255,255,255,.20)" stroke-width="1.3"/>
-            <path class="chartline" d="M0 48 26 41 52 45 78 29 104 36 130 21 156 27 182 15 208 22 234 10 260 17 280 7" fill="none" stroke="#06C755" stroke-width="2.4" stroke-linecap="round" pathLength="620"/>
+        <div class="card kpi">
+          <p class="k">今月の売上<em>AUTO</em></p>
+          <p class="v tnum">¥<span data-count="3847200">3,847,200</span></p>
+          <p class="g tnum">▲ 前月の同じ時点より +12.4%</p>
+        </div>
+        <div class="card chartbox">
+          <p class="k"><span>日ごとの推移</span><span class="tnum">30日</span></p>
+          <svg class="chart" viewBox="0 0 280 62" width="100%" aria-hidden="true">
+            <defs><linearGradient id="gg" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#0FCB88" stop-opacity=".3"/><stop offset="1" stop-color="#0FCB88" stop-opacity="0"/></linearGradient></defs>
+            <path class="cfill" d="M0 47 26 40 52 44 78 28 104 35 130 20 156 26 182 14 208 21 234 9 260 16 280 7 V62 H0 Z" fill="url(#gg)"/>
+            <path d="M0 53 26 49 52 51 78 43 104 47 130 39 156 43 182 36 208 40 234 34 260 37 280 31" fill="none" stroke="rgba(255,255,255,.17)" stroke-width="1.3"/>
+            <path class="cline" d="M0 47 26 40 52 44 78 28 104 35 130 20 156 26 182 14 208 21 234 9 260 16 280 7" fill="none" stroke="#0FCB88" stroke-width="2.4" stroke-linecap="round" pathLength="640"/>
           </svg>
           <div class="wk"><i class="dim" style="height:38%"></i><i class="dim" style="height:52%"></i><i style="height:64%"></i><i class="dim" style="height:44%"></i><i style="height:78%"></i><i style="height:100%"></i><i style="height:88%"></i></div>
         </div>
-        <div class="chips">
-          <div class="pcard chip"><div class="k">昨日</div><div class="v">¥186,400</div></div>
-          <div class="pcard chip"><div class="k">客数</div><div class="v">58 <em>名</em></div></div>
-          <div class="pcard chip"><div class="k">客単価</div><div class="v">¥3,214</div></div>
+        <div class="trio">
+          <div class="card"><p class="k">昨日</p><p class="v tnum">¥186,400</p></div>
+          <div class="card"><p class="k">客数</p><p class="v tnum">58<em> 名</em></p></div>
+          <div class="card"><p class="k">客単価</p><p class="v tnum">¥3,214</p></div>
         </div>
-        <div class="pcard done"><div class="ok">✓</div><p><b>22:15 自動入力済み</b><br>売上表 更新 · 1円単位で照合OK</p></div>
-        <div class="pcard hist">
-          <div class="h"><span>最近の記録</span><span>AUTO</span></div>
-          <div class="r"><span class="d">7/18（土）</span><span class="v">¥212,300</span><span class="c">✓</span></div>
-          <div class="r"><span class="d">7/17（金）</span><span class="v">¥198,750</span><span class="c">✓</span></div>
-          <div class="r"><span class="d">7/16（木）</span><span class="v">¥94,600</span><span class="c">✓</span></div>
+        <div class="card ok"><span class="b" aria-hidden="true">✓</span>
+          <p><b class="tnum">22:15</b> 自動入力済み<br>売上表を更新 ／ 1円単位で照合OK</p></div>
+        <div class="card log">
+          <p class="h"><span>最近の記録</span><em>AUTO</em></p>
+          <p class="r"><span>7/18（土）</span><b class="tnum">¥212,300</b><span aria-hidden="true">✓</span></p>
+          <p class="r"><span>7/17（金）</span><b class="tnum">¥198,750</b><span aria-hidden="true">✓</span></p>
+          <p class="r"><span>7/16（木）</span><b class="tnum">¥94,600</b><span aria-hidden="true">✓</span></p>
         </div>
-        <div class="search"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="5" cy="5" r="4" stroke="#7d838e" stroke-width="1.6"/><path d="M8.2 8.2L11 11" stroke="#7d838e" stroke-width="1.6" stroke-linecap="round"/></svg>日付・イベント名で過去を検索</div>
-        <div class="tabbar"><b>ホーム</b><span>推移</span><span>検索</span><span>設定</span></div>
-        <div class="homebar"></div>
+        <p class="find"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><circle cx="5" cy="5" r="4" stroke="#79818c" stroke-width="1.6"/><path d="M8.2 8.2L11 11" stroke="#79818c" stroke-width="1.6" stroke-linecap="round"/></svg>日付やイベント名で、過去を検索</p>
+        <div class="tabs"><b>ホーム</b><span>推移</span><span>検索</span><span>設定</span></div>
+        <div class="home"></div>
       </div></div>
       <div class="glare"></div>
     </div>
     </div>
-    <div style="flex:1; min-width:300px">
-      <div class="label rv">ポケットの中の経営数字</div>
-      <h2 class="disp big-h rv d1">開いた瞬間、<br>もう最新。</h2>
-      <div class="rows" style="margin-top:5vh; max-width:640px">
-        <div class="rrow rv d2"><b>更新ボタンがない</b><p>売上・客数・昨日・先月比 — 開けば最新。それだけ。</p></div>
-        <div class="rrow rv d3"><b>過去と比べる</b><p>月次推移を過去年と重ねて表示。曜日・客層・売上内訳まで。</p></div>
-        <div class="rrow rv d4"><b>分析は、増やせる</b><p>「原価率も見たい」「ランチだけ分けたい」— 画面はいつでも編集・追加できる。固定のパッケージではない。</p></div>
-        <div class="rrow rv d5"><b>店のブランドに合わせる</b><p>色もロゴも、店の世界観のまま。自分の店の専用アプリのような顔になる。</p></div>
-        <div class="rrow rv d6"><b>データは店のもの</b><p>保存先は店自身のGoogleアカウント。解約しても数字は店に残る。</p></div>
-      </div>
+
+    <div>
+      <h2 class="disp h-big rv">開いた瞬間、<br>もう最新。</h2>
+      <dl class="rows" style="max-width:none">
+        <div class="row rv d2"><dt>更新ボタンがない</dt>
+          <dd>売上、客数、昨日、前月比。開けば最新の状態です。操作は要りません。</dd></div>
+        <div class="row rv d3"><dt>前年と比べられる</dt>
+          <dd>月ごとの推移を前年の同じ月と重ねて表示。曜日別、時間帯別、売上の内訳まで見えます。</dd></div>
+        <div class="row rv d4"><dt>見たい数字は、足せる</dt>
+          <dd>「原価率も見たい」「ランチだけ分けたい」。画面は後からでも編集・追加できます。決まった型に合わせる必要はありません。</dd></div>
+        <div class="row rv d5"><dt>店の見た目に合わせる</dt>
+          <dd>色もロゴも、お店の世界観のまま。自分の店のためだけに作られた画面になります。</dd></div>
+        <div class="row rv d6"><dt>データは店のもの</dt>
+          <dd>保存先はお店ご自身のGoogleアカウント。契約が終わっても、数字はお店に残ります。</dd></div>
+      </dl>
     </div>
   </div>
 </section>
 
-<!-- 6 ═══ AI -->
-<section id="ai">
-  <div class="label rv">AIだから、できるようになった</div>
-  <h2 class="disp big-h rv d1" style="max-width:920px">人が入力しない。<br><span style="color:var(--sub)">だから、間違えない。</span></h2>
-  <div class="stats">
-    <div class="glass sweep stat rv d2"><div class="n">0<small> 回</small></div>
-      <div class="t"><b>手入力</b>数字は人の手を通らない。報告から帳簿まで、AIが直接運ぶ。</div></div>
-    <div class="glass sweep stat rv d3"><div class="n">0<small> 件</small></div>
-      <div class="t"><b>人為ミス</b>疲れない。忘れない。写し間違えない。書いた行は読み戻して1円単位で照合。</div></div>
-    <div class="glass sweep stat rv d4"><div class="n">約1<small> 分</small></div>
-      <div class="t"><b>反映まで</b>送信から帳簿・ダッシュボード反映まで。翌朝ではなく、その場で。</div></div>
+<!-- 7 ── 比較 ─────────────────────────────────────────────── -->
+<section id="compare">
+  <div class="wrap">
+    <h2 class="h-fact rv" style="max-width:15em">人が入力しないので、<br>そもそも間違いが起きません。</h2>
+    <table class="cmp">
+      <caption class="rv d1">1日あたりの売上報告を処理する場合の比較</caption>
+      <thead><tr><th scope="col">項目</th><th scope="col">これまでの手作業</th><th scope="col" class="us">ミセログ</th></tr></thead>
+      <tbody>
+        <tr class="rv-l d2"><td>転記にかかる時間</td><td class="was">毎日 15〜30分</td><td class="us tnum">0分</td></tr>
+        <tr class="rv-l d3"><td>打ち間違い</td><td class="was">気づかないまま残る</td><td class="us">読み戻して1円単位で照合</td></tr>
+        <tr class="rv-l d4"><td>数字が見えるまで</td><td class="was">翌日以降</td><td class="us">約1分</td></tr>
+        <tr class="rv-l d5"><td>おかしな数字</td><td class="was">そのまま帳簿へ</td><td class="us">自動で保留し、確認</td></tr>
+        <tr class="rv-l d6"><td>担当者が休んだ日</td><td class="was">溜まる</td><td class="us">いつも通り動く</td></tr>
+      </tbody>
+    </table>
+    <p class="lede rv" style="margin-top:clamp(30px,4.5vh,48px)">
+      転記に消えていた時間は、そのままお店に返ります。<br>
+      <strong>自動化は、時間を買い戻すいちばん安い方法です。</strong>
+    </p>
   </div>
-  <p class="lede rv d5" style="margin-top:6vh; max-width:780px">
-    転記に消えていた時間は、そのまま店に返る。<br>
-    <b style="color:var(--ink)">自動化は、時間を買い戻すいちばん安い方法。</b>
-  </p>
 </section>
 
-<!-- 7 ═══ OFFER -->
+<!-- 8 ── 料金 ─────────────────────────────────────────────── -->
 <section id="offer">
-  <div class="label rv">入口は選べる · 料金は明朗</div>
-  <h2 class="disp big-h rv d1">今日はLINE。<br>明日はレジ直結でも、同じ。</h2>
-  <p class="lede rv d2" style="margin-top:3vh; max-width:860px">
-    LINE報告 / Square・POSアプリ / レジCSV — 入口の部品だけを店に合わせて差し替える。
-    検証・記帳・見える化・通知の中身は全店共通。だから壊れにくく、業態を選ばない。
-  </p>
-  <div class="glass sweep pwrap rv d3">
-  <table class="ptable">
-    <thead><tr><th>プラン</th><th>導入費</th><th>月額</th><th></th></tr></thead>
-    <tbody>
-    <tr><td class="plan">ゼロから開通</td><td class="n">¥400,000〜¥500,000</td><td class="n">—</td>
-        <td class="what">Google環境・売上/費用シート・フォルダ整理・報告テンプレートまで一式構築</td></tr>
-    <tr class="hot"><td class="plan">スタンダード</td><td class="n">¥250,000〜¥350,000</td><td class="n">¥30,000</td>
-        <td class="what">自動記帳＋ダッシュボード＋保守一式（不具合・書式変化・年次更新・保留対応）</td></tr>
-    <tr><td class="plan">顧問プラン</td><td class="n">スタンダードと同じ</td><td class="n">¥45,000〜¥50,000</td>
-        <td class="what">スタンダード＋月次相談・改修リクエスト（上限つき）</td></tr>
-    <tr><td class="plan">ライト</td><td class="n">¥100,000〜¥150,000</td><td class="n">¥10,000〜¥15,000</td>
-        <td class="what">自動記帳＋LINE確認のみ（小規模店向け）</td></tr>
-    </tbody>
-  </table>
+  <div class="wrap">
+    <h2 class="disp h-big rv">今日はLINE。<br>明日レジ直結でも、同じ。</h2>
+    <p class="lede rv d1" style="margin-top:clamp(20px,3vh,30px)">
+      LINEの報告、Square・POSアプリ、レジのCSV。入口の部品だけをお店に合わせて差し替えます。
+      検証、記帳、見える化、通知。その中身は全店で共通なので、壊れにくく、業態を選びません。
+    </p>
+    <div class="panel rv-s d2">
+      <table class="pt">
+        <thead><tr><th scope="col">プラン</th><th scope="col">導入費</th><th scope="col">月額</th><th scope="col">含まれるもの</th></tr></thead>
+        <tbody>
+          <tr><td class="plan">ゼロから開通</td>
+              <td class="n tnum" data-l="導入費">¥400,000〜¥500,000</td>
+              <td class="n" data-l="月額">—</td>
+              <td class="what">Google環境、売上・費用シート、フォルダ整理、報告テンプレートまで一式を構築</td></tr>
+          <tr class="pick"><td class="plan">スタンダード<span class="tag">おすすめ</span></td>
+              <td class="n tnum" data-l="導入費">¥250,000〜¥350,000</td>
+              <td class="n tnum" data-l="月額">¥30,000</td>
+              <td class="what">自動記帳＋ダッシュボード＋保守一式（不具合対応、書式変化への追従、年次更新、保留の確認）</td></tr>
+          <tr><td class="plan">顧問プラン</td>
+              <td class="n" data-l="導入費">スタンダードと同じ</td>
+              <td class="n tnum" data-l="月額">¥45,000〜¥50,000</td>
+              <td class="what">スタンダードに加えて、月次のご相談と改修リクエスト（上限あり）</td></tr>
+          <tr><td class="plan">ライト</td>
+              <td class="n tnum" data-l="導入費">¥100,000〜¥150,000</td>
+              <td class="n tnum" data-l="月額">¥10,000〜¥15,000</td>
+              <td class="what">自動記帳とLINEでの確認のみ（小規模のお店向け）</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note rv d3">
+      参考：飲食店向けPOSはソフトのみで月額 約¥10,000、受託開発なら¥500,000〜に保守 ¥30,000/月が一般的です。
+      <b>ミセログはその価格帯に「運用する人」まで含みます。</b>
+      アルバイト1シフト分の月額で、毎朝、数字が揃っている状態を買えます。
+    </p>
   </div>
-  <p class="rv d4" style="margin-top:3.5vh; font-size:clamp(12px,1.1vw,14px); color:var(--faint); line-height:1.8">
-    目安：飲食店向けPOSは月額約¥10,000（ソフトのみ）、受託開発は¥500,000〜＋保守¥30,000/月。
-    <b style="color:var(--sub)">同じ価格帯で「運用する人」まで含むのはミセログだけ</b> — アルバイト1シフト分の月額で、毎朝数字が揃う。
-  </p>
 </section>
 
-<!-- 8 ═══ PROOF -->
+<!-- 9 ── 実績 ─────────────────────────────────────────────── -->
 <section id="proof">
-  <div class="label rv">実績 — もう動いている</div>
-  <h2 class="disp big-h rv d1">東京の店舗で、毎日稼働中。</h2>
-  <div class="rows" style="margin-top:6vh; max-width:900px">
-    <div class="rrow rv d2"><b class="num">送信 → 記帳 約1分</b><p>スタッフの送信から記帳完了まで。書いた行は読み戻し、1円単位で照合済み。</p></div>
-    <div class="rrow rv d3"><b class="num">3年分のデータ</b><p>過去の営業データを取り込み済み。日付でもイベント名でも瞬時に検索できる。</p></div>
-    <div class="rrow rv d4"><b class="num">600通以上 / 不一致0</b><p>実際の報告文でAIの読み取りを検証。疑わしい数字は自動保留 — 帳簿は汚さない。</p></div>
-    <div class="rrow rv d5"><b>現場の人間がつくった</b><p>設計・販売・運用は東京の飲食・ホスピタリティ現場の運営者。営業終わりの現実を知っている側の設計。</p></div>
+  <div class="wrap">
+    <h2 class="h-fact rv">東京の店舗で、毎日動いています。</h2>
+    <dl class="rows">
+      <div class="row rv d1"><dt class="fig">送信から約1分</dt>
+        <dd>スタッフが送ってから記帳が終わるまで。書き込んだ行は読み戻し、1円単位で照合済みです。</dd></div>
+      <div class="row rv d2"><dt class="fig">3年分のデータ</dt>
+        <dd>過去の営業データを取り込み済み。日付でも、イベント名でも、すぐに検索できます。</dd></div>
+      <div class="row rv d3"><dt class="fig">600通以上／不一致 0</dt>
+        <dd>実際の報告文でAIの読み取りを検証しました。疑わしい数字は自動で保留するので、帳簿は汚れません。</dd></div>
+      <div class="row rv d4"><dt>現場の人間が作りました</dt>
+        <dd>設計も、販売も、運用も、東京で飲食・ホスピタリティの現場を回している人間が担当します。営業終わりの現実を知っている側の設計です。</dd></div>
+    </dl>
   </div>
 </section>
 
-<!-- 9 ═══ CLOSE — green glass -->
-<section class="green" id="close">
-  <h2 class="disp rv" style="font-size:clamp(40px,6.4vw,92px)">まずは、15分だけ。</h2>
-  <p class="rv d2" style="margin-top:4.5vh; font-size:clamp(16px,1.7vw,22px); line-height:2; max-width:840px">
-    <b>Zoomで画面を見ながら、実際の動きをお見せします。</b>準備するものは何もありません。<br>
-    <span style="font-weight:300">導入作業はすべてこちら。店側はアカウントの許可クリックと、いつもの報告だけ。</span>
-  </p>
-  <div class="cta-row rv d3">
-    <a class="cta" style="background:linear-gradient(165deg,#0e1512,#05130b); color:#eafff2; border-color:rgba(255,255,255,.2); box-shadow:0 18px 50px rgba(0,40,16,.45), inset 0 1.5px 0 rgba(255,255,255,.18)" href="#close">
-      <svg width="17" height="17" viewBox="0 0 17 17" fill="none"><rect x="1.5" y="3" width="10.5" height="11" rx="2.5" stroke="currentColor" stroke-width="1.7"/><path d="M12 8.5l4-2.5v5l-4-2.5z" fill="currentColor"/></svg>
-      オンライン説明を予約する（15分・無料）</a>
-    <span style="font-size:12px; opacity:.75">※ 予約リンク準備中 — 現在はお問い合わせにて受付</span>
+<!-- 10 ── クロージング（ドレンチ）─────────────────────────── -->
+<section class="drench" id="contact">
+  <div class="wrap">
+    <h2 class="disp rv-s" style="font-size:clamp(36px,5.4vw,74px)">まずは、15分だけ。</h2>
+    <p class="rv d2" style="margin-top:clamp(26px,4vh,44px); font-size:clamp(15.5px,1.5vw,20px);
+       line-height:2; max-width:38em; font-weight:700">
+      Zoomで画面をお見せしながら、実際の動きをご説明します。ご用意いただくものはありません。
+      <span style="font-weight:400; display:block; margin-top:1em; opacity:.88">
+      導入の作業はすべてこちらで行います。お店にお願いするのは、アカウントの連携を許可していただくことと、
+      いつも通り報告を送っていただくことだけです。</span>
+    </p>
+    <div class="btns rv d3">
+      <a class="go go-dark" href="#contact">
+        <svg width="17" height="17" viewBox="0 0 17 17" fill="none" aria-hidden="true"><rect x="1.4" y="3" width="10.6" height="11" rx="2.6" stroke="currentColor" stroke-width="1.8"/><path d="M12 8.5l4-2.6v5.2z" fill="currentColor"/></svg>
+        オンライン説明を予約する（15分・無料）</a>
+    </div>
+    <dl class="contact rv d4">
+      <div><dt>お問い合わせ</dt><dd>準備中</dd></div>
+      <div><dt>運営</dt><dd>SHIFT GK（東京）</dd></div>
+      <div><dt>対応エリア</dt><dd>全国／オンライン</dd></div>
+    </dl>
   </div>
-  <p class="disp rv d4" style="margin-top:8vh; font-size:clamp(22px,2.6vw,36px); font-weight:600">送るだけ。あとは全部、自動。</p>
-  <p class="rv d5" style="margin-top:5vh; font-size:13px; opacity:.65">ミセログ（仮称） · SHIFT GK · お問い合わせ：準備中</p>
 </section>
 
-<footer-space></footer-space>
 </main>
 
+<div class="bottom" id="bottom">
+  <a class="go" href="#contact">
+    <svg width="16" height="16" viewBox="0 0 17 17" fill="none" aria-hidden="true"><rect x="1.4" y="3" width="10.6" height="11" rx="2.6" stroke="currentColor" stroke-width="1.8"/><path d="M12 8.5l4-2.6v5.2z" fill="currentColor"/></svg>
+    15分の説明を予約（無料）</a>
+</div>
+
+<footer>
+  <p>ミセログ（仮称）／ SHIFT GK</p>
+  <p>いつもの報告を、そのまま経営数字に。</p>
+</footer>
+
 <script>
-/* Motion system — reveals once (strong ease-out), count-ups, chart draw,
-   sky parallax + progress bar on one rAF, phone tilt on fine pointers.
-   Everything transform/opacity. Off under prefers-reduced-motion. */
+/* ── motion controller ────────────────────────────────────────
+   Reveals enhance an already-visible default: the `.js` class is what
+   hides things, so a no-JS / headless / print render ships complete.
+   ?static skips the gating entirely; ?only=<id> isolates one section. */
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-/* ?static — verification/print hook: no reveal gating, everything visible.
-   Also the graceful path for very old in-store tablets. */
 const isStatic = location.search.includes('static');
 if (!isStatic) document.documentElement.classList.add('js');
-/* ?only=<id> — verification hook: render one section alone (headless
-   fragment-scroll is unreliable; this sidesteps scrolling entirely). */
-const only = new URLSearchParams(location.search).get('only');
-if (only) document.querySelectorAll('section').forEach(x => { if (x.id !== only) x.style.display = 'none'; });
 
-/* reveals — and per-section extras (count-ups) fire on first entry */
-const io = new IntersectionObserver(es => es.forEach(e => {
-  if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); startCounts(e.target); }
-}), { threshold: 0.18 });
+const only = new URLSearchParams(location.search).get('only');
+if (only) document.querySelectorAll('main > section').forEach(s => {
+  if (s.id !== only) s.style.display = 'none';
+});
+
+/* section reveals + per-section extras */
+const io = new IntersectionObserver(entries => entries.forEach(e => {
+  if (!e.isIntersecting) return;
+  e.target.classList.add('in');
+  io.unobserve(e.target);
+  countUp(e.target);
+}), { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
 document.querySelectorAll('section').forEach(s => io.observe(s));
 
-/* count-up */
-const fmt = n => Math.round(n).toLocaleString('ja-JP');
-function startCounts(scope) {
-  if (isStatic || reduce) return;                        // final values already in markup
+/* figures count up once, on reveal */
+function countUp(scope) {
+  if (isStatic || reduce) return;              // final values already in markup
   scope.querySelectorAll('[data-count]').forEach(el => {
-    const end = +el.dataset.count, t0 = performance.now(), dur = 1600;
-    const step = t => {
-      const p = Math.min((t - t0) / dur, 1), e = 1 - Math.pow(1 - p, 4);   // easeOutQuart
-      el.textContent = fmt(end * e);
-      if (p < 1) requestAnimationFrame(step);
+    const end = +el.dataset.count, t0 = performance.now(), dur = 1500;
+    const tick = t => {
+      const p = Math.min((t - t0) / dur, 1);
+      el.textContent = Math.round(end * (1 - Math.pow(1 - p, 4))).toLocaleString('ja-JP');
+      if (p < 1) requestAnimationFrame(tick);
     };
-    requestAnimationFrame(step);
+    requestAnimationFrame(tick);
   });
 }
 
-/* sky parallax + scroll progress — one lerped rAF loop (the butter) */
+/* one rAF loop drives parallax + progress + header state */
 const layers = [...document.querySelectorAll('#sky .layer')];
 const orbits = document.querySelector('#sky .orbits');
 const prog = document.querySelector('#prog i');
-if (!reduce) {
-  let cur = 0, target = 0, raf = null;
-  const tick = () => {
-    cur += (target - cur) * 0.08;
-    for (const l of layers) l.style.transform = `translate3d(0, ${-cur * l.dataset.p}px, 0)`;
-    orbits.style.transform = `translate3d(0, ${-cur * 0.03}px, 0) rotate(${cur * 0.004}deg)`;
-    const m = document.documentElement.scrollHeight - innerHeight;
-    prog.style.transform = `scaleX(${Math.min(cur / Math.max(m, 1), 1)})`;
-    if (Math.abs(target - cur) > 0.1) raf = requestAnimationFrame(tick);
-    else raf = null;
-  };
-  addEventListener('scroll', () => {
-    target = scrollY;
-    if (!raf) raf = requestAnimationFrame(tick);
-  }, { passive: true });
-} else {
-  addEventListener('scroll', () => {
-    const m = document.documentElement.scrollHeight - innerHeight;
-    prog.style.transform = `scaleX(${Math.min(scrollY / Math.max(m, 1), 1)})`;
-  }, { passive: true });
-}
+const hd = document.getElementById('hd');
+const bottom = document.getElementById('bottom');
+const closing = document.getElementById('contact');
+let cur = 0, target = 0, raf = null;
 
-/* phone tilt — desktop fine pointers only */
+const frame = () => {
+  cur += (target - cur) * 0.09;                          // lerp = the smoothness
+  if (!reduce) {
+    for (const l of layers) l.style.transform = `translate3d(0,${-cur * l.dataset.p}px,0)`;
+    orbits.style.transform = `translate3d(0,${-cur * .03}px,0) rotate(${cur * .004}deg)`;
+  }
+  const max = document.documentElement.scrollHeight - innerHeight;
+  prog.style.transform = `scaleX(${Math.min(cur / Math.max(max, 1), 1)})`;
+  if (Math.abs(target - cur) > 0.1) raf = requestAnimationFrame(frame);
+  else raf = null;
+};
+addEventListener('scroll', () => {
+  target = scrollY;
+  hd.classList.toggle('stuck', scrollY > 40);
+  /* show the mobile bar past the hero, hide it once the real CTA is on
+     screen so the two never compete */
+  bottom.classList.toggle('up',
+    scrollY > innerHeight * 0.9 && closing.getBoundingClientRect().top > innerHeight * 0.65);
+  if (!raf) raf = requestAnimationFrame(frame);
+}, { passive: true });
+
+/* device tilt — fine pointers only, never on touch */
 const tilt = document.getElementById('tilt');
 if (tilt && !reduce && matchMedia('(hover:hover) and (pointer:fine)').matches) {
-  const zone = tilt.closest('.phone-wrap');
+  const zone = tilt.closest('.stage');
   zone.addEventListener('pointermove', e => {
     const r = tilt.getBoundingClientRect();
     const dx = (e.clientX - r.left - r.width / 2) / r.width;
     const dy = (e.clientY - r.top - r.height / 2) / r.height;
-    tilt.style.transform = `rotateY(${dx * 10}deg) rotateX(${dy * -8}deg)`;
-  });
+    tilt.style.transform = `rotateY(${dx * 9}deg) rotateX(${dy * -7}deg)`;
+  }, { passive: true });
   zone.addEventListener('pointerleave', () => { tilt.style.transform = ''; });
 }
 </script>
