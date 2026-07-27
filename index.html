@@ -11,11 +11,39 @@
 <meta property="og:title" content="ミセログ（仮称）｜送るだけ。あとは全部、自動。">
 <meta property="og:description" content="いつもの売上報告をLINEに送るだけ。AIが読み取り、約1分で帳簿とダッシュボードに反映。手入力ゼロ、転記ミスゼロ。">
 <meta property="og:url" content="https://karassada.github.io/OSBS/">
+<meta property="og:site_name" content="ミセログ（仮称）／ SHIFT GK">
+<meta property="og:image" content="https://karassada.github.io/OSBS/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="送るだけ。あとは全部、自動。 — いつもの売上報告をLINEに送るだけで、約1分で帳簿に入り、画面が最新になります。">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://karassada.github.io/OSBS/og.png">
+<link rel="canonical" href="https://karassada.github.io/OSBS/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "ミセログ（仮称）",
+  "serviceType": "飲食店向け 売上の自動記帳・ダッシュボード構築",
+  "description": "いつもの売上報告をLINEに送るだけで、AIが読み取り、約1分で帳簿に記入し、スマートフォンのダッシュボードに反映します。Google Workspaceの設置からフォルダ整理、バックアップ、毎月の保守までを含みます。",
+  "url": "https://karassada.github.io/OSBS/",
+  "provider": {
+    "@type": "Organization",
+    "name": "SHIFT GK",
+    "address": { "@type": "PostalAddress", "addressLocality": "東京", "addressCountry": "JP" }
+  },
+  "areaServed": { "@type": "Country", "name": "日本" },
+  "audience": { "@type": "BusinessAudience", "audienceType": "飲食店・バー・カフェ・居酒屋" },
+  "availableChannel": {
+    "@type": "ServiceChannel",
+    "serviceLocation": { "@type": "VirtualLocation", "name": "オンライン（Zoom）" }
+  }
+}
+</script>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2307080b'/%3E%3Cpath d='M9 16.5l4.6 4.6L23 11.8' stroke='%230FCB88' stroke-width='3.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Zen+Old+Mincho:wght@600;700;900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Zen+Old+Mincho:wght@600;700&display=swap">
 <style>
 /* ============================================================
    MISELOG landing page v3 — standalone sales page for cold leads.
@@ -146,7 +174,10 @@ body {
    unit in an inline-block, which the browser cannot break inside.
    overflow-wrap is the safety net: a unit too long for its column
    degrades to a normal break instead of overflowing the layout. */
-.u { display:inline-block; }
+/* The injected units are new descendant spans, so any rule written as
+   `.something span { border… }` would paint every unit as its own chip.
+   Reset them, and scope such rules to `> span`. */
+.u { display:inline-block; border:0; padding:0; margin:0; background:none; }
 [lang="ja"] { word-break:auto-phrase; overflow-wrap:anywhere; }
 /* English needs none of the JP typographic machinery */
 html[data-lang="en"] body { font-feature-settings:normal; }
@@ -206,7 +237,7 @@ html[data-lang="en"] .disp { word-break:normal; }
 
 #sky .layer { position:absolute; inset:-14vh 0; will-change:transform; }
 .orbits { position:absolute; inset:0; width:100%; height:100%; opacity:.45; }
-.obj { position:absolute; will-change:transform; }
+.obj { position:absolute; }
 .obj svg { display:block; overflow:visible; }
 /* Six distinct drift personalities. Objects travel further, rotate harder
    and breathe in scale, at deliberately unmatched durations so the field
@@ -1336,6 +1367,14 @@ const STEM     = /[一-鿿0-9０-９]$/;
    to サービス. Any katakana run rejoins the katakana (or number) before it. */
 const KATA     = /^[ァ-ヶーヴ・]+$/;
 const KATA_END = /[ァ-ヶーヴ・0-9０-９]$/;
+/* Gluing has to work FORWARDS too. Particles lean back onto the word
+   before them, but adverbs lean onto the word after: glue only backwards
+   and 「もう終わりにしましょう。」 splits as 「もう ／ 終わりにしましょう。」,
+   stranding もう at the end of a line. */
+const LEAD = /^(もう|まだ|また|ずっと|すぐ|とても|もっと|すでに|やっと|きっと|ぜひ|いつも|さらに|かなり|ほとんど|あまり|しっかり|ちゃんと|とにかく|まず|なぜ|もし|ただ|そして|しかし|だから|つまり|例えば)$/;
+const ENDS_PUNCT = /[、。，．！？…]$/;
+/* kinsoku: 。、）」 may never begin a line */
+const CLOSER_ONLY = /^[、。，．・！？…」』）】〉》］｝：；:;]+$/;
 const segmenter = ('Segmenter' in Intl) ? new Intl.Segmenter('ja', { granularity: 'word' }) : null;
 
 function phrase(root) {
@@ -1343,18 +1382,33 @@ function phrase(root) {
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
   const nodes = [];
   for (let n; (n = walker.nextNode()); ) {
-    if (n.nodeValue.trim() && !n.parentElement.closest('.u,.march,[data-nophrase]')) nodes.push(n);
+    /* .contact dt is wide-tracked: inline-block unit boundaries make the
+       letter-spacing gaps visible, and those labels are two words anyway */
+    if (n.nodeValue.trim() && !n.parentElement.closest('.u,.march,.contact dt,[data-nophrase]')) nodes.push(n);
   }
   for (const node of nodes) {
-    const units = [];
+    const units = [], leads = [];
     for (const { segment } of segmenter.segment(node.nodeValue)) {
       const prev = units[units.length - 1];
+      const lead = LEAD.test(segment);          // leans forward, so never glue it back
       // glue on: particles/inflection, closing punctuation, or after an opening bracket
-      const glue = prev && (TRAILING.test(segment) || OPENING.test(prev) || KANA.test(segment) ||
-                            (SUFFIX.test(segment) && STEM.test(prev)) ||
-                            (KATA.test(segment) && KATA_END.test(prev)));
+      const glue = !lead && prev &&
+                   (TRAILING.test(segment) || OPENING.test(prev) || KANA.test(segment) ||
+                    (SUFFIX.test(segment) && STEM.test(prev)) ||
+                    (KATA.test(segment) && KATA_END.test(prev)));
       if (glue) units[units.length - 1] = prev + segment;
-      else units.push(segment);
+      else { units.push(segment); leads.push(lead); }
+    }
+    // adverbs join the word in front of them (unless a comma already ends the phrase)
+    for (let i = units.length - 2; i >= 0; i--) {
+      if (leads[i] && !ENDS_PUNCT.test(units[i])) {
+        units[i] += units[i + 1];
+        units.splice(i + 1, 1); leads.splice(i + 1, 1);
+      }
+    }
+    // and nothing may start a line with closing punctuation
+    for (let i = units.length - 1; i > 0; i--) {
+      if (CLOSER_ONLY.test(units[i])) { units[i - 1] += units[i]; units.splice(i, 1); }
     }
     const frag = document.createDocumentFragment();
     for (const u of units) {
