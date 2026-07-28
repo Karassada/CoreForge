@@ -3,19 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ミセログ（仮称）｜送るだけ。あとは全部、自動。</title>
-<meta name="description" content="いつもの売上報告をLINEに送るだけ。AIが読み取り、約1分で帳簿に記入、スマホのダッシュボードに反映。飲食店・バー・カフェの手入力をゼロにする、設置から運用まで込みの自動化サービス。">
+<title>ミセログ（仮称）｜あなたの会社に、専用のOSを。</title>
+<meta name="description" content="いま使っている道具とAIをつなぎ、フォルダ・ダッシュボード・自動化まで一式構築。ブランドに合わせてつくり、毎月の運用まで持ちます。Webサイト制作も。東京・SHIFT GK。">
 <meta name="theme-color" content="#07080b">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ja_JP">
-<meta property="og:title" content="ミセログ（仮称）｜送るだけ。あとは全部、自動。">
-<meta property="og:description" content="いつもの売上報告をLINEに送るだけ。AIが読み取り、約1分で帳簿とダッシュボードに反映。手入力ゼロ、転記ミスゼロ。">
+<meta property="og:title" content="ミセログ（仮称）｜あなたの会社に、専用のOSを。">
+<meta property="og:description" content="いま使っている道具とAIをつなぎ、フォルダも、ダッシュボードも、自動化も、ブランドに合わせて一式つくります。運用まで込み。">
 <meta property="og:url" content="https://karassada.github.io/OSBS/">
 <meta property="og:site_name" content="ミセログ（仮称）／ SHIFT GK">
 <meta property="og:image" content="https://karassada.github.io/OSBS/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="送るだけ。あとは全部、自動。 — いつもの売上報告をLINEに送るだけで、約1分で帳簿に入り、画面が最新になります。">
+<meta property="og:image:alt" content="あなたの会社に、専用のOSを。 — いま使っている道具とAIをつなぎ、フォルダもダッシュボードも自動化も一式つくります。">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://karassada.github.io/OSBS/og.png">
 <link rel="canonical" href="https://karassada.github.io/OSBS/">
@@ -24,8 +24,8 @@
   "@context": "https://schema.org",
   "@type": "Service",
   "name": "ミセログ（仮称）",
-  "serviceType": "飲食店向け 売上の自動記帳・ダッシュボード構築",
-  "description": "いつもの売上報告をLINEに送るだけで、AIが読み取り、約1分で帳簿に記入し、スマートフォンのダッシュボードに反映します。Google Workspaceの設置からフォルダ整理、バックアップ、毎月の保守までを含みます。",
+  "serviceType": "業務システム構築（AI連携・自動化・ダッシュボード・Webサイト制作）",
+  "description": "いま使っている道具とAIをつなぎ、フォルダ構造、ダッシュボード、自動化までを一式構築します。Google Workspaceの設置やWebサイト制作にも対応し、毎月の運用・保守まで含みます。",
   "url": "https://karassada.github.io/OSBS/",
   "provider": {
     "@type": "Organization",
@@ -33,7 +33,7 @@
     "address": { "@type": "PostalAddress", "addressLocality": "東京", "addressCountry": "JP" }
   },
   "areaServed": { "@type": "Country", "name": "日本" },
-  "audience": { "@type": "BusinessAudience", "audienceType": "飲食店・バー・カフェ・居酒屋" },
+  "audience": { "@type": "BusinessAudience", "audienceType": "中小企業・個人事業主・飲食店" },
   "availableChannel": {
     "@type": "ServiceChannel",
     "serviceLocation": { "@type": "VirtualLocation", "name": "オンライン（Zoom）" }
@@ -392,6 +392,12 @@ section.drench > * { position:relative; z-index:1; }
 
 /* ---------- hero ---------- */
 #hero { padding-top:20vh; }
+.badge { display:inline-flex; align-self:flex-start; align-items:center; gap:10px;
+  padding:9px 18px 9px 14px; border-radius:100px; margin-bottom:clamp(20px,3vh,32px);
+  font-size:clamp(11.5px,1vw,13.5px); font-weight:900; letter-spacing:.02em; color:#bfe8cf;
+  background:rgba(15,203,136,.09); border:1px solid rgba(15,203,136,.3); }
+.badge .dot { flex:none; width:7px; height:7px; border-radius:100px; background:var(--jade);
+  animation:pulse 2.4s ease-in-out infinite; }
 .hero-sub { margin-top:clamp(26px,4vh,44px); }
 .cue { position:absolute; bottom:4.5vh; left:clamp(20px,7vw,88px);
        display:flex; align-items:center; gap:11px; font-size:11px;
@@ -401,15 +407,6 @@ section.drench > * { position:relative; z-index:1; }
   background:var(--jade); animation:cue 2.4s var(--eo) infinite; }
 @keyframes cue { to { top:132%; } }
 
-/* ---------- marquee ---------- */
-.march { border-block:1px solid var(--hair); padding:clamp(18px,2.6vh,30px) 0; overflow:hidden;
-  -webkit-mask-image:linear-gradient(90deg,transparent,#000 11%,#000 89%,transparent);
-  mask-image:linear-gradient(90deg,transparent,#000 11%,#000 89%,transparent); }
-.march .track { display:flex; width:max-content; animation:mar 52s linear infinite; }
-.march .set { display:flex; align-items:center; white-space:nowrap;
-  font-family:var(--mincho); font-weight:600; font-size:clamp(15px,1.55vw,21px); color:var(--sub); }
-.march .set span { padding:0 1.5em; }
-.march .set i { font-style:normal; color:var(--jade); font-size:.42em; transform:translateY(-.2em); }
 @keyframes mar { to { transform:translate3d(-50%,0,0); } }
 
 /* ---------- ruled rows ---------- */
@@ -422,17 +419,6 @@ section.drench > * { position:relative; z-index:1; }
 .row .fig { font-size:clamp(17px,1.7vw,23px); color:var(--jade); font-weight:900; letter-spacing:-.02em; }
 
 /* ---------- timeline ---------- */
-.tl { position:relative; margin-top:clamp(38px,6vh,64px); display:grid;
-  grid-template-columns:repeat(4,1fr); gap:clamp(20px,3vw,42px); }
-.tl::before, .tl::after { content:""; position:absolute; top:0; left:0; right:0; height:1px; }
-.tl::before { background:var(--hair); }
-.tl::after  { background:var(--jade); transform:scaleX(0); transform-origin:0 50%; }
-.js .in .tl::after { transform:scaleX(1); transition:transform 1.9s var(--eo) .25s; }
-.tl .st { padding-top:clamp(18px,2.6vh,28px); position:relative; }
-.tl .st::before { content:""; position:absolute; top:-4px; left:0; width:9px; height:9px;
-  border-radius:100px; background:var(--jade); }
-.tl .t { font-size:clamp(15px,1.45vw,19px); font-weight:900; letter-spacing:.01em; }
-.tl p { margin-top:12px; font-size:clamp(13px,1.15vw,15.5px); color:var(--sub); line-height:1.9; text-wrap:pretty; }
 
 /* ---------- device (the one place glass is the point) ---------- */
 .stage { display:grid; grid-template-columns:auto minmax(300px,1fr);
@@ -533,34 +519,11 @@ section.drench > * { position:relative; z-index:1; }
 .tabs b { color:var(--jade); font-weight:700; }
 .home { width:118px; height:4px; border-radius:100px; background:rgba(255,255,255,.32); margin:7px auto 0; }
 
-/* ---------- what gets built ----------
-   Not cards: a heading column and an item column, so the eye reads
-   "this area of work → these concrete things" without a grid of boxes. */
-.grp { display:grid; grid-template-columns:minmax(11em,17em) 1fr;
-  gap:clamp(12px,3vw,48px); padding:clamp(18px,2.6vh,28px) 0;
-  border-bottom:1px solid var(--hair); align-items:start; }
-.grp:first-of-type { border-top:1px solid var(--hair); }
-.grp h3 { font-size:clamp(18px,1.7vw,24px); font-weight:900; letter-spacing:-.015em;
-  color:var(--jade); }
-.grp .why { margin-top:10px; font-size:clamp(12.5px,1.1vw,14.5px); color:var(--faint); line-height:1.85; }
-.grp ul { list-style:none; display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-  gap:7px clamp(16px,2.4vw,34px); }
 /* each item in its own quiet panel — a wall of ticked lines is hard to
    read; a bounded block per idea is not */
-.grp li { position:relative; padding:13px 15px 13px 38px; border-radius:14px;
-  font-size:clamp(13.5px,1.2vw,15.5px); line-height:1.65; color:var(--ink);
-  background:rgba(255,255,255,.028); border:1px solid var(--hair);
-  transition:background .4s var(--eo), border-color .4s var(--eo); }
-.grp li:hover { background:rgba(15,203,136,.05); border-color:rgba(15,203,136,.3); }
-.grp li::before { content:""; position:absolute; left:15px; top:1.15em; width:10px; height:6px;
-  border-left:2px solid var(--jade); border-bottom:2px solid var(--jade);
-  transform:rotate(-45deg); }
-.grp li b { display:block; font-weight:900; color:var(--jade); letter-spacing:-.01em; }
 /* :not(.u) is load-bearing — a bare `span` selector here outranks
    `.u{display:inline-block}` and would turn every phrase unit into a
    block, stacking the text one word per line. */
-.grp li span:not(.u) { display:block; color:var(--faint); font-size:.85em;
-  line-height:1.7; margin-top:2px; }
 
 /* ---------- the diagram ----------
    A real drawn schematic: icon nodes, curved wires with arrowheads,
@@ -670,8 +633,6 @@ section.drench > * { position:relative; z-index:1; }
   font-weight:900; color:var(--jade); letter-spacing:-.02em; }
 
 @media (max-width:640px){
-  .grp { grid-template-columns:1fr; gap:14px; }
-  .grp ul { grid-template-columns:1fr; }
   .back { gap:11px; padding:15px 16px; }
 }
 
@@ -733,7 +694,6 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
 /* ---------- responsive ---------- */
 @media (max-width:900px) {
   .stage { grid-template-columns:1fr; justify-items:center; gap:clamp(34px,6vh,54px); }
-  .tl { grid-template-columns:1fr 1fr; row-gap:clamp(26px,4vh,38px); }
 }
 @media (max-width:640px) {
   section { padding:13vh clamp(20px,7vw,88px); }
@@ -745,13 +705,6 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
   #sky .obj svg { transform:scale(.62); }
   .far { opacity:.10; } .mid { opacity:.17; } .near { opacity:.24; }
   .row { grid-template-columns:1fr; gap:8px; }
-  .tl { grid-template-columns:1fr; gap:0; }
-  .tl::before, .tl::after { top:0; bottom:0; left:0; right:auto; width:1px; height:auto; }
-  .js .tl::after { transform:scaleY(0); transform-origin:50% 0; }
-  .js .in .tl::after { transform:scaleY(1); }
-  .tl .st { padding:0 0 clamp(22px,3.4vh,30px) 26px; }
-  .tl .st:last-child { padding-bottom:0; }
-  .tl .st::before { top:5px; left:-4px; }
   .btns { flex-direction:column; align-items:stretch; }
   .go, .ghost { justify-content:center; }
   /* pricing table → stacked records */
@@ -770,7 +723,7 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
 
 @media (prefers-reduced-motion:reduce) {
   html { scroll-behavior:auto; }
-  .blob,.bob,.bob2,.bob3,.bob4,.bob5,.bob6,.cue i::after,.march .track,.float,
+  .blob,.bob,.bob2,.bob3,.bob4,.bob5,.bob6,.cue i::after,.float,
   .live i,section.drench::after,.rail span,.spark { animation:none !important; }
   .js .rv,.js .rv-l,.js .rv-s { transform:none; }
   .js .in .rv,.js .in .rv-l,.js .in .rv-s { transition:opacity .3s ease; }
@@ -778,7 +731,6 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
   .js .in .mask > span { opacity:1; transition:opacity .35s ease; }
   .js .cline { stroke-dashoffset:0; }
   .js .wk i { transform:none; }
-  .js .tl::after { transform:none; }
   .iphone { transition:none; }
 }
 </style>
@@ -797,7 +749,7 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
       <button type="button" data-set="ja" aria-pressed="true" lang="ja">日本語</button>
       <button type="button" data-set="en" aria-pressed="false" lang="en">EN</button>
     </div>
-    <a class="go" href="#contact" data-en="Book a 15-min demo">15分の説明を予約</a>
+    <a class="go" href="#contact" data-en="Get in touch">お問い合わせ</a>
   </div>
 </header>
 
@@ -857,84 +809,37 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
 <!-- 1 ── HERO ─────────────────────────────────────────────── -->
 <section class="full" id="hero">
   <div class="wrap">
+    <div class="badge rv"><span class="dot"></span><span data-en="Custom AI operating systems, built to order">オーダーメイドのAI業務システム</span></div>
     <h1 class="disp h-hero">
-      <span class="mask"><span data-en="Just send it.">送るだけ。</span></span>
-      <span class="mask m2"><span data-en="Everything else is &lt;em&gt;automatic.&lt;/em&gt;">あとは全部、<em>自動。</em></span></span>
+      <span class="mask"><span data-en="Your business,">あなたの会社に、</span></span>
+      <span class="mask m2"><span data-en="on its own &lt;em&gt;OS.&lt;/em&gt;">専用の<em>OS</em>を。</span></span>
     </h1>
-    <p class="lede hero-sub rv d3" data-en="Your staff send the same end-of-day report, in the same LINE chat they always use. The AI reads it, writes it into your books, and updates your dashboard in about a minute.">
-      スタッフはいつもの売上報告を、いつものLINEに送るだけ。
-      AIがそれを読み取り、約1分で帳簿に記入し、スマホの画面を最新にします。
+    <p class="lede hero-sub rv d3"
+       data-en="We connect the tools you already use to an AI that understands your business, then build the folders, the dashboards and the automations around it. Designed in your brand, run by us every month.">
+      いま使っている道具とAIをつなぎ、フォルダも、ダッシュボードも、自動化も、
+      あなたのブランドに合わせて一式つくります。毎月の運用まで、こちらで持ちます。
     </p>
     <div class="btns rv d4">
       <a class="go" href="#contact">
         <svg width="17" height="17" viewBox="0 0 17 17" fill="none" aria-hidden="true"><rect x="1.4" y="3" width="10.6" height="11" rx="2.6" stroke="currentColor" stroke-width="1.8"/><path d="M12 8.5l4-2.6v5.2z" fill="currentColor"/></svg>
-        <span data-en="Book a 15-minute demo">15分のオンライン説明を予約</span></a>
-      <a class="ghost" href="#flow"><span data-en="See how it works">仕組みを見る</span>
+        <span data-en="Book a 15-minute call">15分のオンライン相談</span></a>
+      <a class="ghost" href="#how"><span data-en="See how it works">つくり方を見る</span>
         <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 2v9M3 7.5L7 11l4-3.5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
     </div>
   </div>
   <p class="cue" aria-hidden="true"><i></i>SCROLL</p>
 </section>
 
-<!-- 2 ── 業態マーキー ─────────────────────────────────────── -->
-<section class="short" aria-label="対応している業態">
-  <div class="march">
-    <div class="track" data-en="&lt;div class='set'&gt;&lt;span&gt;Restaurants&lt;/span&gt;&lt;i&gt;●&lt;/i&gt;&lt;span&gt;Cafés&lt;/span&gt;&lt;i&gt;●&lt;/i&gt;&lt;span&gt;Bars&lt;/span&gt;&lt;i&gt;●&lt;/i&gt;&lt;span&gt;Izakaya&lt;/span&gt;&lt;i&gt;●&lt;/i&gt;&lt;span&gt;Ramen shops&lt;/span&gt;&lt;i&gt;●&lt;/i&gt;&lt;span&gt;Yakiniku&lt;/span&gt;&lt;i&gt;●&lt;/i&gt;&lt;span&gt;Bakeries&lt;/span&gt;&lt;i&gt;●&lt;/i&gt;&lt;span&gt;Lounges&lt;/span&gt;&lt;i&gt;●&lt;/i&gt;&lt;span&gt;Hotel F&amp;amp;B&lt;/span&gt;&lt;i&gt;●&lt;/i&gt;&lt;span&gt;Food trucks&lt;/span&gt;&lt;i&gt;●&lt;/i&gt;&lt;/div&gt;&lt;div class='set' aria-hidden='true'&gt;&lt;span&gt;Restaurants&lt;/span&gt;&lt;i&gt;●&lt;/i&gt;&lt;span&gt;Cafés&lt;/span&gt;&lt;i&gt;●&lt;/i&gt;&lt;span&gt;Bars&lt;/span&gt;&lt;i&gt;●&lt;/i&gt;&lt;span&gt;Izakaya&lt;/span&gt;&lt;i&gt;●&lt;/i&gt;&lt;span&gt;Ramen shops&lt;/span&gt;&lt;i&gt;●&lt;/i&gt;&lt;span&gt;Yakiniku&lt;/span&gt;&lt;i&gt;●&lt;/i&gt;&lt;span&gt;Bakeries&lt;/span&gt;&lt;i&gt;●&lt;/i&gt;&lt;span&gt;Lounges&lt;/span&gt;&lt;i&gt;●&lt;/i&gt;&lt;span&gt;Hotel F&amp;amp;B&lt;/span&gt;&lt;i&gt;●&lt;/i&gt;&lt;span&gt;Food trucks&lt;/span&gt;&lt;i&gt;●&lt;/i&gt;&lt;/div&gt;">
-      <div class="set"><span>レストラン</span><i>●</i><span>カフェ</span><i>●</i><span>バー</span><i>●</i><span>居酒屋</span><i>●</i><span>ラーメン店</span><i>●</i><span>焼肉店</span><i>●</i><span>ベーカリー</span><i>●</i><span>ラウンジ</span><i>●</i><span>ホテル飲食</span><i>●</i><span>キッチンカー</span><i>●</i></div>
-      <div class="set" aria-hidden="true"><span>レストラン</span><i>●</i><span>カフェ</span><i>●</i><span>バー</span><i>●</i><span>居酒屋</span><i>●</i><span>ラーメン店</span><i>●</i><span>焼肉店</span><i>●</i><span>ベーカリー</span><i>●</i><span>ラウンジ</span><i>●</i><span>ホテル飲食</span><i>●</i><span>キッチンカー</span><i>●</i></div>
-    </div>
-  </div>
-</section>
-
-<!-- 3 ── 問題 ─────────────────────────────────────────────── -->
-<section id="problem">
+<!-- 2 ── どうつくるか ─────────────────────────────────────── -->
+<section id="how">
   <div class="wrap">
-    <h2 class="disp h-big rv" style="max-width:16em"
-        data-en="The numbers already exist.&lt;br&gt;&lt;span style='color:var(--sub)'&gt;They are simply not being used.&lt;/span&gt;">数字は毎日生まれている。<br>
-      <span style="color:var(--sub)">活かされていないだけ。</span></h2>
-    <dl class="rows">
-      <div class="row rv-l d1"><dt data-en="The report already exists">報告は、もうある</dt>
-        <dd data-en="After close, the sales report already arrives every day by LINE or message. The data has been there the whole time.">営業が終われば、売上の報告はLINEやメッセージで毎日届いています。データはずっとそこにありました。</dd></div>
-      <div class="row rv-l d2"><dt data-en="Someone retypes it">誰かが打ち直す</dt>
-        <dd data-en="The next day, someone copies those numbers into Excel by hand. Time disappears, and typos slip quietly into the books.">翌日、その数字を誰かがExcelへ手で入れ直します。時間が消え、打ち間違いが静かに帳簿へ入り込みます。</dd></div>
-      <div class="row rv-l d3"><dt data-en="The owner cannot see it">経営者に見えない</dt>
-        <dd data-en="Few owners can answer “how was last month?” on the spot. The numbers exist, but not in a form anyone can read.">「先月はどうだった？」に即答できる店は多くありません。数字はあるのに、見える形になっていないからです。</dd></div>
-    </dl>
-    <p class="lede rv d4" style="margin-top:clamp(30px,4.5vh,48px)"
-       data-en="A new register, training on a new app: a busy floor will accept neither.&lt;br&gt;&lt;strong&gt;That is why “transformation by adding tools” keeps failing at this size of business.&lt;/strong&gt;">
-      レジの入れ替えも、新しいアプリの研修も、忙しい現場はまず受け入れません。<br>
-      <strong>「新しい道具を入れるDX」が、この規模の店で失敗し続けてきた理由です。</strong>
-    </p>
-  </div>
-</section>
-
-<!-- 4 ── インサイト（ドレンチ）────────────────────────────── -->
-<section class="drench" id="insight">
-  <div class="wrap">
-    <h2 class="disp rv-s" style="font-size:clamp(34px,5.6vw,78px); line-height:1.32"
-        data-en="Don’t change the habit.&lt;br&gt;Ride it.">
-      習慣を変えさせない。<br>習慣に、乗る。</h2>
-    <p class="rv d2" style="margin-top:clamp(28px,4.5vh,46px); font-size:clamp(15.5px,1.5vw,21px);
-       line-height:2; max-width:36em; font-weight:700"
-       data-en="No training. No new app. No resistance from the floor.&lt;span style='font-weight:400; display:block; margin-top:1em; color:var(--sub)'&gt;Everyone else asks you to change how you work: new register, new app, new input form. MISELOG asks for nothing, because the AI reads the report your staff already send.&lt;/span&gt;">
-      研修ゼロ。新しいアプリ、ゼロ。現場の抵抗も、ゼロ。
-      <span style="font-weight:400; display:block; margin-top:1em; color:var(--sub)">
-      他社は「やり方を変えてください」と言います。新しいレジ、新しいアプリ、新しい入力フォーム。
-      ミセログは店に何も要求しません。いつもの報告を、AIがそのまま読むからです。</span>
-    </p>
-  </div>
-</section>
-
-
-<!-- 4 ── つながり図（スクロールで描かれる）────────────────── -->
-<section id="wire">
-  <div class="wrap">
-    <h2 class="h-fact rv" data-en="How it all connects.">どうつながるのか。</h2>
+    <h2 class="h-fact rv" data-en="How it is built.">どうつくるのか。</h2>
     <p class="lede rv d1" style="margin-top:clamp(14px,2vh,22px)"
-       data-en="Scroll, and the line draws itself. What your shop already produces goes in at the top, and comes back out at the bottom in a form you can use.">
-      スクロールすると、線が引かれていきます。お店がいつも通りに動いて生まれるものが上から入り、
-      使える形になって下から出てきます。</p>
-
+       data-en="Whatever your business already produces goes in at the top. The AI reads it, checks it, files it, and hands it back as something you can actually use. The intake can be a chat app, a register, email, a spreadsheet — anything that can be connected.">
+      いまの仕事から生まれるものが、上から入ります。AIが読んで、確かめて、しまい、
+      使える形にして返します。入口はチャットでも、レジでも、メールでも。
+      つながるものなら、何でも構いません。
+    </p>
     <div class="dia">
       <svg viewBox="0 0 480 1020" data-nophrase xmlns:xlink="http://www.w3.org/1999/xlink"
            role="img" aria-label="お店から出たデータが、AIを通って、スプレッドシートやダッシュボードに戻るまでの流れ図">
@@ -957,7 +862,7 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
               <path d="M3 5.6A2.6 2.6 0 015.6 3h12.8A2.6 2.6 0 0121 5.6v7.8a2.6 2.6 0 01-2.6 2.6H9.5L5 20v-4h-.4A2.6 2.6 0 013 13.4z"/>
               <path d="M7.4 8h9.2M7.4 11.4h5.6"/>
             </g>
-            <text class="lbl" y="47" data-en="LINE report">LINEの報告</text>
+            <text class="lbl" y="47" data-en="Messages">メッセージ</text>
           </g></g>
 
           <g transform="translate(186,112)"><g class="nd">
@@ -981,7 +886,7 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
             <g class="ico" transform="translate(-12,-12)">
               <path d="M3.4 5.6h17.2v15.2H3.4z"/><path d="M3.4 10.2h17.2M8 3v4.6M16 3v4.6"/>
             </g>
-            <text class="lbl" y="47" data-en="Bookings">予約</text>
+            <text class="lbl" y="47" data-en="Bookings">予約・会計</text>
           </g></g>
         </g>
 
@@ -1014,7 +919,7 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
             <g class="ico" transform="translate(-12,-12)">
               <path d="M2.6 6.6a2 2 0 012-2h5.2l2.2 2.6h8.4a2 2 0 012 2v8.2a2 2 0 01-2 2H4.6a2 2 0 01-2-2z"/>
             </g>
-            <text class="lbl" y="47" data-en="Drive folders">ドライブ</text>
+            <text class="lbl" y="47" data-en="Folders">フォルダ</text>
           </g></g>
 
           <g transform="translate(388,626)"><g class="nd">
@@ -1051,7 +956,7 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
               <path d="M2.8 5.4A2.4 2.4 0 015.2 3h11.6a2.4 2.4 0 012.4 2.4v7.2a2.4 2.4 0 01-2.4 2.4H8.8L4.8 19v-3.6h-.4A2.4 2.4 0 012.8 12.6z"/>
               <path d="M7.6 9.2l2.4 2.4 4.4-4.6"/>
             </g>
-            <text class="lbl" y="64" data-en="LINE reply">LINEの確認</text>
+            <text class="lbl" y="64" data-en="Auto replies">自動の通知</text>
           </g></g>
 
           <g transform="translate(292,838)"><g class="nd">
@@ -1069,7 +974,7 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
               <path d="M2.8 4.6h18.4v14.8H2.8z"/><path d="M2.8 9h18.4"/>
               <path d="M6 6.8h.02M8.8 6.8h.02"/><path d="M7 13h10M7 16h6"/>
             </g>
-            <text class="lbl" y="64" data-en="Your website">お店のサイト</text>
+            <text class="lbl" y="64" data-en="Site &amp; reports">サイト・資料</text>
           </g></g>
 
           <!-- and back into the AI, every month -->
@@ -1096,7 +1001,7 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
 
       <div class="cap-chip" data-cap="1" style="top:1.6%"><em>1</em><span data-en="It comes in">入ってくる</span></div>
       <div class="cap-chip" data-cap="2" style="top:42.6%"><em>2</em><span data-en="The AI reads and decides">AIが読んで、判断する</span></div>
-      <div class="cap-chip" data-cap="3" style="top:53.8%"><em>3</em><span data-en="It is stored">しまわれる</span></div>
+      <div class="cap-chip" data-cap="3" style="top:53.8%"><em>3</em><span data-en="It gets organised">整理される</span></div>
       <div class="cap-chip" data-cap="4" style="top:74.6%"><em>4</em><span data-en="It comes back">返ってくる</span></div>
     </div>
 
@@ -1108,26 +1013,11 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
       <p data-en="&lt;b&gt;And it loops.&lt;/b&gt; Every month the AI reviews its own work and we improve what needs it. The day you buy it is the worst it will ever be.">
         <b>そして、ここで終わりません。</b>毎月AIは自分の仕事を見直し、こちらは必要な部分に手を入れます。買った日が、いちばん出来の悪い状態です。</p>
     </div>
-
-    <div class="gains rv">
-      <div>
-        <p data-en="Time spent retyping">転記にかかる時間</p>
-        <span class="was" data-en="15–30 min a day">毎日15〜30分</span><span class="now" data-en="0 min">0分</span>
-      </div>
-      <div>
-        <p data-en="Until you can see the numbers">数字が見えるまで</p>
-        <span class="was" data-en="Next day at best">翌日以降</span><span class="now" data-en="About 1 min">約1分</span>
-      </div>
-      <div>
-        <p data-en="Figures that look wrong">おかしな数字</p>
-        <span class="was" data-en="Slips through unseen">気づかず残る</span><span class="now" data-en="Stopped &amp; checked">止めて確認</span>
-      </div>
-    </div>
   </div>
 </section>
 
-<!-- 5 ── 製品（デバイス）──────────────────────────────────── -->
-<section id="phone">
+<!-- 3 ── 実例 ─────────────────────────────────────────────── -->
+<section id="case">
   <div class="wrap stage">
     <div class="float rv-s">
     <div class="iphone" id="tilt" role="img" aria-label="ミセログのスマートフォン画面。今月売上¥3,847,200、前月同時点より12.4%増。昨日の売上¥186,400、客数58名、客単価¥3,214。22:15に自動入力済み。">
@@ -1184,132 +1074,87 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
     </div>
 
     <div>
-      <h2 class="disp h-big rv" data-en="Open it.&lt;br&gt;It’s already current.">開いた瞬間、<br>もう最新。</h2>
+      <h2 class="disp h-big rv" data-en="One that is&lt;br&gt;already running.">いま動いている、<br>ひとつの例。</h2>
+      <p class="lede rv d2" style="margin-top:clamp(16px,2.4vh,26px)"
+         data-en="A Tokyo venue sends its usual end-of-day report in the chat app it already used. The AI reads it, writes it into the books, and the owner’s screen is current about a minute later. Here it happens to be LINE; it could just as easily be the register, or email.">
+        東京の店舗が、いつも使っているアプリでいつも通りの報告を送ります。
+        AIがそれを読み、帳簿に書き、約1分後にはオーナーの画面が最新になっています。
+        この店ではLINEですが、レジでも、メールでも構いません。
+      </p>
       <dl class="rows" style="max-width:none">
-        <div class="row rv d2"><dt data-en="No refresh button">更新ボタンがない</dt>
-          <dd data-en="Sales, covers, yesterday, last month. Open it and it is current. Nothing to press.">売上、客数、昨日、前月比。開けば最新の状態です。操作は要りません。</dd></div>
-        <div class="row rv d4"><dt data-en="Add what you want to see">見たい数字は、足せる</dt>
-          <dd data-en="“I want cost ratio too.” “Split out lunch.” The screen can be edited and extended later. You are not locked into a fixed template.">「原価率も見たい」「ランチだけ分けたい」。画面は後からでも編集・追加できます。決まった型に合わせる必要はありません。</dd></div>
-        <div class="row rv d6"><dt data-en="The data is yours">データは店のもの</dt>
-          <dd data-en="Everything is stored in your own Google account. If the contract ever ends, the numbers stay with you.">保存先はお店ご自身のGoogleアカウント。契約が終わっても、数字はお店に残ります。</dd></div>
+        <div class="row rv d3"><dt data-en="About 1 minute">送信から約1分</dt>
+          <dd data-en="From sending to the entry being finished, read back and reconciled to the yen.">送ってから記帳が終わるまで。書いた行は読み戻し、1円単位で照合します。</dd></div>
+        <div class="row rv d4"><dt data-en="Nothing typed by hand">手入力はゼロ</dt>
+          <dd data-en="Nobody retypes anything, so there is nothing to get wrong. Anything that looks off is held and queried, never guessed.">誰も打ち直さないので、間違えようがありません。おかしな数字は推測せず、保留して確認します。</dd></div>
+        <div class="row rv d5"><dt data-en="The data stays yours">データは自分のもの</dt>
+          <dd data-en="Everything lives in your own Google account, with backups. If we ever part ways, it all stays with you.">保存先はご自身のGoogleアカウント。控えも残ります。契約が終わっても、すべて手元に残ります。</dd></div>
       </dl>
     </div>
   </div>
 </section>
 
-<!-- 6.5 ── つくるもの ─────────────────────────────────────── -->
-<section id="build">
+<!-- 4 ── パッケージ ───────────────────────────────────────── -->
+<section id="packages">
   <div class="wrap">
-    <h2 class="disp h-big rv" data-en="What we actually build.">お店に、何を<br>つくるのか。</h2>
-    <p class="lede rv d1" style="margin-top:clamp(20px,3vh,30px)"
-       data-en="Some shops start with nothing at all. No company email, no shared folders, nothing on the map. That is fine. We build the whole base, and then put the AI inside it. &lt;strong&gt;You see one screen and your usual LINE. Behind it sit dozens of parts, each one fitted to your shop by hand.&lt;/strong&gt;">
-      パソコンも、会社のメールも、共有のフォルダも、地図の情報も。何もないところから始めても大丈夫です。
-      土台からこちらでつくり、その中にAIを住まわせます。
-      <strong>お店が見るのは、1つの画面といつものLINEだけ。その裏側には、数十の部品が並びます。</strong>
+    <h2 class="disp h-big rv" data-en="What you can order.">たのめること。</h2>
+    <p class="lede rv d1" style="margin-top:clamp(16px,2.4vh,26px)"
+       data-en="Two kinds of work: building the system your business runs on, and building the site it shows itself with. Take one, or both. Everything is made to your brand and kept running by us.">
+      やっていることは大きく2つ。仕事を動かす仕組みをつくることと、それを見せるサイトをつくること。
+      どちらか一方でも、両方でも。すべてブランドに合わせてつくり、運用まで持ちます。
     </p>
 
-    <div class="grp rv-l d2">
-      <div><h3 data-en="Building the base">土台をつくる</h3></div>
-      <ul>
-        <li data-en="&lt;b&gt;Google Workspace set up&lt;/b&gt;&lt;span&gt;A company email address, shared calendar and storage.&lt;/span&gt;"><b>Google Workspaceの設置</b><span>会社のメールと共有カレンダー、保存場所を用意します。</span></li>
-        <li data-en="&lt;b&gt;Google Business Profile, properly done&lt;/b&gt;&lt;span&gt;What customers see when they search you or find you on Maps. Photos, hours, replies to reviews.&lt;/span&gt;"><b>Googleビジネスプロフィールの整備</b><span>検索やマップで見つけたお客様に出る情報を整えます。写真、営業時間、口コミへの返信まで。</span></li>
-        <li data-en="&lt;b&gt;Spreadsheet templates&lt;/b&gt;&lt;span&gt;Sales, costs and stock, in sheets shaped to your shop.&lt;/span&gt;"><b>スプレッドシートの雛形</b><span>売上・費用・在庫が入って残る表を、お店に合わせて。</span></li>
-        <li data-en="&lt;b&gt;A folder structure on Google Drive&lt;/b&gt;&lt;span&gt;Last March’s invoice, found in seconds.&lt;/span&gt;"><b>Googleドライブのフォルダ整理</b><span>「去年3月の請求書」が、数秒で出る並びに。</span></li>
-        <li data-en="&lt;b&gt;Backups of everything&lt;/b&gt;&lt;span&gt;Copied to Drive automatically. Nothing is lost for good.&lt;/span&gt;"><b>すべてのバックアップ</b><span>自動で控えが残り、取り返しがつかなくなりません。</span></li>
-      </ul>
-    </div>
-
-    <div class="grp rv-l d3">
-      <div><h3 data-en="Putting the AI inside">AIを店に住まわせる</h3></div>
-      <ul>
-        <li data-en="&lt;b&gt;A working environment for the AI&lt;/b&gt;&lt;span&gt;Its own place to run, with a local copy kept.&lt;/span&gt;"><b>AIの作業場所を用意</b><span>AIが動く専用の場所。手元にも控えを置きます。</span></li>
-        <li data-en="&lt;b&gt;Connecting your tools to it&lt;/b&gt;&lt;span&gt;Register, payments, mail, sheets and calendar, read together.&lt;/span&gt;"><b>ツールとAIをつなぐ</b><span>レジ、決済、メール、表、カレンダーをまとめて見ます。</span></li>
-        <li data-en="&lt;b&gt;Workflows and routines&lt;/b&gt;&lt;span&gt;Your procedures, repeated on schedule.&lt;/span&gt;"><b>手順を仕事として登録</b><span>お店のやり方を覚えさせ、必要な時間に自動で回します。</span></li>
-        <li data-en="&lt;b&gt;Calendar linked up&lt;/b&gt;&lt;span&gt;Deliveries, shifts, payment dates and bookings, written in.&lt;/span&gt;"><b>カレンダー連携</b><span>納品、シフト、支払日、予約が自動で入ります。</span></li>
-        <li data-en="&lt;b&gt;A communication system if you need one&lt;/b&gt;&lt;span&gt;Slack or similar, set up with the AI sitting in it.&lt;/span&gt;"><b>連絡の仕組み（必要な場合）</b><span>Slackのような連絡の場を用意し、AIを常駐させます。</span></li>
-        <li data-en="&lt;b&gt;Conversation read as context&lt;/b&gt;&lt;span&gt;What was said and what the numbers did, held together.&lt;/span&gt;"><b>会話と数字をまとめて文脈に</b><span>話した内容と数字を一緒に持たせ、やることが自然に出ます。</span></li>
-      </ul>
-    </div>
-
-    <div class="grp rv-l d4">
-      <div><h3 data-en="Making it look like you">お店の顔をつくる</h3></div>
-      <ul>
-        <li data-en="&lt;b&gt;Dashboards&lt;/b&gt;&lt;span&gt;The one screen that answers “how are we doing?”&lt;/span&gt;"><b>ダッシュボード</b><span>「今どうなっている？」に答えが出る画面です。</span></li>
-        <li data-en="&lt;b&gt;Websites and landing pages&lt;/b&gt;&lt;span&gt;Built to bring customers in, not just exist.&lt;/span&gt;"><b>Webサイト・ランディングページ</b><span>あるだけでなく、お客様が来るための作りに。</span></li>
-        <li data-en="&lt;b&gt;Your colours, type and design elements&lt;/b&gt;&lt;span&gt;Screens, site and documents, all clearly one shop.&lt;/span&gt;"><b>色・書体・デザイン要素</b><span>画面もサイトも書類も、同じお店のものに見せます。</span></li>
-      </ul>
-    </div>
-
-    <div class="grp rv-l d5">
-      <div><h3 data-en="Keeping it alive">毎月、良くしていく</h3></div>
-      <ul>
-        <li data-en="&lt;b&gt;Monthly improvement and maintenance&lt;/b&gt;&lt;span&gt;Faults, format changes, the yearly rollover, new requests.&lt;/span&gt;"><b>毎月の改善と保守</b><span>不具合、書式の変化、年次の切り替え、新しいご要望。</span></li>
-        <li data-en="&lt;b&gt;The AI learns your business&lt;/b&gt;&lt;span&gt;It reviews its own work instead of standing still.&lt;/span&gt;"><b>AIがお店に詳しくなっていく</b><span>自分の仕事を見直し、買った日のまま止まりません。</span></li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-
-
-<!-- 8 ── 料金 ─────────────────────────────────────────────── -->
-<section id="offer">
-  <div class="wrap">
-    <h2 class="disp h-big rv" data-en="LINE today.&lt;br&gt;Straight from the register tomorrow.">今日はLINE。<br>明日レジ直結でも、同じ。</h2>
-    <p class="lede rv d1" style="margin-top:clamp(20px,3vh,30px)"
-       data-en="A LINE report, Square or a POS app, a CSV from the register. Only the intake piece is swapped to suit the shop. Checking, recording, visualising, notifying: that core is identical everywhere, which is what makes it hard to break and easy to fit.">
-      LINEの報告、Square・POSアプリ、レジのCSV。入口の部品だけをお店に合わせて差し替えます。
-      検証、記帳、見える化、通知。その中身は全店で共通なので、壊れにくく、業態を選びません。
-    </p>
     <div class="panel rv-s d2">
       <table class="pt">
-        <thead><tr><th scope="col" data-en="Plan">プラン</th><th scope="col" data-en="Setup">導入費</th><th scope="col" data-en="Monthly">月額</th><th scope="col" data-en="What’s included">含まれるもの</th></tr></thead>
+        <thead><tr><th scope="col" data-en="Package">パッケージ</th><th scope="col" data-en="Setup">導入費</th><th scope="col" data-en="Monthly">月額</th><th scope="col" data-en="What's included">含まれるもの</th></tr></thead>
         <tbody>
           <tr><td class="plan" data-en="Full setup">ゼロから開通</td>
               <td class="n tnum" data-l="導入費" data-dl="Setup">¥400,000〜¥500,000</td>
               <td class="n" data-l="月額" data-dl="Monthly">—</td>
-              <td class="what" data-en="The Google environment, sales and cost sheets, folder structure and report templates, all built from scratch.">Google環境、売上・費用シート、フォルダ整理、報告テンプレートまで一式を構築</td></tr>
-          <tr class="pick"><td class="plan" data-en="Standard&lt;span class='tag'&gt;Recommended&lt;/span&gt;">スタンダード<span class="tag">おすすめ</span></td>
+              <td class="what" data-en="For a business starting with nothing in place: the Google environment, company email, folder structure, sheet templates and backups, all built from scratch.">道具が何もない状態から。Google環境、会社のメール、フォルダ構造、シートの雛形、バックアップまで一式を構築します。</td></tr>
+          <tr class="pick"><td class="plan" data-en="Standard OS&lt;span class='tag'&gt;Most ordered&lt;/span&gt;">OS構築<span class="tag">いちばん多い</span></td>
               <td class="n tnum" data-l="導入費" data-dl="Setup">¥250,000〜¥350,000</td>
               <td class="n tnum" data-l="月額" data-dl="Monthly">¥30,000</td>
-              <td class="what" data-en="Automated bookkeeping, dashboard and full maintenance: faults, changes to your report format, the yearly rollover, and chasing anything held for review.">自動記帳＋ダッシュボード＋保守一式（不具合対応、書式変化への追従、年次更新、保留の確認）</td></tr>
-          <tr><td class="plan" data-en="Retainer">顧問プラン</td>
-              <td class="n" data-l="導入費" data-dl="Setup" data-en="Same as Standard">スタンダードと同じ</td>
+              <td class="what" data-en="Your tools connected to the AI, the automations that matter to your business, a dashboard in your brand, and full maintenance every month.">いま使っている道具とAIの接続、あなたの商売に効く自動化、ブランドに合わせたダッシュボード、そして毎月の保守一式。</td></tr>
+          <tr><td class="plan" data-en="With a retainer">顧問プラン</td>
+              <td class="n" data-l="導入費" data-dl="Setup" data-en="Same as OS build">OS構築と同じ</td>
               <td class="n tnum" data-l="月額" data-dl="Monthly">¥45,000〜¥50,000</td>
-              <td class="what" data-en="Everything in Standard, plus a monthly review and change requests (capped).">スタンダードに加えて、月次のご相談と改修リクエスト（上限あり）</td></tr>
+              <td class="what" data-en="Everything in the OS build, plus a monthly working session and a capped allowance for changes and new automations.">OS構築に加えて、月次の打ち合わせと、改修・追加自動化のリクエスト枠（上限つき）。</td></tr>
           <tr><td class="plan" data-en="Light">ライト</td>
               <td class="n tnum" data-l="導入費" data-dl="Setup">¥100,000〜¥150,000</td>
               <td class="n tnum" data-l="月額" data-dl="Monthly">¥10,000〜¥15,000</td>
-              <td class="what" data-en="Automated bookkeeping and the LINE confirmation only. For smaller shops.">自動記帳とLINEでの確認のみ（小規模のお店向け）</td></tr>
+              <td class="what" data-en="One automation and its confirmations, nothing more. A small, honest starting point.">自動化ひとつと、その確認だけ。小さく始めたい方に。</td></tr>
+          <tr><td class="plan" data-en="Website">Webサイト</td>
+              <td class="n" data-l="導入費" data-dl="Setup" data-en="Quoted">お見積り</td>
+              <td class="n" data-l="月額" data-dl="Monthly" data-en="Quoted">お見積り</td>
+              <td class="what" data-en="A site built in the same hands and the same brand as the rest. On its own, or folded into any package above.">残りと同じ手で、同じブランドでつくるサイト。単体でも、上のどれかに含める形でも。</td></tr>
         </tbody>
       </table>
     </div>
     <p class="note rv d3"
-       data-en="For reference: restaurant POS software alone runs about ¥10,000 a month, and custom development typically starts at ¥500,000 plus ¥30,000 a month to maintain. &lt;b&gt;MISELOG includes the person who runs it, at that same price.&lt;/b&gt; For the monthly cost of a single part-time shift, the numbers are simply ready every morning.">
-      参考：飲食店向けPOSはソフトのみで月額 約¥10,000、受託開発なら¥500,000〜に保守 ¥30,000/月が一般的です。
-      <b>ミセログはその価格帯に「運用する人」まで含みます。</b>
-      アルバイト1シフト分の月額で、毎朝、数字が揃っている状態を買えます。
+       data-en="For reference: business software alone tends to run around ¥10,000 a month, and custom development starts near ¥500,000 plus maintenance. &lt;b&gt;What is unusual here is that the person who runs it is included.&lt;/b&gt; Nothing is a template with your name dropped into it.">
+      参考までに：業務ソフトはソフトだけで月額約¥10,000、受託開発なら¥500,000〜に保守が乗るのが一般的です。
+      <b>ここで珍しいのは、「運用する人」まで含まれていることです。</b>
+      名前を入れ替えただけのテンプレートは、ひとつもありません。
     </p>
   </div>
 </section>
 
-
-<!-- 10 ── クロージング（ドレンチ）─────────────────────────── -->
+<!-- 5 ── クロージング ─────────────────────────────────────── -->
 <section class="drench full" id="contact">
   <div class="wrap">
-    <h2 class="disp rv-s" style="font-size:clamp(36px,5.4vw,74px)" data-en="Start with 15 minutes.">まずは、15分だけ。</h2>
+    <h2 class="disp rv-s" style="font-size:clamp(36px,5.4vw,74px)" data-en="Tell us what you do.">まずは、お話を。</h2>
     <p class="rv d2" style="margin-top:clamp(26px,4vh,44px); font-size:clamp(15.5px,1.5vw,20px);
        line-height:2; max-width:38em; font-weight:700"
-       data-en="We share a screen on Zoom and show you the real thing working. There is nothing for you to prepare.&lt;span style='font-weight:400; display:block; margin-top:1em; color:var(--sub)'&gt;We handle the whole setup. All we ask of the shop is permission to connect the account, and that your staff keep sending the report exactly as they do now.&lt;/span&gt;">
-      Zoomで画面をお見せしながら、実際の動きをご説明します。ご用意いただくものはありません。
+       data-en="Fifteen minutes on a call. You describe how the work moves today, we show you what we would build and what it costs.&lt;span style='font-weight:400; display:block; margin-top:1em; color:var(--sub)'&gt;There is nothing to prepare, and nothing to install to find out.&lt;/span&gt;">
+      15分だけ、オンラインで。いまの仕事の流れを聞かせていただければ、
+      何をつくるか、いくらになるかをその場でお見せします。
       <span style="font-weight:400; display:block; margin-top:1em; color:var(--sub)">
-      導入の作業はすべてこちらで行います。お店にお願いするのは、アカウントの連携を許可していただくことと、
-      いつも通り報告を送っていただくことだけです。</span>
+      ご用意いただくものはありません。話を聞くために、何かを導入する必要もありません。</span>
     </p>
     <div class="btns rv d3">
       <a class="go" href="#contact">
         <svg width="17" height="17" viewBox="0 0 17 17" fill="none" aria-hidden="true"><rect x="1.4" y="3" width="10.6" height="11" rx="2.6" stroke="currentColor" stroke-width="1.8"/><path d="M12 8.5l4-2.6v5.2z" fill="currentColor"/></svg>
-        <span data-en="Book the demo (15 min, free)">オンライン説明を予約する（15分・無料）</span></a>
+        <span data-en="Book the 15-minute call (free)">15分のオンライン相談（無料）</span></a>
     </div>
     <dl class="contact rv d4">
       <div><dt data-en="Contact">お問い合わせ</dt><dd data-en="Coming soon">準備中</dd></div>
@@ -1321,10 +1166,11 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
 
 </main>
 
+
 <div class="bottom" id="bottom">
   <a class="go" href="#contact">
     <svg width="16" height="16" viewBox="0 0 17 17" fill="none" aria-hidden="true"><rect x="1.4" y="3" width="10.6" height="11" rx="2.6" stroke="currentColor" stroke-width="1.8"/><path d="M12 8.5l4-2.6v5.2z" fill="currentColor"/></svg>
-    <span data-en="Book a free 15-min demo">15分の説明を予約（無料）</span></a>
+    <span data-en="Book a free 15-min call">15分のオンライン相談（無料）</span></a>
 </div>
 
 <footer>
@@ -1384,7 +1230,7 @@ function phrase(root) {
   for (let n; (n = walker.nextNode()); ) {
     /* .contact dt is wide-tracked: inline-block unit boundaries make the
        letter-spacing gaps visible, and those labels are two words anyway */
-    if (n.nodeValue.trim() && !n.parentElement.closest('.u,.march,.contact dt,[data-nophrase]')) nodes.push(n);
+    if (n.nodeValue.trim() && !n.parentElement.closest('.u,.contact dt,[data-nophrase]')) nodes.push(n);
   }
   for (const node of nodes) {
     const units = [], leads = [];
