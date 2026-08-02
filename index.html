@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ミセログ（仮称）｜あなたの会社に、専用のOSを。</title>
-<meta name="description" content="会社のデジタル基盤を一式構築。アカウント開設・ドメイン・Webサイト・フォルダ・スプレッドシート・ダッシュボード・自動化、そしてClaudeの設置まで。ゼロからでも、いまの仕組みの作り直しでも。東京・SHIFT GK。">
+<meta name="description" content="会社のデジタル基盤を一式構築。アカウント開設・ドメイン・Webサイト・フォルダ・スプレッドシート・ダッシュボード・自動化、そしてClaudeの設置まで。ゼロからでも、いまの仕組みの作り直しでも。東京・SHIFT合同会社。">
 <meta name="theme-color" content="#07080b">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ja_JP">
 <meta property="og:title" content="ミセログ（仮称）｜あなたの会社に、専用のOSを。">
 <meta property="og:description" content="アカウントもドメインもサイトもフォルダもダッシュボードも自動化も、そしてClaudeも。会社のデジタル基盤を一式つくります。">
 <meta property="og:url" content="https://karassada.github.io/OSBS/">
-<meta property="og:site_name" content="ミセログ（仮称）／ SHIFT GK">
+<meta property="og:site_name" content="ミセログ（仮称）／ SHIFT合同会社">
 <meta property="og:image" content="https://karassada.github.io/OSBS/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -29,7 +29,7 @@
   "url": "https://karassada.github.io/OSBS/",
   "provider": {
     "@type": "Organization",
-    "name": "SHIFT GK",
+    "name": "SHIFT合同会社",
     "address": { "@type": "PostalAddress", "addressLocality": "東京", "addressCountry": "JP" }
   },
   "areaServed": { "@type": "Country", "name": "日本" },
@@ -63,7 +63,7 @@
 
    MOTION: varied per section, never one uniform entrance —
    mask-wipe (hero), stagger (lists), line-draw (timeline),
-   scale+tilt (product), count-up (figures). Reveals ENHANCE an
+   scale-in (product), count-up (figures). Reveals ENHANCE an
    already-visible default: content is visible without JS, the
    `.js` class opts into hiding, so a headless render never ships
    blank. prefers-reduced-motion ⇒ crossfade, all loops off.
@@ -422,14 +422,13 @@ section.drench > * { position:relative; z-index:1; }
 
 /* ---------- device (the one place glass is the point) ---------- */
 .stage { display:grid; grid-template-columns:auto minmax(300px,1fr);
-  gap:clamp(36px,6vw,92px); align-items:center; perspective:1500px; }
+  gap:clamp(36px,6vw,92px); align-items:center; }
 .float { animation:float 9s ease-in-out infinite alternate; }
 @keyframes float { from{transform:translate3d(0,-7px,0)} to{transform:translate3d(0,9px,0)} }
 .iphone {
   width:min(328px,80vw); aspect-ratio:328/670; border-radius:56px; position:relative;
   background:linear-gradient(155deg,#4a4e56,#191a1e 26%,#0e0f12 72%,#2b2e34);
-  padding:4px; transform-style:preserve-3d; will-change:transform;
-  transition:transform .8s var(--eo);
+  padding:4px;
   /* the jade below the device reads as screen-spill onto the surface,
      not as a halo — it stays under the object, never around it. */
   box-shadow:0 50px 100px -20px rgba(0,0,0,.8), 0 0 0 1px rgba(255,255,255,.07),
@@ -748,7 +747,6 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
   .js .in .mask > span { opacity:1; transition:opacity .35s ease; }
   .js .cline { stroke-dashoffset:0; }
   .js .wk i { transform:none; }
-  .iphone { transition:none; }
 }
 </style>
 </head>
@@ -759,7 +757,7 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
 
 <header class="hd" id="hd">
   <a class="mark" href="#hero">
-    <span class="n" data-en="MISELOG">ミセログ</span><span class="k" data-en="working title / SHIFT GK">仮称 ／ SHIFT GK</span>
+    <span class="n" data-en="MISELOG">ミセログ</span><span class="k" data-en="working title / SHIFT合同会社">仮称 ／ SHIFT合同会社</span>
   </a>
   <div class="right">
     <div class="lang" role="group" aria-label="Language / 言語">
@@ -1037,7 +1035,7 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
 <section id="case">
   <div class="wrap stage">
     <div class="float rv-s">
-    <div class="iphone" id="tilt" role="img" aria-label="ミセログのスマートフォン画面。今月売上¥3,847,200、前月同時点より12.4%増。昨日の売上¥186,400、客数58名、客単価¥3,214。22:15に自動入力済み。">
+    <div class="iphone" role="img" aria-label="ミセログのスマートフォン画面。今月売上¥3,847,200、前月同時点より12.4%増。昨日の売上¥186,400、客数58名、客単価¥3,214。22:15に自動入力済み。">
       <div class="island"></div>
       <!-- data-nophrase: the phone's labels sit in space-between flex rows,
            and splitting them into phrase units would scatter the words
@@ -1200,7 +1198,7 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
     </div>
     <dl class="contact rv d4">
       <div><dt data-en="Contact">お問い合わせ</dt><dd data-en="Coming soon">準備中</dd></div>
-      <div><dt data-en="Operated by">運営</dt><dd data-en="SHIFT GK (Tokyo)">SHIFT GK（東京）</dd></div>
+      <div><dt data-en="Operated by">運営</dt><dd data-en="SHIFT合同会社 (Tokyo)">SHIFT合同会社（東京）</dd></div>
       <div><dt data-en="Coverage">対応エリア</dt><dd data-en="Nationwide / online">全国／オンライン</dd></div>
     </dl>
   </div>
@@ -1216,7 +1214,7 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
 </div>
 
 <footer>
-  <p data-en="MISELOG (working title) / SHIFT GK">ミセログ（仮称）／ SHIFT GK</p>
+  <p data-en="MISELOG (working title) / SHIFT合同会社">ミセログ（仮称）／ SHIFT合同会社</p>
   <p data-en="The report you already send, turned into the numbers you need.">いつもの報告を、そのまま経営数字に。</p>
 </footer>
 
@@ -1438,18 +1436,6 @@ addEventListener('scroll', () => {
   if (!raf) raf = requestAnimationFrame(frame);
 }, { passive: true });
 
-/* device tilt — fine pointers only, never on touch */
-const tilt = document.getElementById('tilt');
-if (tilt && !reduce && matchMedia('(hover:hover) and (pointer:fine)').matches) {
-  const zone = tilt.closest('.stage');
-  zone.addEventListener('pointermove', e => {
-    const r = tilt.getBoundingClientRect();
-    const dx = (e.clientX - r.left - r.width / 2) / r.width;
-    const dy = (e.clientY - r.top - r.height / 2) / r.height;
-    tilt.style.transform = `rotateY(${dx * 9}deg) rotateX(${dy * -7}deg)`;
-  }, { passive: true });
-  zone.addEventListener('pointerleave', () => { tilt.style.transform = ''; });
-}
 </script>
 </body>
 </html>
