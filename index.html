@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ミセログ（仮称）｜あなたの会社に、専用のOSを。</title>
-<meta name="description" content="いま使っている道具とAIをつなぎ、フォルダ・ダッシュボード・自動化まで一式構築。ブランドに合わせてつくり、毎月の運用まで持ちます。Webサイト制作も。東京・SHIFT GK。">
+<meta name="description" content="会社のデジタル基盤を一式構築。アカウント開設・ドメイン・Webサイト・フォルダ・スプレッドシート・ダッシュボード・自動化、そしてClaudeの設置まで。ゼロからでも、いまの仕組みの作り直しでも。東京・SHIFT GK。">
 <meta name="theme-color" content="#07080b">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ja_JP">
 <meta property="og:title" content="ミセログ（仮称）｜あなたの会社に、専用のOSを。">
-<meta property="og:description" content="いま使っている道具とAIをつなぎ、フォルダも、ダッシュボードも、自動化も、ブランドに合わせて一式つくります。運用まで込み。">
+<meta property="og:description" content="アカウントもドメインもサイトもフォルダもダッシュボードも自動化も、そしてClaudeも。会社のデジタル基盤を一式つくります。">
 <meta property="og:url" content="https://karassada.github.io/OSBS/">
 <meta property="og:site_name" content="ミセログ（仮称）／ SHIFT GK">
 <meta property="og:image" content="https://karassada.github.io/OSBS/og.png">
@@ -24,8 +24,8 @@
   "@context": "https://schema.org",
   "@type": "Service",
   "name": "ミセログ（仮称）",
-  "serviceType": "業務システム構築（AI連携・自動化・ダッシュボード・Webサイト制作）",
-  "description": "いま使っている道具とAIをつなぎ、フォルダ構造、ダッシュボード、自動化までを一式構築します。Google Workspaceの設置やWebサイト制作にも対応し、毎月の運用・保守まで含みます。",
+  "serviceType": "デジタル基盤構築（Claude導入・自動化・ダッシュボード・Webサイト制作・アカウント設計）",
+  "description": "会社のデジタル基盤を一式構築します。Google Workspaceやドメインなど必要なアカウントの開設、フォルダ構造とスプレッドシート、ダッシュボード、Webサイト、自動化、そしてClaudeの設置と接続まで。構築後は月額プランで修正・改善に対応します。",
   "url": "https://karassada.github.io/OSBS/",
   "provider": {
     "@type": "Organization",
@@ -665,6 +665,23 @@ section.drench > * { position:relative; z-index:1; }
   border-radius:16px; padding:clamp(16px,2.2vh,22px) clamp(16px,2vw,24px); }
 .note b { color:var(--jade); font-weight:900; }
 
+/* ---------- monthly tiers ---------- */
+.tiers-h { margin-top:clamp(34px,5vh,54px); font-size:clamp(19px,2vw,27px); font-weight:900;
+  letter-spacing:-.015em; color:var(--jade); }
+.tiers { display:grid; grid-template-columns:repeat(auto-fit,minmax(215px,1fr));
+  gap:clamp(11px,1.6vw,16px); margin-top:clamp(18px,2.6vh,26px); }
+.tiers > div { border-radius:18px; padding:clamp(18px,2.6vh,24px) clamp(16px,2vw,22px);
+  background:rgba(255,255,255,.028); border:1px solid var(--hair);
+  transition:background .4s var(--eo), border-color .4s var(--eo); }
+.tiers > div:hover { background:rgba(15,203,136,.05); border-color:rgba(15,203,136,.3); }
+.tiers .t { font-size:clamp(12px,1.05vw,13.5px); font-weight:900; letter-spacing:.06em;
+  color:var(--jade); }
+.tiers .p { margin-top:8px; font-size:clamp(21px,2.1vw,28px); font-weight:900;
+  letter-spacing:-.025em; color:var(--ink); }
+.tiers .p span { font-size:.5em; font-weight:700; color:var(--faint); letter-spacing:0;
+  margin-left:.4em; }
+.tiers .d { margin-top:10px; font-size:clamp(12.5px,1.1vw,14px); color:var(--sub); line-height:1.8; }
+
 /* ---------- contact ---------- */
 .contact { margin-top:clamp(30px,4.5vh,48px); display:flex; flex-wrap:wrap; gap:12px 40px;
   padding-top:clamp(24px,3.4vh,34px); border-top:1px solid rgba(15,203,136,.24); }
@@ -809,14 +826,14 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
 <!-- 1 ── HERO ─────────────────────────────────────────────── -->
 <section class="full" id="hero">
   <div class="wrap">
-    <div class="badge rv"><span class="dot"></span><span data-en="Custom AI operating systems, built to order">オーダーメイドのAI業務システム</span></div>
+    <div class="badge rv"><span class="dot"></span><span data-en="Custom business systems, built on Claude">Claudeで動く、オーダーメイドの業務システム</span></div>
     <h1 class="disp h-hero">
       <span class="mask"><span data-en="Your business,">あなたの会社に、</span></span>
       <span class="mask m2"><span data-en="on its own &lt;em&gt;OS.&lt;/em&gt;">専用の<em>OS</em>を。</span></span>
     </h1>
     <p class="lede hero-sub rv d3"
-       data-en="We connect the tools you already use to an AI, then build the folders, the dashboards and the automations around them, all in your brand. After that, changes and fixes are handled every month.">
-      いま使っているツールとAIをつなぎ、フォルダも、ダッシュボードも、自動化も、
+       data-en="We connect the tools you already use to Claude, then build the folders, the dashboards and the automations around them, all in your brand. After that, changes and fixes are handled every month.">
+      いま使っているツールとClaudeをつなぎ、フォルダも、ダッシュボードも、自動化も、
       あなたのブランドに合わせて一式つくります。その後も、毎月の変更や修正に対応します。
     </p>
     <div class="btns rv d4">
@@ -1000,7 +1017,7 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
       </svg>
 
       <div class="cap-chip" data-cap="1" style="top:1.6%"><em>1</em><span data-en="It comes in">入ってくる</span></div>
-      <div class="cap-chip" data-cap="2" style="top:42.6%"><em>2</em><span data-en="The AI reads and decides">AIが読んで、判断する</span></div>
+      <div class="cap-chip" data-cap="2" style="top:42.6%"><em>2</em><span data-en="Claude reads and decides">Claudeが読んで、判断する</span></div>
       <div class="cap-chip" data-cap="3" style="top:53.8%"><em>3</em><span data-en="It gets organised">整理される</span></div>
       <div class="cap-chip" data-cap="4" style="top:74.6%"><em>4</em><span data-en="It comes back">返ってくる</span></div>
     </div>
@@ -1074,68 +1091,92 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
     </div>
 
     <div>
-      <h2 class="disp h-big rv" data-en="One that is&lt;br&gt;already running.">いま動いている、<br>ひとつの例。</h2>
+      <h2 class="disp h-big rv" data-en="We build the&lt;br&gt;whole set.">一式、こちらで<br>つくります。</h2>
       <p class="lede rv d2" style="margin-top:clamp(16px,2.4vh,26px)"
-         data-en="In one business, staff send their usual report in the app they already use. The AI reads it, writes it into the books, and about a minute later the owner’s screen is current. Depending on the business it might be LINE, or email — we connect to whichever tool you prefer.">
-        ある事業では、いつも使っているアプリで、いつも通りの報告を送ります。
-        AIがそれを読み、帳簿に書き、約1分後にはオーナーの画面が最新になっています。
-        事業によってLINEだったり、Eメールだったり。お好みのツールとおつなぎできます。
+         data-en="Accounts, domain, site, folders, sheets, dashboard, automations and the AI itself. If a piece is missing, we open it and set it up. You end up with a business that runs on its own system instead of on somebody’s memory.">
+        アカウントも、ドメインも、サイトも、フォルダも、シートも、ダッシュボードも、自動化も、AIも。
+        足りないものは、こちらで開設して整えます。誰かの記憶ではなく、
+        仕組みで回る会社になります。
       </p>
       <dl class="rows" style="max-width:none">
-        <div class="row rv d3"><dt data-en="About 1 minute">送信から約1分</dt>
-          <dd data-en="From sending to the entry being finished, read back and reconciled to the yen.">送ってから記帳が終わるまで。書いた行は読み戻し、1円単位で照合します。</dd></div>
-        <div class="row rv d4"><dt data-en="Nothing typed by hand">手入力はゼロ</dt>
-          <dd data-en="Nobody retypes anything, so there is nothing to get wrong. Anything that looks off is held and queried, never guessed.">誰も打ち直さないので、間違えようがありません。おかしな数字は推測せず、保留して確認します。</dd></div>
-        <div class="row rv d5"><dt data-en="The data stays yours">データは自分のもの</dt>
-          <dd data-en="Everything lives in your own Google account, with backups. If we ever part ways, it all stays with you.">保存先はご自身のGoogleアカウント。控えも残ります。契約が終わっても、すべて手元に残ります。</dd></div>
+        <div class="row rv d3"><dt data-en="The accounts">必要なアカウント</dt>
+          <dd data-en="Google Workspace, company email for as many people as you need, the domain, and the developer accounts the system needs to run — Cloudflare, LINE Developers and the rest. Opened and configured by us.">Google Workspace、人数分の会社メール、ドメイン。さらにCloudflareやLINE Developersなど、システムが動くために必要なものまで、こちらで開設して設定します。</dd></div>
+        <div class="row rv d4"><dt data-en="Where the data lives">データの置き場所</dt>
+          <dd data-en="A folder structure that makes sense, and spreadsheets shaped to how you actually work. The numbers that arrive each month land in them by themselves, and stay as company data.">迷わないフォルダ構造と、実際の仕事に合わせたスプレッドシート。毎月入ってくる数字はひとりでに収まり、会社のデータとして残ります。</dd></div>
+        <div class="row rv d5"><dt data-en="Something to look at">見えるかたち</dt>
+          <dd data-en="A dashboard that answers “how are we doing” at a glance, a website, and an app if the work needs one. All drawn in your brand, not a template with your logo dropped on it.">ひと目で状況が分かるダッシュボード、Webサイト、必要ならアプリまで。すべてブランドに合わせて描きます。ロゴを載せ替えただけのテンプレートではありません。</dd></div>
+        <div class="row rv d6"><dt data-en="Claude, set up properly">AIはClaudeで</dt>
+          <dd data-en="We build on Claude and connect it to everything above, with the plugins and integrations it needs. It knows your business, not a generic one, and it keeps working without you prompting it.">Claudeを中心に構築し、上のすべてに接続します。必要なプラグインや連携もこちらで用意。一般論ではなく、あなたの会社を分かった状態で動きます。</dd></div>
+        <div class="row rv d6"><dt data-en="It stays yours">データは会社のもの</dt>
+          <dd data-en="Everything sits in your own accounts, with backups. Nothing is typed by hand, so nothing gets mistyped — and if we ever part ways, all of it stays with you.">保存先はすべて自社のアカウント。控えも残ります。手入力がないので打ち間違いも起きません。契約が終わっても、すべて手元に残ります。</dd></div>
       </dl>
     </div>
   </div>
 </section>
 
-<!-- 4 ── パッケージ ───────────────────────────────────────── -->
+<!-- 4 ── 料金プラン ───────────────────────────────────────── -->
 <section id="packages">
   <div class="wrap">
     <h2 class="disp h-big rv" data-en="Pricing.">料金プラン。</h2>
     <p class="lede rv d1" style="margin-top:clamp(16px,2.4vh,26px)"
-       data-en="The plans differ mainly in where you start. With nothing in place yet, take the full setup; with tools already running, take the OS build. A website can be added to any of them, or taken on its own. Everything is made to your brand, and changes are handled monthly.">
-      違いは「どこから始めるか」です。ツールが何もなければ「ゼロから開通」、
-      すでに使っているものがあれば「OS構築」から。サイトは単体でも、どのプランにも足せます。
-      すべてブランドに合わせてつくり、その後の変更にも対応します。
+       data-en="The difference is where you start. With nothing in place, take the full build. Already running and want it done properly, take the rebuild. Or take a single piece. Every build can carry a monthly plan for the changes that follow.">
+      違いは「どこから始めるか」です。何もない状態からなら<b>フルビルド</b>、
+      すでに動いていて作り直したいなら<b>導入・改善</b>、
+      ひとつだけ必要なら<b>単品</b>。どの構築にも、あとから続く変更のために月額プランを付けられます。
     </p>
 
     <div class="panel rv-s d2">
       <table class="pt">
-        <thead><tr><th scope="col" data-en="Package">パッケージ</th><th scope="col" data-en="Setup">導入費</th><th scope="col" data-en="Monthly">月額</th><th scope="col" data-en="What's included">含まれるもの</th></tr></thead>
+        <thead><tr><th scope="col" data-en="Package">プラン</th><th scope="col" data-en="Build (guide)">構築費（目安）</th><th scope="col" data-en="What it covers">内容</th></tr></thead>
         <tbody>
-          <tr><td class="plan" data-en="Full setup">ゼロから開通</td>
-              <td class="n tnum" data-l="導入費" data-dl="Setup">¥400,000〜¥500,000</td>
-              <td class="n" data-l="月額" data-dl="Monthly">—</td>
-              <td class="what" data-en="For a business starting with nothing in place: the Google environment, company email, folder structure, sheet templates and backups, all built from scratch.">道具が何もない状態から。Google環境、会社のメール、フォルダ構造、シートの雛形、バックアップまで一式を構築します。</td></tr>
-          <tr class="pick"><td class="plan" data-en="Standard OS&lt;span class='tag'&gt;Most ordered&lt;/span&gt;">OS構築<span class="tag">いちばん多い</span></td>
-              <td class="n tnum" data-l="導入費" data-dl="Setup">¥250,000〜¥350,000</td>
-              <td class="n tnum" data-l="月額" data-dl="Monthly">¥30,000</td>
-              <td class="what" data-en="Your tools connected to the AI, the automations that matter to your business, a dashboard in your brand, and full maintenance every month.">いま使っている道具とAIの接続、あなたの商売に効く自動化、ブランドに合わせたダッシュボード、そして毎月の保守一式。</td></tr>
-          <tr><td class="plan" data-en="With a retainer">顧問プラン</td>
-              <td class="n" data-l="導入費" data-dl="Setup" data-en="Same as OS build">OS構築と同じ</td>
-              <td class="n tnum" data-l="月額" data-dl="Monthly">¥45,000〜¥50,000</td>
-              <td class="what" data-en="Everything in the OS build, plus a monthly working session and a capped allowance for changes and new automations.">OS構築に加えて、月次の打ち合わせと、改修・追加自動化のリクエスト枠（上限つき）。</td></tr>
-          <tr><td class="plan" data-en="Light">ライト</td>
-              <td class="n tnum" data-l="導入費" data-dl="Setup">¥100,000〜¥150,000</td>
-              <td class="n tnum" data-l="月額" data-dl="Monthly">¥10,000〜¥15,000</td>
-              <td class="what" data-en="One automation and its confirmations, nothing more. A small, honest starting point.">自動化ひとつと、その確認だけ。小さく始めたい方に。</td></tr>
-          <tr><td class="plan" data-en="Website">Webサイト</td>
-              <td class="n" data-l="導入費" data-dl="Setup" data-en="Quoted">お見積り</td>
-              <td class="n" data-l="月額" data-dl="Monthly" data-en="Quoted">お見積り</td>
-              <td class="what" data-en="A site built in the same hands and the same brand as the rest. On its own, or folded into any package above.">残りと同じ手で、同じブランドでつくるサイト。単体でも、上のどれかに含める形でも。</td></tr>
+          <tr class="pick"><td class="plan" data-en="Full build&lt;span class='tag'&gt;From zero&lt;/span&gt;">フルビルド<span class="tag">ゼロから</span></td>
+              <td class="n tnum" data-l="構築費" data-dl="Build">¥800,000〜¥1,500,000</td>
+              <td class="what" data-en="A company set up from nothing: accounts and domain, company email, folder structure, spreadsheets, the website, the dashboard, the automations, and Claude connected to all of it.">会社をゼロから立ち上げる一式。アカウントとドメイン、会社メール、フォルダ構造、スプレッドシート、Webサイト、ダッシュボード、自動化、そのすべてに接続したClaudeまで。</td></tr>
+          <tr><td class="plan" data-en="Rebuild &amp; connect">導入・改善</td>
+              <td class="n tnum" data-l="構築費" data-dl="Build">¥350,000〜¥700,000</td>
+              <td class="what" data-en="For a business already running. We look at how the work actually moves, then redesign and reconnect it: consulting, design and implementation on top of the tools you already have.">すでに動いている会社向け。いまの仕事の流れを見たうえで、設計し直してつなぎ直します。コンサルティング・設計・実装まで。</td></tr>
+          <tr><td class="plan" data-en="Website only">Webサイト（単品）</td>
+              <td class="n tnum" data-l="構築費" data-dl="Build">¥250,000〜¥600,000</td>
+              <td class="what" data-en="A site on its own, built in the same hands and the same brand as everything else.">サイトだけ。ほかと同じ手で、同じブランドでつくります。</td></tr>
+          <tr><td class="plan" data-en="Dashboard only">ダッシュボード（単品）</td>
+              <td class="n tnum" data-l="構築費" data-dl="Build">¥200,000〜¥450,000</td>
+              <td class="what" data-en="Your numbers in one screen, fed by whatever you already use.">数字をひとつの画面に。入力元は、いま使っているもので構いません。</td></tr>
+          <tr><td class="plan" data-en="AI setup only">AIセットアップ（単品）</td>
+              <td class="n tnum" data-l="構築費" data-dl="Build">¥150,000〜¥350,000</td>
+              <td class="what" data-en="Claude set up around your business, with the connections and plugins it needs to be useful rather than generic.">あなたの会社に合わせたClaudeの設置。一般論で終わらせないための接続とプラグインまで。</td></tr>
         </tbody>
       </table>
     </div>
-    <p class="note rv d3"
-       data-en="For reference: business software alone tends to run around ¥10,000 a month, and custom development starts near ¥500,000 plus maintenance. &lt;b&gt;What is unusual here is that the person who runs it is included.&lt;/b&gt; Nothing is a template with your name dropped into it.">
-      参考までに：業務ソフトはソフトだけで月額約¥10,000、受託開発なら¥500,000〜に保守が乗るのが一般的です。
-      <b>ここで珍しいのは、「運用する人」まで含まれていることです。</b>
-      名前を入れ替えただけのテンプレートは、ひとつもありません。
+
+    <h3 class="tiers-h rv d3" data-en="Monthly, after it is built">つくったあとの、月額。</h3>
+    <p class="lede rv d3" style="margin-top:10px; font-size:clamp(13.5px,1.15vw,16px)"
+       data-en="A system that nobody tends goes stale. The monthly plan covers the changes: each tier includes a set number of revisions, so a business that keeps tuning simply takes a higher one.">
+      誰も手を入れない仕組みは、古びます。月額はそのための枠です。
+      各プランに毎月の修正・改善の件数が含まれ、よく手を入れる会社ほど上のプランになります。
+    </p>
+    <div class="tiers rv d4">
+      <div>
+        <p class="t" data-en="Light">ライト</p>
+        <p class="p tnum" data-en="&lt;span&gt;¥30,000&lt;/span&gt; / month">¥30,000<span data-en=""> / 月</span></p>
+        <p class="d" data-en="Up to 2 changes a month, plus fixes when something breaks.">月2件までの修正・改善。不具合の対応は別枠で対応します。</p>
+      </div>
+      <div>
+        <p class="t" data-en="Standard">スタンダード</p>
+        <p class="p tnum" data-en="&lt;span&gt;¥60,000&lt;/span&gt; / month">¥60,000<span data-en=""> / 月</span></p>
+        <p class="d" data-en="Up to 5 changes a month and a monthly working session to decide what they should be.">月5件までの修正・改善と、何を直すかを決める月次の打ち合わせ。</p>
+      </div>
+      <div>
+        <p class="t" data-en="Pro">プロ</p>
+        <p class="p tnum" data-en="&lt;span&gt;¥120,000&lt;/span&gt; / month">¥120,000<span data-en=""> / 月</span></p>
+        <p class="d" data-en="No cap on changes and priority turnaround, for businesses that keep reshaping how they work.">件数の上限なし、優先対応。仕組みを頻繁に変えていく会社向け。</p>
+      </div>
+    </div>
+
+    <p class="note rv d5"
+       data-en="&lt;b&gt;These figures are a guide, not a quote.&lt;/b&gt; What a build actually costs depends on how many tools have to be connected and how much already exists. You get a fixed number after the call, before anything starts.">
+      <b>上の金額は目安で、見積もりではありません。</b>
+      実際の費用は、つなぐ道具の数と、すでにあるものの量で変わります。
+      お話を伺ったうえで、着手前に金額を確定してお出しします。
     </p>
   </div>
 </section>
