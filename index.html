@@ -345,6 +345,8 @@ section.drench > * { position:relative; z-index:1; }
 .lede strong { color:var(--ink); font-weight:700; }
 .disp em { font-style:normal; color:var(--jade); }
 .tnum { font-variant-numeric:tabular-nums; font-feature-settings:"tnum" 1; }
+/* product names stay whole across a line break */
+.nw { white-space:nowrap; }
 
 /* ---------- reveals (varied per section, never one uniform entrance) --- */
 /* default = visible. `.js` opts into hiding, so no-JS/headless ships full. */
@@ -830,8 +832,9 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
       <span class="mask m2"><span data-en="on its own &lt;em&gt;OS.&lt;/em&gt;">専用の<em>OS</em>を。</span></span>
     </h1>
     <p class="lede hero-sub rv d3"
-       data-en="We connect the tools you already use to Claude, then build the folders, the dashboards and the automations around them, all in your brand. After that, changes and fixes are handled every month.">
-      いま使っているツールとClaudeをつなぎ、フォルダも、ダッシュボードも、自動化も、
+       data-en="We connect &lt;span class=&quot;nw&quot;&gt;Claude Code&lt;/span&gt;, the AI tool business is talking about right now, to the tools you already use, then build the folder structure, the dashboards and the automations for each task, all in your brand. After that, changes and fixes are handled every month.">
+      現在使っているツール等に今ビジネス業界で話題の <span class="nw">Claude Code</span> をつなぎ、
+      フォルダ構成も、ダッシュボードも、作業別の自動化機能も、
       あなたのブランドに合わせて一式つくります。その後も、毎月の変更や修正に対応します。
     </p>
     <div class="btns rv d4">
@@ -1299,10 +1302,17 @@ function phrase(root) {
     const frag = document.createDocumentFragment();
     for (const u of units) {
       if (!u.trim()) { frag.append(u); continue; }        // keep real spaces breakable
+      /* Whitespace must stay OUTSIDE the inline-block: a space at the edge
+         of one collapses, which silently closes the gap around Latin words
+         embedded in Japanese (「話題の Claude Code をつなぎ」). */
+      const lead = u.match(/^\s*/)[0];
+      const tail = u.match(/\s*$/)[0];
+      if (lead) frag.append(lead);
       const s = document.createElement('span');
       s.className = 'u';
-      s.textContent = u;
+      s.textContent = u.slice(lead.length, u.length - tail.length);
       frag.append(s);
+      if (tail) frag.append(tail);
     }
     node.replaceWith(frag);
   }
