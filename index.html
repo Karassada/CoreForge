@@ -692,6 +692,21 @@ section.drench > * { position:relative; z-index:1; }
   letter-spacing:0; margin-left:.4em; }
 .tiers .d { margin-top:10px; font-size:clamp(12.5px,1.1vw,14px); color:var(--sub); line-height:1.8; }
 
+/* ---------- closing checklist ---------- */
+/* `i`, not `span`, for the parenthetical: a span selector here would also
+   catch the units the Japanese line-breaker injects. */
+.checks { list-style:none; margin-top:clamp(24px,3.4vh,34px); display:grid;
+  gap:clamp(9px,1.3vh,13px); max-width:36em; }
+.checks li { position:relative; padding-left:31px; color:var(--ink);
+  font-size:clamp(13.5px,1.25vw,16.5px); font-weight:700; line-height:1.75; }
+.checks li::before { content:""; position:absolute; left:4px; top:.62em;
+  width:11px; height:6.5px; border-left:2px solid var(--jade);
+  border-bottom:2px solid var(--jade); transform:rotate(-45deg); }
+.checks i { font-style:normal; font-weight:400; color:var(--sub); }
+.ask { margin-top:clamp(24px,3.6vh,36px); font-family:var(--mincho); font-weight:600;
+  font-size:clamp(17px,1.9vw,26px); line-height:1.75; letter-spacing:-.01em;
+  text-wrap:balance; }
+
 /* ---------- contact ---------- */
 .contact { margin-top:clamp(30px,4.5vh,48px); display:flex; flex-wrap:wrap; gap:12px 40px;
   padding-top:clamp(24px,3.4vh,34px); border-top:1px solid rgba(15,203,136,.24); }
@@ -849,7 +864,7 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
     <div class="btns rv d4">
       <a class="go" href="#contact">
         <svg width="17" height="17" viewBox="0 0 17 17" fill="none" aria-hidden="true"><rect x="1.4" y="3" width="10.6" height="11" rx="2.6" stroke="currentColor" stroke-width="1.8"/><path d="M12 8.5l4-2.6v5.2z" fill="currentColor"/></svg>
-        <span data-en="Book a 15-minute call">15分のオンライン相談</span></a>
+        <span data-en="Book a 30-minute call">30分のオンライン相談</span></a>
       <a class="ghost" href="#how"><span data-en="See the connections">連携を見る</span>
         <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 2v9M3 7.5L7 11l4-3.5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
     </div>
@@ -1201,21 +1216,26 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
 <!-- 5 ── クロージング ─────────────────────────────────────── -->
 <section class="drench full" id="contact">
   <div class="wrap">
-    <h2 class="disp rv-s" style="font-size:clamp(36px,5.4vw,74px)" data-en="Tell us what you do.">まずは、お話を。</h2>
+    <h2 class="disp rv-s" style="font-size:clamp(32px,4.9vw,66px)" data-en="First, just 30 minutes&lt;br&gt;of your time.">まずは、30分だけ<br>お時間をください。</h2>
     <p class="rv d2" style="margin-top:clamp(26px,4vh,44px); font-size:clamp(15.5px,1.5vw,20px);
        line-height:2; max-width:38em; font-weight:700"
-       data-en="Fifteen minutes on a call. You describe how the work moves today, we show you what we would build and what it costs.&lt;span style='font-weight:400; display:block; margin-top:1em; color:var(--sub)'&gt;There is nothing to prepare, and nothing to install to find out.&lt;/span&gt;">
-      15分だけ、オンラインで。いまの仕事の流れを聞かせていただければ、
-      何をつくるか、いくらになるかをその場でお見せします。
-      <span style="font-weight:400; display:block; margin-top:1em; color:var(--sub)">
-      ご用意いただくものはありません。話を聞くために、何かを導入する必要もありません。</span>
+       data-en="If you walk us through how the work moves today, on a call, we will work out the plan that best turns it into a system, and come back to you afterwards with an accurate figure.">
+      オンラインでいまの業務フローをヒアリングさせていただければ、
+      貴社に最適な「仕組み化のプラン」を検討し、後日、正確な金額と共にお戻しします。
     </p>
-    <div class="btns rv d3">
+    <ul class="checks rv d3">
+      <li data-en="Nothing to prepare &lt;i&gt;(turn up empty-handed)&lt;/i&gt;">事前準備は一切不要 <i>（手ぶらでご参加ください）</i></li>
+      <li data-en="Nothing to install &lt;i&gt;(your current setup is fine as it is)&lt;/i&gt;">ツールの導入も不要 <i>（今ある環境のままで大丈夫です）</i></li>
+      <li data-en="Longer if you need it &lt;i&gt;(happy to keep going if there is more to cover)&lt;/i&gt;">時間の延長も可能 <i>（じっくり話したい場合も対応します）</i></li>
+    </ul>
+    <p class="ask rv d4" data-en="Why not take the first step toward a company that runs on its system, right here?">
+      あなたの会社の「仕組み化」の第一歩を、ここから始めませんか。</p>
+    <div class="btns rv d4">
       <a class="go" href="#contact">
         <svg width="17" height="17" viewBox="0 0 17 17" fill="none" aria-hidden="true"><rect x="1.4" y="3" width="10.6" height="11" rx="2.6" stroke="currentColor" stroke-width="1.8"/><path d="M12 8.5l4-2.6v5.2z" fill="currentColor"/></svg>
-        <span data-en="Book the 15-minute call (free)">15分のオンライン相談（無料）</span></a>
+        <span data-en="Book the 30-minute call (free)">30分のオンライン相談（無料）</span></a>
     </div>
-    <dl class="contact rv d4">
+    <dl class="contact rv d5">
       <div><dt data-en="Contact">お問い合わせ</dt><dd data-en="Coming soon">準備中</dd></div>
       <div><dt data-en="Operated by">運営</dt><dd data-en="SHIFT合同会社 (Tokyo)">SHIFT合同会社（東京）</dd></div>
       <div><dt data-en="Coverage">対応エリア</dt><dd data-en="Nationwide / online">全国／オンライン</dd></div>
@@ -1229,7 +1249,7 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
 <div class="bottom" id="bottom">
   <a class="go" href="#contact">
     <svg width="16" height="16" viewBox="0 0 17 17" fill="none" aria-hidden="true"><rect x="1.4" y="3" width="10.6" height="11" rx="2.6" stroke="currentColor" stroke-width="1.8"/><path d="M12 8.5l4-2.6v5.2z" fill="currentColor"/></svg>
-    <span data-en="Book a free 15-min call">15分のオンライン相談（無料）</span></a>
+    <span data-en="Book a free 30-min call">30分のオンライン相談（無料）</span></a>
 </div>
 
 <footer>
