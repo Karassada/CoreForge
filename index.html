@@ -683,8 +683,11 @@ section.drench > * { position:relative; z-index:1; }
   color:var(--jade); }
 .tiers .p { margin-top:8px; font-size:clamp(21px,2.1vw,28px); font-weight:900;
   letter-spacing:-.025em; color:var(--ink); }
-.tiers .p span { font-size:.5em; font-weight:700; color:var(--faint); letter-spacing:0;
-  margin-left:.4em; }
+/* > span:not(.u) — the Japanese line-breaker injects .u spans as direct
+   children, so a bare `.tiers .p span` shrinks the price itself to 10.5px
+   grey. Only the real suffix element may take this. */
+.tiers .p > span:not(.u) { font-size:.5em; font-weight:700; color:var(--faint);
+  letter-spacing:0; margin-left:.4em; }
 .tiers .d { margin-top:10px; font-size:clamp(12.5px,1.1vw,14px); color:var(--sub); line-height:1.8; }
 
 /* ---------- contact ---------- */
@@ -1158,27 +1161,27 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
       </table>
     </div>
 
-    <h3 class="tiers-h rv d3" data-en="Monthly, after it is built">つくったあとの、月額。</h3>
+    <h3 class="tiers-h rv d3" data-en="Monthly, after launch.">導入後の月額。</h3>
     <p class="lede rv d3" style="margin-top:10px; font-size:clamp(13.5px,1.15vw,16px)"
-       data-en="A system that nobody tends goes stale. The monthly plan covers the changes: each tier includes a set number of revisions, so a business that keeps tuning simply takes a higher one.">
+       data-en="A system that nobody tends goes stale. The monthly plan is the room to keep tending it: each tier includes a set number of changes and improvements, so a business that keeps reshaping things simply takes a higher one.">
       誰も手を入れない仕組みは、古びます。月額はそのための枠です。
       各プランに毎月の修正・改善の件数が含まれ、よく手を入れる会社ほど上のプランになります。
     </p>
     <div class="tiers rv d4">
       <div>
         <p class="t" data-en="Light">ライト</p>
-        <p class="p tnum" data-en="&lt;span&gt;¥30,000&lt;/span&gt; / month">¥30,000<span data-en=""> / 月</span></p>
-        <p class="d" data-en="Up to 2 changes a month, plus fixes when something breaks.">月2件までの修正・改善。不具合の対応は別枠で対応します。</p>
+        <p class="p tnum" data-en="¥30,000&lt;span&gt; / month and up&lt;/span&gt;">¥30,000<span data-en=""> / 月 〜</span></p>
+        <p class="d" data-en="For a company that wants the system it has built simply kept running, with fixes when something breaks and small adjustments as they come up.">ひとまず作った仕組みを維持し、不具合の修正や軽微な調整をしたい会社向け。</p>
       </div>
       <div>
         <p class="t" data-en="Standard">スタンダード</p>
-        <p class="p tnum" data-en="&lt;span&gt;¥60,000&lt;/span&gt; / month">¥60,000<span data-en=""> / 月</span></p>
-        <p class="d" data-en="Up to 5 changes a month and a monthly working session to decide what they should be.">月5件までの修正・改善と、何を直すかを決める月次の打ち合わせ。</p>
+        <p class="p tnum" data-en="¥80,000&lt;span&gt; / month and up&lt;/span&gt;">¥80,000<span data-en=""> / 月 〜</span></p>
+        <p class="d" data-en="For a company whose way of working keeps shifting, wanting monthly updates and a regular working session to keep pace with it.">業務のやり方が変わるスピードに合わせて、毎月のアップデートや定期的な打ち合わせを行いたい会社向け。</p>
       </div>
       <div>
         <p class="t" data-en="Pro">プロ</p>
-        <p class="p tnum" data-en="&lt;span&gt;¥120,000&lt;/span&gt; / month">¥120,000<span data-en=""> / 月</span></p>
-        <p class="d" data-en="No cap on changes and priority turnaround, for businesses that keep reshaping how they work.">件数の上限なし、優先対応。仕組みを頻繁に変えていく会社向け。</p>
+        <p class="p tnum" data-en="¥120,000&lt;span&gt; / month and up&lt;/span&gt;">¥120,000<span data-en=""> / 月 〜</span></p>
+        <p class="d" data-en="For a company staying on the front foot: the AI evolving further, new systems added, the organisation updated continuously.">AIのさらなる進化、新しい仕組みの追加など、常に攻めの姿勢で組織をアップデートし続けたい会社向け。</p>
       </div>
     </div>
 
