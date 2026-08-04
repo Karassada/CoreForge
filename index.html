@@ -692,6 +692,15 @@ section.drench > * { position:relative; z-index:1; }
   letter-spacing:0; margin-left:.4em; }
 .tiers .d { margin-top:10px; font-size:clamp(12.5px,1.1vw,14px); color:var(--sub); line-height:1.8; }
 
+.tiers-note { margin-top:clamp(12px,1.8vh,16px); font-size:clamp(11.5px,1vw,13px);
+  color:var(--faint); line-height:1.8; }
+/* the "works without an AI account" caveat, under the Claude row.
+   A tinted block, not a side stripe. */
+.opt { display:block; margin-top:11px; padding:10px 13px; border-radius:11px;
+  font-style:normal; background:rgba(15,203,136,.06);
+  border:1px solid rgba(15,203,136,.22); color:var(--sub);
+  font-size:.92em; line-height:1.8; }
+
 /* ---------- closing checklist ---------- */
 /* `i`, not `span`, for the parenthetical: a span selector here would also
    catch the units the Japanese line-breaker injects. */
@@ -1134,7 +1143,7 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
           <dd data-en="&lt;b&gt;Not a template. Designed for you alone.&lt;/b&gt;A dashboard that shows the state of the business at a glance, a website, and a dedicated app where the work calls for one. All drawn from scratch around the value of your brand. We do not reuse somebody else’s template with the logo swapped out."><b>テンプレートではない、貴社だけのデザイン。</b>ひと目で経営や業務の状況が分かるダッシュボード、Webサイト、必要であれば専用のアプリまで。すべて貴社のブランド価値に合わせてゼロから描きます。他社のロゴを載せ替えただけの、ありきたりなテンプレートは使いません。</dd></div>
 
         <div class="row rv d6"><dt data-en="Claude, set up properly">AIはClaudeで</dt>
-          <dd data-en="&lt;b&gt;A dedicated AI that understands your context.&lt;/b&gt;We build the system around Claude, an AI with world-leading intelligence, and connect it to the folders, the sheets and the dashboard. The plugins and integrations it needs are supplied by us. It is not an AI reciting generalities: it runs with a deep understanding of your company."><b>貴社の文脈を理解した、専属AI。</b>世界最高峰の知性を持つ「Claude」を中心にシステムを構築し、フォルダ、シート、ダッシュボードのすべてに接続します。必要なプラグインや連携システムもこちらで完備。一般論を語るAIではなく、「あなたの会社のこと」を深く理解した状態で稼働します。</dd></div>
+          <dd data-en="&lt;b&gt;A dedicated AI that understands your context.&lt;/b&gt;We build the system around Claude, an AI with world-leading intelligence, and connect it to the folders, the sheets and the dashboard. The plugins and integrations it needs are supplied by us. It is not an AI reciting generalities: it runs with a deep understanding of your company.&lt;i class=&quot;opt&quot;&gt;Most of what we build runs with no AI account at all. The AI layer alone can be removed later, and everything else keeps working.&lt;/i&gt;"><b>貴社の文脈を理解した、専属AI。</b>世界最高峰の知性を持つ「Claude」を中心にシステムを構築し、フォルダ、シート、ダッシュボードのすべてに接続します。必要なプラグインや連携システムもこちらで完備。一般論を語るAIではなく、「あなたの会社のこと」を深く理解した状態で稼働します。<i class="opt">仕組みの大部分は、AIのアカウントがなくても動きます。AIの部分だけを後から外すこともでき、そのときもほかはそのまま動き続けます。</i></dd></div>
 
         <div class="row rv d6"><dt data-en="It stays yours">データは会社のもの</dt>
           <dd data-en="&lt;b&gt;Every asset, in your own account.&lt;/b&gt;All of your data is stored in your own company accounts. Backups are kept automatically. Because nothing is typed by hand, mistyping cannot happen. And in the event our contract ends, the system we built and the data both stay with you."><b>すべての資産は、自社のアカウントに。</b>すべてのデータの保存先は、お客様ご自身の自社アカウントです。バックアップ（控え）も自動で残ります。手入力がないため打ち間違いのミスも起きません。万が一、弊社との契約が終了しても、構築したシステムとデータはすべて手元に残り続けます。</dd></div>
@@ -1159,6 +1168,9 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
       <table class="pt">
         <thead><tr><th scope="col" data-en="Package">プラン</th><th scope="col" data-en="Build (guide)">構築費（目安）</th><th scope="col" data-en="What it covers">内容</th></tr></thead>
         <tbody>
+          <tr><td class="plan" data-en="Diagnosis">業務診断</td>
+              <td class="n tnum" data-l="構築費" data-dl="Build">¥50,000</td>
+              <td class="what" data-en="A paid session to map how the work moves today and what should be built. Credited in full against the build if you go ahead.">いまの業務の流れと、何をつくるべきかを洗い出す有料の診断。構築に進む場合は、全額を費用に充当します。</td></tr>
           <tr class="pick"><td class="plan" data-en="Full build&lt;span class='tag'&gt;Recommended&lt;/span&gt;">フルビルド<span class="tag">おすすめ</span></td>
               <td class="n tnum" data-l="構築費" data-dl="Build">¥800,000 〜 ¥1,500,000</td>
               <td class="what" data-en="A complete set that turns a company into a system from nothing.&lt;br&gt;Accounts, the domain, company email, the folder structure, spreadsheets, the website, the dashboard, the automations, and Claude connected to all of it.">会社をゼロから仕組み化する一式。<br>アカウント、ドメイン、会社メール、フォルダ構造、スプレッドシート、Webサイト、ダッシュボード、自動化、そしてすべてに接続したClaudeまで。</td></tr>
@@ -1174,6 +1186,9 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
           <tr><td class="plan" data-en="AI setup only">AIセットアップ（単品）</td>
               <td class="n tnum" data-l="構築費" data-dl="Build">¥150,000 〜 ¥350,000</td>
               <td class="what" data-en="Claude built specifically around your operations, with the environment and plugins connected so it never stops at generalities.">貴社の業務に特化させたClaudeを構築。一般論で終わらせないための環境とプラグインを連携します。</td></tr>
+          <tr><td class="plan" data-en="Enterprise">エンタープライズ</td>
+              <td class="n tnum" data-l="構築費" data-dl="Build">¥2,000,000〜</td>
+              <td class="what" data-en="Several sites or departments, multiple systems running alongside each other, and a longer build. Quoted individually.">複数拠点・複数部門、システムが何本も並走する規模。個別にお見積りします。</td></tr>
         </tbody>
       </table>
     </div>
@@ -1188,19 +1203,23 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
       <div>
         <p class="t" data-en="Light">ライト</p>
         <p class="p tnum" data-en="¥30,000&lt;span&gt; / month and up&lt;/span&gt;">¥30,000<span data-en=""> / 月 〜</span></p>
-        <p class="d" data-en="For a company that wants the system it has built simply kept running, with fixes when something breaks and small adjustments as they come up.">ひとまず作った仕組みを維持し、不具合の修正や軽微な調整をしたい会社向け。</p>
+        <p class="d" data-en="Keeping what has been built running: monitoring, and fixes when something breaks. Around 1 to 2 hours a month. New features are not included.">つくった仕組みを動かし続けるための枠。見守りと不具合の対応で、月1〜2時間ほど。新しい機能の追加は含みません。</p>
       </div>
       <div>
         <p class="t" data-en="Standard">スタンダード</p>
         <p class="p tnum" data-en="¥80,000&lt;span&gt; / month and up&lt;/span&gt;">¥80,000<span data-en=""> / 月 〜</span></p>
-        <p class="d" data-en="For a company whose way of working keeps shifting, wanting monthly updates and a regular working session to keep pace with it.">業務のやり方が変わるスピードに合わせて、毎月のアップデートや定期的な打ち合わせを行いたい会社向け。</p>
+        <p class="d" data-en="Around 5 hours a month of improvements, plus a monthly session to decide what they should be. For a company whose way of working keeps shifting.">月5時間ほどの改善と、何を直すかを決める月次の打ち合わせ。業務のやり方が変わっていく会社向け。</p>
       </div>
       <div>
         <p class="t" data-en="Pro">プロ</p>
-        <p class="p tnum" data-en="¥120,000&lt;span&gt; / month and up&lt;/span&gt;">¥120,000<span data-en=""> / 月 〜</span></p>
-        <p class="d" data-en="For a company staying on the front foot: the AI evolving further, new systems added, the organisation updated continuously.">AIのさらなる進化、新しい仕組みの追加など、常に攻めの姿勢で組織をアップデートし続けたい会社向け。</p>
+        <p class="p tnum" data-en="¥150,000&lt;span&gt; / month and up&lt;/span&gt;">¥150,000<span data-en=""> / 月 〜</span></p>
+        <p class="d" data-en="Around 12 hours a month with priority turnaround. For a company adding new systems and reshaping how it works continuously.">月12時間ほど、優先対応。新しい仕組みの追加や、組織のアップデートを続けていく会社向け。</p>
       </div>
     </div>
+
+    <p class="tiers-note rv d4"
+       data-en="Hours beyond the tier are billed at ¥12,000 each. Monthly plans start from a three-month term.">
+      枠を超えた分は、1時間あたり¥12,000で承ります。月額プランは3ヶ月からのご契約です。</p>
 
     <div class="note rv d5">
       <p data-en="※ Every figure shown is a guide, not a confirmed quote. The actual cost varies with the number of tools to be connected and the volume of systems and data you already hold. We always go through your situation in detail first, and present a fixed figure before any contract is signed or any work begins.">
