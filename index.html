@@ -668,7 +668,9 @@ section.drench > * { position:relative; z-index:1; }
   color:var(--sub); line-height:1.95; max-width:62em;
   background:rgba(255,255,255,.028); border:1px solid var(--hair);
   border-radius:16px; padding:clamp(16px,2.2vh,22px) clamp(16px,2vw,24px); }
-.note b { color:var(--jade); font-weight:900; }
+.note p + p { margin-top:clamp(13px,1.9vh,19px); padding-top:clamp(13px,1.9vh,19px);
+  border-top:1px solid var(--hair); }
+.note b { display:block; margin-bottom:6px; color:var(--jade); font-weight:900; }
 
 /* ---------- monthly tiers ---------- */
 .tiers-h { margin-top:clamp(34px,5vh,54px); font-size:clamp(19px,2vw,27px); font-weight:900;
@@ -1185,12 +1187,14 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
       </div>
     </div>
 
-    <p class="note rv d5"
-       data-en="&lt;b&gt;These figures are a guide, not a quote.&lt;/b&gt; What a build actually costs depends on how many tools have to be connected and how much already exists. You get a fixed number after the call, before anything starts.">
-      <b>上の金額は目安で、見積もりではありません。</b>
-      実際の費用は、つなぐ道具の数と、すでにあるものの量で変わります。
-      お話を伺ったうえで、着手前に金額を確定してお出しします。
-    </p>
+    <div class="note rv d5">
+      <p data-en="※ Every figure shown is a guide, not a confirmed quote. The actual cost varies with the number of tools to be connected and the volume of systems and data you already hold. We always go through your situation in detail first, and present a fixed figure before any contract is signed or any work begins.">
+        ※ 表記の金額はすべて目安であり、確定したお見積もりではありません。実際の費用は、連携するツールの数や、現在すでにお持ちのシステム・データの量によって変動します。必ず事前にお話を詳しく伺ったうえで、ご契約・着手前に確定した金額をご提示しますのでご安心ください。
+      </p>
+      <p data-en="&lt;b&gt;[About third-party service fees]&lt;/b&gt;The monthly subscription and usage fees for the external services the system needs to run &lt;span class=&quot;nw&quot;&gt;(Google Workspace&lt;/span&gt;, Claude, Cloudflare, &lt;span class=&quot;nw&quot;&gt;Google Cloud&lt;/span&gt; and so on) are paid by you directly, at cost. Every one of them is contracted under your own accounts, so no middleman margin arises at any point.">
+        <b>【ツールのご利用料金について】</b>システムの維持・運用に必要な各種外部サービス<span class="nw">（Google Workspace</span>、Claude、Cloudflare、<span class="nw">Google Cloud</span>など）の月額サブスクリプション費用や利用料は、お客様ご自身でのご負担（実費）となります。すべてお客様のアカウントで直接ご契約いただくため、中間マージンなどは一切発生いたしません。
+      </p>
+    </div>
   </div>
 </section>
 
