@@ -415,8 +415,12 @@ section.drench > * { position:relative; z-index:1; }
 .rows { border-top:1px solid var(--hair); margin-top:clamp(34px,5vh,56px); max-width:900px; }
 .row { display:grid; grid-template-columns:minmax(9em,15em) 1fr; gap:clamp(14px,3.4vw,52px);
   padding:clamp(15px,2.2vh,24px) 0; border-bottom:1px solid var(--hair); align-items:start; }
-.row dt { font-weight:900; font-size:clamp(16px,1.5vw,20px); letter-spacing:-.01em;
-  color:var(--jade); }
+.row dt { font-weight:900; font-size:clamp(18px,1.85vw,25px); letter-spacing:-.02em;
+  color:var(--jade); line-height:1.45; }
+/* the emphasised lead line above each body paragraph. `b` not `span`:
+   a span selector here would also catch the injected phrase units. */
+.row dd b { display:block; margin-bottom:7px; color:var(--ink); font-weight:900;
+  font-size:clamp(14.5px,1.4vw,18px); letter-spacing:-.01em; line-height:1.65; }
 .row dd { font-size:clamp(14px,1.25vw,16.5px); color:var(--sub); line-height:1.95; text-wrap:pretty; }
 .row .fig { font-size:clamp(17px,1.7vw,23px); color:var(--jade); font-weight:900; letter-spacing:-.02em; }
 
@@ -1101,15 +1105,19 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
       </p>
       <dl class="rows" style="max-width:none">
         <div class="row rv d3"><dt data-en="The accounts">必要なアカウント</dt>
-          <dd data-en="Google Workspace, company email for as many people as you need, the domain, and the developer accounts the system needs to run — Cloudflare, LINE Developers and the rest. Opened and configured by us.">Google Workspace、人数分の会社メール、ドメイン。さらにCloudflareやLINE Developersなど、システムが動くために必要なものまで、こちらで開設して設定します。</dd></div>
+          <dd data-en="&lt;b&gt;Everything behind the scenes, handled.&lt;/b&gt;Google Workspace, company email for as many people as you need, and your own domain. Plus the backend the system depends on to run safely and fast, Cloudflare and LINE Developers among them. All of it opened and tuned by us."><b>裏側の設定まで、すべておまかせ。</b>Google Workspace、人数分の会社メール、独自ドメインの取得。さらにCloudflareやLINE Developersなど、システムを安全・高速に動かすために必要なバックエンドの設定まで、すべてこちらで開設して最適化します。</dd></div>
+
         <div class="row rv d4"><dt data-en="Where the data lives">データの置き場所</dt>
-          <dd data-en="A folder structure that makes sense, and spreadsheets shaped to how you actually work. The numbers that arrive each month land in them by themselves, and stay as company data.">迷わないフォルダ構造と、実際の仕事に合わせたスプレッドシート。毎月入ってくる数字はひとりでに収まり、会社のデータとして残ります。</dd></div>
+          <dd data-en="&lt;b&gt;Nothing lost, nothing scattered, everything accumulating.&lt;/b&gt;A folder structure nobody gets lost in, and spreadsheets designed around how the work actually moves. The numbers and information that arrive each month settle into their place on their own, with no hand touching them, and build up as a real data asset for the company."><b>迷わない、散らからない、自動で貯まる。</b>誰もが迷わないフォルダ構造と、実際の現場の動きに合わせたスプレッドシートを設計。毎月発生する数字や情報は、人の手を介さず「ひとりでに」所定の場所に収まり、会社の貴重なデータ資産として蓄積されます。</dd></div>
+
         <div class="row rv d5"><dt data-en="Something to look at">見えるかたち</dt>
-          <dd data-en="A dashboard that answers “how are we doing” at a glance, a website, and an app if the work needs one. All drawn in your brand, not a template with your logo dropped on it.">ひと目で状況が分かるダッシュボード、Webサイト、必要ならアプリまで。すべてブランドに合わせて描きます。ロゴを載せ替えただけのテンプレートではありません。</dd></div>
+          <dd data-en="&lt;b&gt;Not a template. Designed for you alone.&lt;/b&gt;A dashboard that shows the state of the business at a glance, a website, and a dedicated app where the work calls for one. All drawn from scratch around the value of your brand. We do not reuse somebody else’s template with the logo swapped out."><b>テンプレートではない、貴社だけのデザイン。</b>ひと目で経営や業務の状況が分かるダッシュボード、Webサイト、必要であれば専用のアプリまで。すべて貴社のブランド価値に合わせてゼロから描きます。他社のロゴを載せ替えただけの、ありきたりなテンプレートは使いません。</dd></div>
+
         <div class="row rv d6"><dt data-en="Claude, set up properly">AIはClaudeで</dt>
-          <dd data-en="We build on Claude and connect it to everything above, with the plugins and integrations it needs. It knows your business, not a generic one, and it keeps working without you prompting it.">Claudeを中心に構築し、上のすべてに接続します。必要なプラグインや連携もこちらで用意。一般論ではなく、あなたの会社を分かった状態で動きます。</dd></div>
+          <dd data-en="&lt;b&gt;A dedicated AI that understands your context.&lt;/b&gt;We build the system around Claude, an AI with world-leading intelligence, and connect it to the folders, the sheets and the dashboard. The plugins and integrations it needs are supplied by us. It is not an AI reciting generalities: it runs with a deep understanding of your company."><b>貴社の文脈を理解した、専属AI。</b>世界最高峰の知性を持つ「Claude」を中心にシステムを構築し、フォルダ、シート、ダッシュボードのすべてに接続します。必要なプラグインや連携システムもこちらで完備。一般論を語るAIではなく、「あなたの会社のこと」を深く理解した状態で稼働します。</dd></div>
+
         <div class="row rv d6"><dt data-en="It stays yours">データは会社のもの</dt>
-          <dd data-en="Everything sits in your own accounts, with backups. Nothing is typed by hand, so nothing gets mistyped — and if we ever part ways, all of it stays with you.">保存先はすべて自社のアカウント。控えも残ります。手入力がないので打ち間違いも起きません。契約が終わっても、すべて手元に残ります。</dd></div>
+          <dd data-en="&lt;b&gt;Every asset, in your own account.&lt;/b&gt;All of your data is stored in your own company accounts. Backups are kept automatically. Because nothing is typed by hand, mistyping cannot happen. And in the event our contract ends, the system we built and the data both stay with you."><b>すべての資産は、自社のアカウントに。</b>すべてのデータの保存先は、お客様ご自身の自社アカウントです。バックアップ（控え）も自動で残ります。手入力がないため打ち間違いのミスも起きません。万が一、弊社との契約が終了しても、構築したシステムとデータはすべて手元に残り続けます。</dd></div>
       </dl>
     </div>
   </div>
