@@ -1,2 +1,8 @@
 .DS_Store
 *.log
+
+# Internal only — this repo is PUBLIC (GitHub Pages serves it).
+# Strategy, pricing research and meeting notes must never be pushed.
+*.md
+!README.md
+meetings/
