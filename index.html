@@ -342,7 +342,7 @@ section.drench > * { position:relative; z-index:1; }
           font-size:clamp(24px,3.5vw,46px); line-height:1.4; text-wrap:balance; }
 .lede { font-size:clamp(15.5px,1.45vw,20px); color:var(--sub); line-height:2.05;
         max-width:34em; text-wrap:pretty; }
-.lede strong { color:var(--ink); font-weight:700; }
+.lede strong, .lede b { color:var(--ink); font-weight:900; }
 .disp em { font-style:normal; color:var(--jade); }
 .tnum { font-variant-numeric:tabular-nums; font-feature-settings:"tnum" 1; }
 /* product names stay whole across a line break */
@@ -1128,10 +1128,11 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
   <div class="wrap">
     <h2 class="disp h-big rv" data-en="Pricing.">料金プラン。</h2>
     <p class="lede rv d1" style="margin-top:clamp(16px,2.4vh,26px)"
-       data-en="The difference is where you start. With nothing in place, take the full build. Already running and want it done properly, take the rebuild. Or take a single piece. Every build can carry a monthly plan for the changes that follow.">
-      違いは「どこから始めるか」です。何もない状態からなら<b>フルビルド</b>、
-      すでに動いていて作り直したいなら<b>導入・改善</b>、
-      ひとつだけ必要なら<b>単品</b>。どの構築にも、あとから続く変更のために月額プランを付けられます。
+       data-en="The difference is where you start. To build the system from nothing at all, take the &lt;b&gt;full build&lt;/b&gt;. To improve something already running, take the &lt;b&gt;rebuild&lt;/b&gt;. If you need one piece and nothing else, take a &lt;b&gt;single item&lt;/b&gt;. Whichever you choose, a monthly plan can be combined with it, so the system can be changed and extended freely later on.">
+      違いは「どこから始めるか」です。何もないゼロの状態から仕組みを作るなら<b>「フルビルド」</b>。
+      すでに動いているものを改善したいなら<b>「導入・改善」</b>。
+      ひとつだけピンポイントで必要なら<b>「単品」</b>。
+      どのプランをお選びいただいても、後から柔軟に変更・拡張できるように月額プランを組み合わせられます。
     </p>
 
     <div class="panel rv-s d2">
@@ -1252,9 +1253,11 @@ if (!isStatic) document.documentElement.classList.add('js');
    ありました into ありま／した, which is the exact break we're preventing. */
 const KANA     = /^[ぁ-んー]+$/;
 const TRAILING = /^[、。，．・！？…〜ー」』）】〉》］｝：；:;\/]/;
-/* prev ends with an opener or a currency mark, so the next piece belongs
-   to it: 「+運用する, ¥+10,000, 30,000/+月 */
-const OPENING  = /[「『（【〈《［｛¥￥＄$€£\/]$/;
+/* prev ends with an opener, a currency mark, or a middle dot, so the next
+   piece belongs to it: 「+運用する, ¥+10,000, 30,000/+月, 導入・+改善.
+   ・ joins two words, so it must bind in BOTH directions or a name like
+   「導入・改善」 splits across lines. */
+const OPENING  = /[「『（【〈《［｛¥￥＄$€£\/・]$/;
 /* a lone kanji after a kanji or a number is a suffix or a counter
    (原価+率, 売上+表, 1+円) and must not be stranded on its own line */
 const SUFFIX   = /^[一-鿿]$/;
