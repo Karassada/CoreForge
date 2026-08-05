@@ -1,8 +1,8 @@
-# CoreForge — Landing Page
+# CoreForge — Website
 
 **Organize. Automate. Save Time.**
 
-Landing page for **CoreForge**, a business-infrastructure service from **SHIFT合同会社**
+The official website for **CoreForge**, a business-infrastructure service from **SHIFT合同会社**
 for Japanese small and medium-sized companies. CoreForge organizes how a company works,
 automates repetitive work, and gives owners a clear view of the business — accounts and
 domain, folder structure, spreadsheets, website, dashboards, workflow automations, and
