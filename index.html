@@ -15,7 +15,7 @@
 <meta property="og:image" content="https://karassada.github.io/CoreForge/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="あなたの会社に、専用のOSを。 — いま使っている道具とAIをつなぎ、フォルダもダッシュボードも自動化も一式つくります。">
+<meta property="og:image:alt" content="あなたの会社に、専用のOSを。 — いま使っている道具をつなぎ、フォルダもダッシュボードも自動化も一式つくります。">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://karassada.github.io/CoreForge/og.png">
 <link rel="canonical" href="https://karassada.github.io/CoreForge/">
@@ -572,7 +572,7 @@ section.drench > * { position:relative; z-index:1; }
 .js .on .lbl { opacity:1; transform:none;
   transition:opacity .5s var(--eo) .3s, transform .5s var(--eo) .3s; }
 
-/* the AI core */
+/* the auto-process core */
 .core .disc { fill:#08120e; stroke:var(--jade); stroke-width:2; }
 .core .ring { fill:none; stroke:rgba(15,203,136,.4); stroke-width:1.2;
   transform-box:fill-box; transform-origin:center; animation:spin 16s linear infinite; }
@@ -580,8 +580,12 @@ section.drench > * { position:relative; z-index:1; }
   animation-duration:26s; animation-direction:reverse; }
 .core .ring.r1 { stroke-dasharray:9 11; }
 .core .glyph { fill:var(--jade); }
+/* 19px suited the old two-character label; the Japanese one is four
+   characters and rendered 81px wide inside a 96px disc, leaving ~2px of
+   clearance at the text's baseline. Sized to sit comfortably instead. */
 .core .cap { fill:var(--jade); font-family:var(--goth); font-weight:900;
-  font-size:19px; text-anchor:middle; letter-spacing:.06em; }
+  font-size:15px; text-anchor:middle; letter-spacing:.04em; }
+html[lang="en"] .core .cap { font-size:18px; letter-spacing:.08em; }
 .js .core { opacity:0; transform-box:fill-box; transform-origin:center; transform:scale(.6); }
 .js .on .core { opacity:1; transform:none;
   transition:opacity .6s var(--eo), transform .95s var(--eo); }
@@ -862,14 +866,14 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
 <!-- 1 ── HERO ─────────────────────────────────────────────── -->
 <section class="full" id="hero">
   <div class="wrap">
-    <div class="badge rv"><span class="dot"></span><span data-en="Custom business systems, built on AI">AIで動く、オーダーメイドの業務システム</span></div>
+    <div class="badge rv"><span class="dot"></span><span data-en="Organize. Automate. Save Time.">整える。自動化する。時間を生む。</span></div>
     <h1 class="disp h-hero">
       <span class="mask"><span data-en="Your business,">あなたの会社に、</span></span>
       <span class="mask m2"><span data-en="on its own &lt;em&gt;OS.&lt;/em&gt;">専用の<em>OS</em>を。</span></span>
     </h1>
     <p class="lede hero-sub rv d3"
-       data-en="We connect the AI every business is talking about right now to the tools you already use, then build the folder structure, the dashboards and the automations for each task, all in your brand. After that, changes and fixes are handled every month.">
-      現在使っているツール等に今ビジネス業界で話題のAIをつなぎ、
+       data-en="We connect the tools you already use, then build the folder structure, the dashboards and the automations for each task, all in your brand. After that, changes and fixes are handled every month.">
+      現在使っているツールをそのままつなぎ、
       フォルダ構成も、ダッシュボードも、作業別の自動化機能も、
       あなたのブランドに合わせて一式つくります。その後も、毎月の変更や修正に対応します。
     </p>
@@ -889,14 +893,14 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
   <div class="wrap">
     <h2 class="h-fact rv" data-en="How it connects.">連携のイメージ。</h2>
     <p class="lede rv d1" style="margin-top:clamp(14px,2vh,22px)"
-       data-en="Whatever your work already produces goes in at the top. The AI reads it, checks it, saves it, and hands it back in a form you can use. The intake can be a chat app, a register, email — anything that can be connected.">
-      いまの仕事から生まれるものが、上から入ります。AIが読んで、確かめて、保存し、
-      使える形にして返します。入口はチャットでも、レジでも、メールでも。
+       data-en="Whatever your work already produces goes in at the top. The copying and the totalling finish without anyone touching them, and come back in a form you can use. The intake can be a chat app, a register, email — anything that can be connected.">
+      いまの仕事から生まれるものが、上から入ります。転記も、集計も、
+      手を動かさずに終わり、使える形になって返ってきます。入口はチャットでも、レジでも、メールでも。
       つながるものなら、何でも構いません。
     </p>
     <div class="dia">
       <svg viewBox="0 0 480 1020" data-nophrase xmlns:xlink="http://www.w3.org/1999/xlink"
-           role="img" aria-label="お店から出たデータが、AIを通って、スプレッドシートやダッシュボードに戻るまでの流れ図">
+           role="img" aria-label="日々の業務から出たデータが、自動処理を通って、スプレッドシートやダッシュボードに戻るまでの流れ図">
         <defs>
           <marker id="ah" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse">
             <path d="M0 1.2L8.6 5L0 8.8z" fill="rgba(15,203,136,.85)"/>
@@ -944,13 +948,13 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
           </g></g>
         </g>
 
-        <!-- 2 ── AI -->
+        <!-- 2 ── 自動処理 (was the AI node; AI is optional, not the engine) -->
         <g class="st">
           <g transform="translate(240,336)"><g class="core">
             <circle class="ring r1" r="62"/>
             <circle class="ring r2" r="76"/>
             <circle class="disc" r="48"/>
-            <text class="cap" y="8">AI</text>
+            <text class="cap" y="8" data-en="AUTO">自動処理</text>
           </g></g>
         </g>
 
@@ -1031,7 +1035,7 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
             <text class="lbl" y="64" data-en="Site &amp; reports">サイト・資料</text>
           </g></g>
 
-          <!-- and back into the AI, every month -->
+          <!-- and back into the system, every month -->
           <path class="wire-p loop" id="w15" marker-end="url(#ah)"
                 d="M240,902 C118,944 24,850 24,660 C24,486 100,350 186,330"/>
         </g>
@@ -1054,7 +1058,7 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
       </svg>
 
       <div class="cap-chip" data-cap="1" style="top:1.6%"><em>1</em><span data-en="It comes in">入ってくる</span></div>
-      <div class="cap-chip" data-cap="2" style="top:42.6%"><em>2</em><span data-en="AI reads and decides">AIが読んで、判断する</span></div>
+      <div class="cap-chip" data-cap="2" style="top:42.6%"><em>2</em><span data-en="It is read and sorted, automatically">自動で読み取り、振り分ける</span></div>
       <div class="cap-chip" data-cap="3" style="top:53.8%"><em>3</em><span data-en="It gets organised">整理される</span></div>
       <div class="cap-chip" data-cap="4" style="top:74.6%"><em>4</em><span data-en="It comes back">返ってくる</span></div>
     </div>
@@ -1064,8 +1068,8 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
         <path d="M26 15a11 11 0 11-3.2-7.8" stroke="#0FCB88" stroke-width="2.6" stroke-linecap="round"/>
         <path d="M27 3v6h-6" stroke="#0FCB88" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
-      <p data-en="&lt;b&gt;And this is where it starts improving.&lt;/b&gt;&lt;br&gt;The AI keeps learning month by month as it runs, deepening its understanding of your business. Paired with regular human support, that makes the day it goes live the least capable it will ever be: the more it is used, the more it is worth.">
-        <b>そして進化はここから始まります。</b><br>AIは運用しながら毎月学習し、ビジネスへの理解を深めて進化します。定期的な人的サポートと合わせることで、『導入時』が最も未熟で、使えば使うほど価値が高まる仕組みを提供します</p>
+      <p data-en="&lt;b&gt;And this is where it starts improving.&lt;/b&gt;&lt;br&gt;The system is tended every month. When the way you work changes, it changes with it — so the day it goes live is the least capable it will ever be: the more it is used, the more it is worth.">
+        <b>そして進化はここから始まります。</b><br>仕組みは毎月手を入れて育てます。業務のやり方が変われば仕組みも一緒に変わるので、『導入時』が最も未熟で、使えば使うほど価値が高まります</p>
     </div>
   </div>
 </section>
@@ -1145,7 +1149,7 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
         <div class="row rv d5"><dt data-en="Something to look at">見えるかたち</dt>
           <dd data-en="&lt;b&gt;Not a template. Designed for you alone.&lt;/b&gt;A dashboard that shows the state of the business at a glance, a website, and a dedicated app where the work calls for one. All drawn from scratch around the value of your brand. We do not reuse somebody else’s template with the logo swapped out."><b>テンプレートではない、貴社だけのデザイン。</b>ひと目で経営や業務の状況が分かるダッシュボード、Webサイト、必要であれば専用のアプリまで。すべて貴社のブランド価値に合わせてゼロから描きます。他社のロゴを載せ替えただけの、ありきたりなテンプレートは使いません。</dd></div>
 
-        <div class="row rv d6"><dt data-en="AI, set up properly">AIは、専属で</dt>
+        <div class="row rv d6"><dt data-en="AI, if you want it">AIは、ご希望なら</dt>
           <dd data-en="&lt;b&gt;A dedicated AI that understands your context.&lt;/b&gt;We build the system around an AI with world-leading intelligence, and connect it to the folders, the sheets and the dashboard. The plugins and integrations it needs are supplied by us. It is not an AI reciting generalities: it runs with a deep understanding of your company.&lt;i class=&quot;opt&quot;&gt;Most of what we build runs with no AI account at all. The AI layer alone can be removed later, and everything else keeps working.&lt;/i&gt;"><b>貴社の文脈を理解した、専属AI。</b>世界最高峰の知性を持つAIを中心にシステムを構築し、フォルダ、シート、ダッシュボードのすべてに接続します。必要なプラグインや連携システムもこちらで完備。一般論を語るAIではなく、「あなたの会社のこと」を深く理解した状態で稼働します。<i class="opt">仕組みの大部分は、AIのアカウントがなくても動きます。AIの部分だけを後から外すこともでき、そのときもほかはそのまま動き続けます。</i></dd></div>
 
         <div class="row rv d6"><dt data-en="It stays yours">データは会社のもの</dt>
