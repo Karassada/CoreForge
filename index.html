@@ -150,9 +150,12 @@ body {
   -webkit-backdrop-filter:blur(18px) saturate(1.4); backdrop-filter:blur(18px) saturate(1.4);
   border-bottom-color:var(--hair);
 }
-.mark { display:flex; align-items:baseline; gap:11px; text-decoration:none; color:var(--ink); }
-.mark .n { font-family:var(--mincho); font-weight:700; font-size:19px; letter-spacing:.06em; }
-.mark .k { font-size:10.5px; color:var(--faint); letter-spacing:.14em; font-weight:500; }
+/* Brand only in the header — the legal entity lives in the closing section
+   and the footer, not up here. Vertical padding takes the hit area to 44px+;
+   it measured 105x27.5 when the entity name sat alongside. */
+.mark { display:inline-flex; align-items:center; padding:9px 0; min-height:44px;
+  text-decoration:none; color:var(--ink); }
+.mark .n { font-family:var(--mincho); font-weight:700; font-size:25px; letter-spacing:.05em; }
 .hd .go { font-size:13.5px; padding:11px 22px; }
 .hd .right { display:flex; align-items:center; gap:14px; }
 
@@ -166,7 +169,7 @@ body {
 }
 .lang button:hover { color:var(--ink); }
 .lang button[aria-pressed="true"] { background:var(--ink); color:var(--bg); }
-@media (max-width:640px){ .hd .go { display:none; } .mark .k { display:none; } }
+@media (max-width:640px){ .hd .go { display:none; } .mark .n { font-size:22px; } }
 
 /* ---------- Japanese line breaking ----------
    Japanese must wrap at word/phrase boundaries, never mid-word:
@@ -799,7 +802,7 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
 
 <header class="hd" id="hd">
   <a class="mark" href="#hero">
-    <span class="n" data-en="CoreForge">CoreForge</span><span class="k" data-en="SHIFT合同会社">SHIFT合同会社</span>
+    <span class="n" data-en="CoreForge">CoreForge</span>
   </a>
   <div class="right">
     <div class="lang" role="group" aria-label="Language / 言語">
