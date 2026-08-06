@@ -1,9 +1,9 @@
-# CoreForge — Website
+# CoreBuild — Website
 
 **Organize. Automate. Save Time.**
 
-The official website for **CoreForge**, a business-infrastructure service from **SHIFT合同会社**
-for Japanese small and medium-sized companies. CoreForge organizes how a company works,
+The official website for **CoreBuild**, a business-infrastructure service from **SHIFT合同会社**
+for Japanese small and medium-sized companies. CoreBuild organizes how a company works,
 automates repetitive work, and gives owners a clear view of the business — accounts and
 domain, folder structure, spreadsheets, website, dashboards, workflow automations, and
 AI connected to all of it. Sold as a build plus an ongoing monthly plan.
