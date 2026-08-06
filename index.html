@@ -1179,10 +1179,10 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
       <table class="pt">
         <thead><tr><th scope="col" data-en="Package">プラン</th><th scope="col" data-en="Build (guide, excl. tax)">構築費（目安・税別）</th><th scope="col" data-en="What it covers">内容</th></tr></thead>
         <tbody>
-          <tr><td class="plan" data-en="Diagnosis">業務診断</td>
-              <td class="n tnum" data-l="構築費（税別）" data-dl="Build (excl. tax)">¥50,000</td>
+          <tr class="pick"><td class="plan" data-en="Diagnosis&lt;span class='tag'&gt;Start here&lt;/span&gt;">業務診断<span class="tag">まずはここから</span></td>
+              <td class="n tnum" data-l="診断費（税別）" data-dl="Diagnosis (excl. tax)">¥50,000</td>
               <td class="what" data-en="A paid session to map how the work moves today and what should be built. Credited in full against the build if you go ahead.">いまの業務の流れと、何をつくるべきかを洗い出す有料の診断。構築に進む場合は、全額を費用に充当します。</td></tr>
-          <tr class="pick"><td class="plan" data-en="Full build&lt;span class='tag'&gt;Recommended&lt;/span&gt;">フルビルド<span class="tag">おすすめ</span></td>
+          <tr><td class="plan" data-en="Full build">フルビルド</td>
               <td class="n tnum" data-l="構築費（税別）" data-dl="Build (excl. tax)">¥1,000,000 〜 ¥1,800,000</td>
               <td class="what" data-en="A complete set that turns a company into a system from nothing.&lt;br&gt;Accounts, the domain, company email, the folder structure, spreadsheets, the website, the dashboard, the automations, and AI connected to all of it.">会社をゼロから仕組み化する一式。<br>アカウント、ドメイン、会社メール、フォルダ構造、スプレッドシート、Webサイト、ダッシュボード、自動化、そしてすべてに接続したAIまで。</td></tr>
           <tr><td class="plan" data-en="Rebuild &amp; improve">導入・改善</td>
@@ -1284,7 +1284,7 @@ footer { padding:clamp(30px,5vh,52px) clamp(20px,7vw,88px); border-top:1px solid
 
 <footer>
   <p data-en="CoreBuild / SHIFT合同会社">CoreBuild ／ SHIFT合同会社</p>
-  <p data-en="The report you already send, turned into the numbers you need.">いつもの報告を、そのまま経営数字に。</p>
+  <p data-en="Organize. Automate. Save Time.">整える。自動化する。時間を生む。</p>
 </footer>
 
 <script>
@@ -1333,6 +1333,19 @@ const LEAD = /^(もう|まだ|また|ずっと|すぐ|とても|もっと|すで
 const ENDS_PUNCT = /[、。，．！？…]$/;
 /* kinsoku: 。、）」 may never begin a line */
 const CLOSER_ONLY = /^[、。，．・！？…」』）】〉》］｝：；:;]+$/;
+/* inside a word, not at a phrase start — see the LEAD guard in phrase() */
+const MIDWORD = /[ぁ-んー]$/;
+/* Source newlines inside Japanese prose render as REAL spaces, so the indented
+   markup was putting a gap after some 、 and not others. Collapse a newline when
+   Japanese sits on both sides; keep it as one space anywhere else, because the
+   space around embedded Latin ("Google Workspace") is load-bearing. */
+const CJK = /[぀-ゟ゠-ヿ一-鿿。、，．・！？…「」『』（）【】〈〉《》［］｛｝：；]/;
+function unwrap(s) {
+  return s.replace(/[ \t]*\n[ \t]*/g, (m, off, str) => {
+    const b = str[off - 1], a = str[off + m.length];
+    return (b && a && CJK.test(b) && CJK.test(a)) ? '' : ' ';
+  });
+}
 const segmenter = ('Segmenter' in Intl) ? new Intl.Segmenter('ja', { granularity: 'word' }) : null;
 
 function phrase(root) {
@@ -1345,10 +1358,21 @@ function phrase(root) {
     if (n.nodeValue.trim() && !n.parentElement.closest('.u,.contact dt,[data-nophrase]')) nodes.push(n);
   }
   for (const node of nodes) {
+    /* A text node that is ONLY closing punctuation — the 「。」 sitting after a
+       </b> — can never be merged by the CLOSER_ONLY pass below, which only sees
+       inside one node. Three of these in the price paragraph could start a line
+       with 「。」, the exact kinsoku break this engine exists to prevent. A word
+       joiner removes the break opportunity without touching the layout. */
+    if (CLOSER_ONLY.test(node.nodeValue.trim())) { node.nodeValue = '⁠' + node.nodeValue; continue; }
     const units = [], leads = [];
-    for (const { segment } of segmenter.segment(node.nodeValue)) {
+    for (const { segment } of segmenter.segment(unwrap(node.nodeValue))) {
       const prev = units[units.length - 1];
-      const lead = LEAD.test(segment);          // leans forward, so never glue it back
+      /* An adverb only leans forward when it actually STARTS a phrase. Mid-word
+         it is not an adverb at all: the segmenter cuts お選びい|ただ|いても, LEAD
+         matched that 「ただ」 as the adverb, the kana glue below was skipped, and
+         the price paragraph rendered a visible break at 選びい／ただいても. If the
+         previous unit ends in kana we are inside a word, so never treat it as a lead. */
+      const lead = LEAD.test(segment) && !(prev && MIDWORD.test(prev));
       // glue on: particles/inflection, closing punctuation, or after an opening bracket
       const glue = !lead && prev &&
                    (TRAILING.test(segment) || OPENING.test(prev) || KANA.test(segment) ||
@@ -1368,6 +1392,11 @@ function phrase(root) {
     for (let i = units.length - 1; i > 0; i--) {
       if (CLOSER_ONLY.test(units[i])) { units[i - 1] += units[i]; units.splice(i, 1); }
     }
+    /* The loop above stops at i > 0, so a closer sitting FIRST in its node has no
+       previous unit to merge into — which is the 「。」 that follows a </b>, e.g.
+       …必要なら<b>「単品」</b>。 A word joiner kills the break opportunity in front
+       of it instead. */
+    if (units.length && CLOSER_ONLY.test(units[0])) units[0] = '⁠' + units[0];
     const frag = document.createDocumentFragment();
     for (const u of units) {
       if (!u.trim()) { frag.append(u); continue; }        // keep real spaces breakable
